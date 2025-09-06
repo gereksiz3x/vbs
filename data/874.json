@@ -4,9 +4,9 @@
   "exams": [
     {
       "examName": "3. Deneme",
-      "examDate": "2024-09-09", // Sonraki tarih olduğunu varsayalım
+      "examDate": "2024-09-09",
       "score": 67,
-      "rank": 2, // Sıralama 1'den 2'ye düştü
+      "rank": 2,
       "totalStudents": 12
     },
     {
