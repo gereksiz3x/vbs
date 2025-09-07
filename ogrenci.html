@@ -28,41 +28,41 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 20px;
+            padding: 15px;
         }
         
         .container {
             max-width: 1200px;
             margin: 0 auto;
             background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
             overflow: hidden;
         }
         
         .header {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
-            padding: 30px;
+            padding: 20px;
             text-align: center;
         }
         
         .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
+            font-size: 1.8rem;
+            margin-bottom: 5px;
             font-weight: 700;
         }
         
         .header p {
-            font-size: 1.1rem;
+            font-size: 1rem;
             opacity: 0.9;
         }
         
         .content {
-            padding: 30px;
+            padding: 20px;
             display: grid;
             grid-template-columns: 1fr;
-            gap: 30px;
+            gap: 20px;
         }
         
         @media (min-width: 992px) {
@@ -73,67 +73,75 @@
         
         .card {
             background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
             border: 1px solid var(--border);
         }
         
         .card-title {
             color: var(--primary);
-            font-size: 1.5rem;
-            margin-bottom: 20px;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
             font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 10px;
-        }
-        
-        .card-title i {
-            font-size: 1.3rem;
+            gap: 8px;
         }
         
         .info-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px;
+            margin-bottom: 15px;
         }
         
         .info-item {
             background: var(--light);
-            padding: 15px;
-            border-radius: 10px;
+            padding: 12px;
+            border-radius: 8px;
             text-align: center;
         }
         
         .info-label {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             color: var(--dark);
             opacity: 0.7;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
         }
         
         .info-value {
-            font-size: 1.4rem;
+            font-size: 1.2rem;
             font-weight: bold;
             color: var(--primary);
         }
         
+        .student-name {
+            text-align: center;
+            margin: 10px 0;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--secondary);
+            line-height: 1.3;
+            padding: 0 10px;
+            word-wrap: break-word;
+        }
+        
         .chart-container {
             position: relative;
-            height: 300px;
-            margin: 20px 0;
+            height: 250px;
+            margin: 15px 0;
         }
         
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
+            margin-top: 10px;
+            font-size: 0.9rem;
         }
         
         th, td {
-            padding: 12px 15px;
+            padding: 10px 12px;
             text-align: left;
             border-bottom: 1px solid var(--border);
         }
@@ -142,14 +150,11 @@
             background: var(--primary);
             color: white;
             font-weight: 600;
+            font-size: 0.85rem;
         }
         
         tr:nth-child(even) {
             background: var(--light);
-        }
-        
-        tr:hover {
-            background: #e9ecef;
         }
         
         .up {
@@ -168,18 +173,18 @@
         
         .loading {
             text-align: center;
-            padding: 40px;
+            padding: 30px;
             color: var(--dark);
-            font-size: 1.1rem;
+            font-size: 1rem;
         }
         
         .badge {
             display: inline-block;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.85rem;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
             font-weight: 600;
-            margin-left: 10px;
+            margin-left: 8px;
         }
         
         .badge-success {
@@ -187,14 +192,62 @@
             color: #155724;
         }
         
-        .badge-danger {
-            background: #f8d7da;
-            color: #721c24;
-        }
-        
         .badge-warning {
             background: #fff3cd;
             color: #856404;
+        }
+        
+        .comment-box {
+            margin-top: 15px;
+            padding: 12px;
+            background: var(--light);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        /* Daha kompakt tasarım için */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .header p {
+                font-size: 0.9rem;
+            }
+            
+            .content {
+                padding: 15px;
+                gap: 15px;
+            }
+            
+            .card {
+                padding: 15px;
+            }
+            
+            .info-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            
+            .student-name {
+                font-size: 1.1rem;
+            }
+            
+            th, td {
+                padding: 8px 10px;
+                font-size: 0.8rem;
+            }
+            
+            .chart-container {
+                height: 200px;
+            }
+        }
+        
+        /* Tablo için yatay kaydırma */
+        .table-container {
+            overflow-x: auto;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -207,41 +260,35 @@
 
         <div class="content">
             <div class="card">
-                <div class="card-title">
-                    <span>📊 Öğrenci Bilgileri</span>
-                </div>
+                <div class="card-title">📊 Öğrenci Bilgileri</div>
                 <div id="studentInfo">
                     <div class="loading">Öğrenci bilgileri yükleniyor...</div>
                 </div>
             </div>
 
             <div class="card">
-                <div class="card-title">
-                    <span>🎯 Son Deneme Performansı</span>
-                </div>
+                <div class="card-title">🎯 Son Deneme Performansı</div>
                 <div id="latestExam">
                     <div class="loading">Son deneme bilgileri yükleniyor...</div>
                 </div>
             </div>
 
             <div class="card exam-history">
-                <div class="card-title">
-                    <span>📈 Geçmiş Deneme Sonuçları</span>
-                </div>
-                <div id="examHistory">
+                <div class="card-title">📈 Geçmiş Deneme Sonuçları</div>
+                <div class="table-container">
                     <table>
                         <thead>
                             <tr>
-                                <th>Deneme Tarihi</th>
-                                <th>Deneme Adı</th>
+                                <th>Tarih</th>
+                                <th>Deneme</th>
                                 <th>Puan</th>
-                                <th>Sıralama</th>
-                                <th>Toplam Öğrenci</th>
-                                <th>Değişim (Puan)</th>
-                                <th>Değişim (Sıra)</th>
+                                <th>Sıra</th>
+                                <th>Toplam</th>
+                                <th>Puan Değişim</th>
+                                <th>Sıra Değişim</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="examHistoryBody">
                             <!-- JavaScript ile doldurulacak -->
                         </tbody>
                     </table>
@@ -249,18 +296,14 @@
             </div>
 
             <div class="card">
-                <div class="card-title">
-                    <span>📶 Puan Değişimi</span>
-                </div>
+                <div class="card-title">📶 Puan Değişimi</div>
                 <div class="chart-container">
                     <canvas id="scoreChart"></canvas>
                 </div>
             </div>
 
             <div class="card">
-                <div class="card-title">
-                    <span>🏆 Sıralama Değişimi</span>
-                </div>
+                <div class="card-title">🏆 Sıralama Değişimi</div>
                 <div class="chart-container">
                     <canvas id="rankChart"></canvas>
                 </div>
@@ -296,7 +339,7 @@
             document.getElementById('studentInfo').innerHTML = `
                 <div class="error">
                     <h3>Hata: ${error.message}</h3>
-                    <p>Lütfen öğrenci ID'sini kontrol edin ve tekrar deneyin.</p>
+                    <p>Lütfen öğrenci ID'sini kontrol edin.</p>
                 </div>
             `;
         });
@@ -314,7 +357,7 @@
             const progressIcon = progress >= 0 ? '📈' : '📉';
             progressText = `<div class="info-item">
                 <div class="info-label">İlerleme</div>
-                <div class="info-value ${progressClass}">${progressIcon} ${progress >= 0 ? '+' : ''}${progress.toFixed(2)}</div>
+                <div class="info-value ${progressClass}">${progressIcon} ${progress >= 0 ? '+' : ''}${progress.toFixed(1)}</div>
             </div>`;
         }
 
@@ -334,15 +377,13 @@
                 </div>
                 ${progressText}
             </div>
-            <div style="text-align: center; margin-top: 15px;">
-                <h2 style="color: var(--secondary);">${data.name}</h2>
-            </div>
+            <div class="student-name">${data.name}</div>
         `;
     }
 
     function displayExamHistory(data) {
         const exams = data.exams;
-        const tbody = document.querySelector('#examHistory tbody');
+        const tbody = document.getElementById('examHistoryBody');
         const latestExamDiv = document.getElementById('latestExam');
 
         // Son denemeyi göster
@@ -367,11 +408,11 @@
                     <div class="info-value">${latest.rank} ${rankBadge}</div>
                 </div>
                 <div class="info-item">
-                    <div class="info-label">Toplam Öğrenci</div>
+                    <div class="info-label">Toplam</div>
                     <div class="info-value">${latest.totalStudents}</div>
                 </div>
             </div>
-            <div style="margin-top: 20px; padding: 15px; background: var(--light); border-radius: 10px;">
+            <div class="comment-box">
                 <strong>Yorum:</strong> ${generateComment(latest, exams[1])}
             </div>
         `;
@@ -384,9 +425,9 @@
 
             if (index < exams.length - 1) {
                 const nextExam = exams[index + 1];
-                const scoreDiff = (exam.score - nextExam.score).toFixed(2);
-                if (scoreDiff > 0) puanDegisim = `<span class="up">+${scoreDiff} ↗️</span>`;
-                else if (scoreDiff < 0) puanDegisim = `<span class="down">${scoreDiff} ↘️</span>`;
+                const scoreDiff = (exam.score - nextExam.score).toFixed(1);
+                if (scoreDiff > 0) puanDegisim = `<span class="up">+${scoreDiff} ↗</span>`;
+                else if (scoreDiff < 0) puanDegisim = `<span class="down">${scoreDiff} ↘</span>`;
 
                 const rankDiff = nextExam.rank - exam.rank;
                 if (rankDiff > 0) siraDegisim = `<span class="up">${rankDiff} ↑</span>`;
@@ -410,20 +451,20 @@
 
     function generateComment(currentExam, previousExam) {
         if (!previousExam) {
-            if (currentExam.rank === 1) return "İlk denemede birincilik! Muhteşem bir başlangıç! 🌟";
-            return "İlk deneme sonucun. Gösterdiğin çaban için teşekkürler!";
+            if (currentExam.rank === 1) return "İlk denemede birincilik! Muhteşem başlangıç! 🌟";
+            return "İlk deneme sonucun. Gösterdiğin çaba için teşekkürler!";
         }
 
         const scoreDiff = currentExam.score - previousExam.score;
         const rankDiff = previousExam.rank - currentExam.rank;
 
         if (rankDiff > 0) {
-            return `Sıralaman ${rankDiff} basamak yükselmiş! Harika bir ilerleme! 🚀`;
+            return `Sıralaman ${rankDiff} basamak yükselmiş! Harika ilerleme! 🚀`;
         } else if (rankDiff < 0) {
-            return `Sıralaman ${Math.abs(rankDiff)} basamak düşmüş. Bir sonraki deneme için daha fazla çalışmalısın. 💪`;
+            return `Sıralaman ${Math.abs(rankDiff)} basamak düşmüş. Daha fazla çalışmalısın. 💪`;
         } else {
-            if (scoreDiff > 0) return "Sıralaman koruyarak puanını artırmayı başardın! Tebrikler! ✅";
-            return "Sıralaman aynı kalmış. Küçük bir push ile sıralamanı yükseltebilirsin. 📚";
+            if (scoreDiff > 0) return "Sıralaman korunurken puanını artırdın! Tebrikler! ✅";
+            return "Sıralaman aynı kalmış. Küçük bir çabayla yükselebilirsin. 📚";
         }
     }
 
@@ -455,35 +496,23 @@
                     pointBackgroundColor: '#4361ee',
                     pointBorderColor: '#fff',
                     pointBorderWidth: 2,
-                    pointRadius: 5,
-                    pointHoverRadius: 7
+                    pointRadius: 4,
+                    pointHoverRadius: 6
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    title: { 
-                        display: true, 
-                        text: 'Puan Değişim Grafiği',
-                        font: { size: 16, weight: 'bold' },
-                        color: '#4361ee'
-                    },
-                    legend: {
-                        display: false
-                    }
+                    legend: { display: false }
                 },
                 scales: {
                     y: { 
                         beginAtZero: false,
-                        grid: {
-                            color: 'rgba(0, 0, 0, 0.1)'
-                        }
+                        grid: { color: 'rgba(0, 0, 0, 0.1)' }
                     },
                     x: {
-                        grid: {
-                            color: 'rgba(0, 0, 0, 0.1)'
-                        }
+                        grid: { color: 'rgba(0, 0, 0, 0.1)' }
                     }
                 }
             }
@@ -506,35 +535,23 @@
                     pointBackgroundColor: '#f72585',
                     pointBorderColor: '#fff',
                     pointBorderWidth: 2,
-                    pointRadius: 5,
-                    pointHoverRadius: 7
+                    pointRadius: 4,
+                    pointHoverRadius: 6
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    title: { 
-                        display: true, 
-                        text: 'Sıralama Değişim Grafiği (Küçük Sayı Daha İyi)',
-                        font: { size: 16, weight: 'bold' },
-                        color: '#f72585'
-                    },
-                    legend: {
-                        display: false
-                    }
+                    legend: { display: false }
                 },
                 scales: {
                     y: { 
                         reverse: true,
-                        grid: {
-                            color: 'rgba(0, 0, 0, 0.1)'
-                        }
+                        grid: { color: 'rgba(0, 0, 0, 0.1)' }
                     },
                     x: {
-                        grid: {
-                            color: 'rgba(0, 0, 0, 0.1)'
-                        }
+                        grid: { color: 'rgba(0, 0, 0, 0.1)' }
                     }
                 }
             }
