@@ -5,14 +5,14 @@ from datetime import datetime, timedelta
 # 1. Ayarlar
 data_folder = "data"
 # Her yeni deneme için bir tarih belirle. Bu örnekte her deneme bir gün sonra.
-base_date = datetime(2024, 9, 7) # 1. Deneme tarihi
+base_date = datetime(2024, 9, 15) # 1. Deneme tarihi
 exam_names = ["1. Deneme", "2. Deneme", "3. Deneme"] # Deneme isimleri
 
 # 2. Yeni veriyi elle buraya yapıştır (Resimden okuduğunuz veri)
 new_exam_data = [
-    {"id": 192, "name": "Eslik, Selin Sude", "score": 72},
-    {"id": 874, "name": "Esen, Berat Talha", "score": 67},
-    {"id": 123, "name": "Kaya, Nizamettin", "score": 65},
+    {"id": 192, "name": "Eslik, Selin Sude", "score": 75},
+    {"id": 874, "name": "Esen, Berat Talha", "score": 78},
+    {"id": 123, "name": "Kaya, Nizamettin", "score": 79},
     {"id": 725, "name": "Erdogdu, Zeynep", "score": 65},
     {"id": 822, "name": "Emir, Cansu", "score": 58},
     {"id": 315, "name": "Kaya, Yaren", "score": 52},
