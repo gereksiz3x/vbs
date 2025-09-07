@@ -1,12 +1,12 @@
 {
-  "id": 874,
-  "name": "Esen, Berat Talha",
+  "id": 822,
+  "name": "Emir, Cansu",
   "exams": [
     {
       "examName": "1. Deneme",
       "examDate": "2025-09-07",
-      "score": 77,
-      "rank": 2,
+      "score": 55,
+      "rank": 9,
       "totalStudents": 17
     }
   ]

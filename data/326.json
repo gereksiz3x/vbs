@@ -1,20 +1,13 @@
 {
   "id": 326,
-  "name": "Börklü, Kübra",
+  "name": "B�0�2rkl��, K��bra",
   "exams": [
     {
-      "examName": "3. Deneme",
-      "examDate": "2024-09-09",
-      "score": 31,
-      "rank": 10, // 12 öğrenci arasında 10.
-      "totalStudents": 12
-    },
-    {
       "examName": "1. Deneme",
-      "examDate": "2024-09-07",
-      "score": 52,
-      "rank": 7, // 15 öğrenci arasında 7.
-      "totalStudents": 15
+      "examDate": "2025-09-07",
+      "score": 50,
+      "rank": 11,
+      "totalStudents": 17
     }
   ]
 }

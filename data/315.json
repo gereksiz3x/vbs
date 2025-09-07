@@ -1,12 +1,12 @@
 {
-  "id": 874,
-  "name": "Esen, Berat Talha",
+  "id": 315,
+  "name": "Kaya, Yaren",
   "exams": [
     {
       "examName": "1. Deneme",
       "examDate": "2025-09-07",
-      "score": 77,
-      "rank": 2,
+      "score": 50,
+      "rank": 12,
       "totalStudents": 17
     }
   ]
