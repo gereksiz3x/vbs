@@ -3,10 +3,17 @@
   "name": "Beycioglu, Ay�0�6e Sude",
   "exams": [
     {
+      "examName": "2. Deneme",
+      "examDate": "2025-09-07",
+      "score": 80,
+      "rank": 6,
+      "totalStudents": 17
+    },
+    {
       "examName": "1. Deneme",
       "examDate": "2025-09-07",
-      "score": 68,
-      "rank": 4,
+      "score": 60,
+      "rank": 6,
       "totalStudents": 17
     }
   ]

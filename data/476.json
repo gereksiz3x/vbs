@@ -3,10 +3,17 @@
   "name": "Sar�0�3b�0�3y�0�3k, G�0�2k�0�4e",
   "exams": [
     {
+      "examName": "2. Deneme",
+      "examDate": "2025-09-07",
+      "score": 80,
+      "rank": 10,
+      "totalStudents": 17
+    },
+    {
       "examName": "1. Deneme",
       "examDate": "2025-09-07",
-      "score": 36,
-      "rank": 16,
+      "score": 40,
+      "rank": 13,
       "totalStudents": 17
     }
   ]

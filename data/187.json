@@ -3,10 +3,17 @@
   "name": "D�0�2len, Mustafa Cem",
   "exams": [
     {
+      "examName": "2. Deneme",
+      "examDate": "2025-09-07",
+      "score": 80,
+      "rank": 14,
+      "totalStudents": 17
+    },
+    {
       "examName": "1. Deneme",
       "examDate": "2025-09-07",
-      "score": 15,
-      "rank": 17,
+      "score": 10,
+      "rank": 16,
       "totalStudents": 17
     }
   ]
