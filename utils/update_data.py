@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 data_folder = "data"
 # Her yeni deneme için bir tarih belirle. Bu örnekte her deneme bir gün sonra.
 base_date = datetime(2024, 9, 15) # 1. Deneme tarihi
-exam_names = ["1. Deneme", "2. Deneme", "3. Deneme"] # Deneme isimleri
+exam_names = ["5.deneme"] # Deneme isimleri
 
 # 2. Yeni veriyi elle buraya yapıştır (Resimden okuduğunuz veri)
 new_exam_data = [
