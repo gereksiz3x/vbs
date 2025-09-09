@@ -92,45 +92,43 @@
         
         .info-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
+            grid-template-columns: 1fr;
+            gap: 8px;
             margin-bottom: 12px;
         }
         
-        .info-item {
-            background: var(--light);
-            padding: 10px;
-            border-radius: 8px;
-            text-align: center;
-            min-height: 60px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+        .info-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            padding: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .info-row:last-child {
+            border-bottom: none;
         }
         
         .info-label {
-            font-size: 0.75rem;
+            font-weight: 600;
             color: var(--dark);
-            opacity: 0.7;
-            margin-bottom: 3px;
         }
         
         .info-value {
-            font-size: 1.1rem;
-            font-weight: bold;
+            text-align: right;
             color: var(--primary);
-            line-height: 1.2;
+            font-weight: bold;
         }
         
         .student-name {
             text-align: center;
-            margin: 8px 0;
-            font-size: 1.1rem;
+            margin: 10px 0;
+            font-size: 1.2rem;
             font-weight: 600;
             color: var(--secondary);
-            line-height: 1.2;
-            padding: 0 5px;
-            word-wrap: break-word;
+            padding: 10px;
+            background: var(--light);
+            border-radius: 8px;
         }
         
         .chart-container {
@@ -191,6 +189,7 @@
             border-radius: 12px;
             font-size: 0.7rem;
             font-weight: 600;
+            margin-left: 5px;
         }
         
         .badge-success {
@@ -208,8 +207,8 @@
             padding: 10px;
             background: var(--light);
             border-radius: 8px;
-            font-size: 0.8rem;
-            line-height: 1.3;
+            font-size: 0.9rem;
+            line-height: 1.4;
         }
         
         /* Tablo için yatay kaydırma */
@@ -218,55 +217,14 @@
             margin-top: 8px;
         }
         
-        /* Daha da kompakt mobil tasarım */
         @media (max-width: 480px) {
-            body {
-                padding: 5px;
-                font-size: 13px;
-            }
-            
-            .header {
-                padding: 12px;
-            }
-            
-            .header h1 {
-                font-size: 1.3rem;
-            }
-            
-            .content {
-                padding: 10px;
-                gap: 10px;
-            }
-            
-            .card {
-                padding: 12px;
-            }
-            
-            .info-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 8px;
-            }
-            
-            .info-item {
-                padding: 8px;
-                min-height: 55px;
+            .info-row {
+                grid-template-columns: 1fr;
+                gap: 5px;
             }
             
             .info-value {
-                font-size: 1rem;
-            }
-            
-            .student-name {
-                font-size: 1rem;
-            }
-            
-            th, td {
-                padding: 6px;
-                font-size: 0.75rem;
-            }
-            
-            .chart-container {
-                height: 180px;
+                text-align: left;
             }
         }
     </style>
@@ -280,15 +238,8 @@
 
         <div class="content">
             <div class="card">
-                <div class="card-title">📊 Öğrenci Bilgileri</div>
+                <div class="card-title">📊 Deneme Sonuç Bilgileri</div>
                 <div id="studentInfo">
-                    <div class="loading">Yükleniyor...</div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-title">🎯 Son Deneme</div>
-                <div id="latestExam">
                     <div class="loading">Yükleniyor...</div>
                 </div>
             </div>
@@ -301,11 +252,11 @@
                             <tr>
                                 <th>Tarih</th>
                                 <th>Deneme</th>
-                                <th>Puan</th>
+                                <th>Net</th>
                                 <th>Sıra</th>
                                 <th>Toplam</th>
-                                <th>Puan</th>
-                                <th>Sıra</th>
+                                <th>Net Değişim</th>
+                                <th>Sıra Değişim</th>
                             </tr>
                         </thead>
                         <tbody id="examHistoryBody">
@@ -316,7 +267,7 @@
             </div>
 
             <div class="card">
-                <div class="card-title">📶 Puan Grafiği</div>
+                <div class="card-title">📶 Net Grafiği</div>
                 <div class="chart-container">
                     <canvas id="scoreChart"></canvas>
                 </div>
@@ -366,86 +317,76 @@
     function displayStudentInfo(data) {
         const infoDiv = document.getElementById('studentInfo');
         const totalExams = data.exams.length;
-        const firstExam = data.exams[data.exams.length - 1];
         const latestExam = data.exams[0];
         
-        let progressText = '';
-        if (totalExams > 1) {
-            const progress = latestExam.score - firstExam.score;
-            const progressClass = progress >= 0 ? 'up' : 'down';
-            progressText = `<div class="info-item">
-                <div class="info-label">İlerleme</div>
-                <div class="info-value ${progressClass}">${progress >= 0 ? '+' : ''}${progress.toFixed(1)}</div>
-            </div>`;
+        // Soru sayısı için varsayılan bir değer (gerçek veri yoksa)
+        const soruSayisi = latestExam.totalStudents * 1.5; // Varsayılan hesaplama
+        
+        let rankBadge = '';
+        if (latestExam.rank === 1) {
+            rankBadge = '<span class="badge badge-success">1</span>';
+        } else if (latestExam.rank === 2) {
+            rankBadge = '<span class="badge badge-warning">2</span>';
+        } else if (latestExam.rank === 3) {
+            rankBadge = '<span class="badge badge-warning">3</span>';
         }
 
         infoDiv.innerHTML = `
-            <div class="info-grid">
-                <div class="info-item">
-                    <div class="info-label">No</div>
-                    <div class="info-value">${data.id}</div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">Puan</div>
-                    <div class="info-value">${latestExam.score}</div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">Deneme</div>
-                    <div class="info-value">${totalExams}</div>
-                </div>
-                ${progressText}
-            </div>
             <div class="student-name">${data.name}</div>
+            
+            <div class="info-grid">
+                <div class="info-row">
+                    <span class="info-label">Öğrenci No:</span>
+                    <span class="info-value">${data.id}</span>
+                </div>
+                
+                <div class="info-row">
+                    <span class="info-label">Deneme:</span>
+                    <span class="info-value">${latestExam.examName}</span>
+                </div>
+                
+                <div class="info-row">
+                    <span class="info-label">Soru Sayısı:</span>
+                    <span class="info-value">${soruSayisi}</span>
+                </div>
+                
+                <div class="info-row">
+                    <span class="info-label">Yaptığı Net:</span>
+                    <span class="info-value">${latestExam.score}</span>
+                </div>
+                
+                <div class="info-row">
+                    <span class="info-label">Sınava Giren Kişi Sayısı:</span>
+                    <span class="info-value">${latestExam.totalStudents}</span>
+                </div>
+                
+                <div class="info-row">
+                    <span class="info-label">Öğrencinin Sırası:</span>
+                    <span class="info-value">${latestExam.rank} ${rankBadge}</span>
+                </div>
+            </div>
+            
+            <div class="comment-box">
+                <strong>Yorum:</strong> ${generateComment(latestExam, data.exams[1])}
+            </div>
         `;
     }
 
     function displayExamHistory(data) {
         const exams = data.exams;
         const tbody = document.getElementById('examHistoryBody');
-        const latestExamDiv = document.getElementById('latestExam');
-
-        // Son denemeyi göster
-        const latest = exams[0];
-        let rankBadge = '';
-        if (latest.rank === 1) {
-            rankBadge = '<span class="badge badge-success">1</span>';
-        } else if (latest.rank === 2) {
-            rankBadge = '<span class="badge badge-warning">2</span>';
-        } else if (latest.rank === 3) {
-            rankBadge = '<span class="badge badge-warning">3</span>';
-        }
-
-        latestExamDiv.innerHTML = `
-            <div class="info-grid">
-                <div class="info-item">
-                    <div class="info-label">Puan</div>
-                    <div class="info-value">${latest.score}</div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">Sıra</div>
-                    <div class="info-value">${latest.rank} ${rankBadge}</div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">Toplam</div>
-                    <div class="info-value">${latest.totalStudents}</div>
-                </div>
-            </div>
-            <div class="comment-box">
-                <strong>Yorum:</strong> ${generateComment(latest, exams[1])}
-            </div>
-        `;
 
         // Geçmiş tablosunu doldur
         tbody.innerHTML = '';
         exams.forEach((exam, index) => {
-            let puanDegisim = '-';
+            let netDegisim = '-';
             let siraDegisim = '-';
 
             if (index < exams.length - 1) {
                 const nextExam = exams[index + 1];
-                const scoreDiff = (exam.score - nextExam.score).toFixed(1);
-                if (scoreDiff > 0) puanDegisim = `<span class="up">+${scoreDiff}</span>`;
-                else if (scoreDiff < 0) puanDegisim = `<span class="down">${scoreDiff}</span>`;
+                const netDiff = (exam.score - nextExam.score).toFixed(1);
+                if (netDiff > 0) netDegisim = `<span class="up">+${netDiff}</span>`;
+                else if (netDiff < 0) netDegisim = `<span class="down">${netDiff}</span>`;
 
                 const rankDiff = nextExam.rank - exam.rank;
                 if (rankDiff > 0) siraDegisim = `<span class="up">${rankDiff}↑</span>`;
@@ -459,7 +400,7 @@
                 <td><strong>${exam.score}</strong></td>
                 <td>${exam.rank}</td>
                 <td>${exam.totalStudents}</td>
-                <td>${puanDegisim}</td>
+                <td>${netDegisim}</td>
                 <td>${siraDegisim}</td>
             `;
             tbody.appendChild(row);
@@ -472,7 +413,7 @@
             return "İlk deneme sonucun.";
         }
 
-        const scoreDiff = currentExam.score - previousExam.score;
+        const netDiff = currentExam.score - previousExam.score;
         const rankDiff = previousExam.rank - currentExam.rank;
 
         if (rankDiff > 0) {
@@ -480,7 +421,7 @@
         } else if (rankDiff < 0) {
             return `${Math.abs(rankDiff)} basamak düşmüş.`;
         } else {
-            if (scoreDiff > 0) return "Puanını artırdın!";
+            if (netDiff > 0) return "Netini artırdın!";
             return "Sıralaman aynı.";
         }
     }
@@ -496,14 +437,14 @@
         const scores = exams.map(e => e.score);
         const ranks = exams.map(e => e.rank);
 
-        // Puan Grafiği
+        // Net Grafiği
         const scoreCtx = document.getElementById('scoreChart').getContext('2d');
         scoreChart = new Chart(scoreCtx, {
             type: 'line',
             data: {
                 labels: labels,
                 datasets: [{
-                    label: 'Puan',
+                    label: 'Net',
                     data: scores,
                     borderColor: '#4361ee',
                     backgroundColor: 'rgba(67, 97, 238, 0.1)',
@@ -520,11 +461,22 @@
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
+                plugins: { 
+                    legend: { display: false },
+                    title: {
+                        display: true,
+                        text: 'Net Değişim Grafiği',
+                        font: { size: 12 }
+                    }
+                },
                 scales: {
                     y: { 
                         beginAtZero: false,
-                        grid: { color: 'rgba(0, 0, 0, 0.1)' }
+                        grid: { color: 'rgba(0, 0, 0, 0.1)' },
+                        title: {
+                            display: true,
+                            text: 'Net'
+                        }
                     },
                     x: {
                         grid: { color: 'rgba(0, 0, 0, 0.1)' }
@@ -557,11 +509,22 @@
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
+                plugins: { 
+                    legend: { display: false },
+                    title: {
+                        display: true,
+                        text: 'Sıralama Değişim Grafiği',
+                        font: { size: 12 }
+                    }
+                },
                 scales: {
                     y: { 
                         reverse: true,
-                        grid: { color: 'rgba(0, 0, 0, 0.1)' }
+                        grid: { color: 'rgba(0, 0, 0, 0.1)' },
+                        title: {
+                            display: true,
+                            text: 'Sıra'
+                        }
                     },
                     x: {
                         grid: { color: 'rgba(0, 0, 0, 0.1)' }
