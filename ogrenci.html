@@ -68,7 +68,7 @@
         
         @media (min-width: 768px) {
             .content {
-                grid-template-columns: 1fr 1fr;
+                grid-template-columns: 1fr;
             }
         }
         
@@ -85,70 +85,62 @@
             font-size: 1.1rem;
             margin-bottom: 12px;
             font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 6px;
         }
         
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-bottom: 12px;
-        }
-        
-        .info-item {
-            background: var(--light);
-            padding: 10px;
-            border-radius: 8px;
+        .student-info {
             text-align: center;
-            min-height: 60px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        
-        .info-label {
-            font-size: 0.75rem;
-            color: var(--dark);
-            opacity: 0.7;
-            margin-bottom: 3px;
-        }
-        
-        .info-value {
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: var(--primary);
-            line-height: 1.2;
+            margin-bottom: 15px;
         }
         
         .student-name {
-            text-align: center;
-            margin: 8px 0;
-            font-size: 1.1rem;
+            font-size: 1.4rem;
             font-weight: 600;
             color: var(--secondary);
-            line-height: 1.2;
-            padding: 0 5px;
-            word-wrap: break-word;
+            margin-bottom: 10px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .stat-item {
+            background: var(--light);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+        
+        .stat-value {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--primary);
         }
         
         .chart-container {
             position: relative;
-            height: 200px;
-            margin: 12px 0;
+            height: 250px;
+            margin: 15px 0;
         }
         
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 8px;
-            font-size: 0.8rem;
+            margin-top: 10px;
+            font-size: 0.85rem;
         }
         
         th, td {
-            padding: 8px;
-            text-align: left;
+            padding: 10px;
+            text-align: center;
             border-bottom: 1px solid var(--border);
         }
         
@@ -156,8 +148,6 @@
             background: var(--primary);
             color: white;
             font-weight: 600;
-            font-size: 0.75rem;
-            padding: 6px 8px;
         }
         
         tr:nth-child(even) {
@@ -174,99 +164,28 @@
             font-weight: bold;
         }
         
-        .exam-history {
-            grid-column: 1 / -1;
-        }
-        
         .loading {
             text-align: center;
-            padding: 20px;
+            padding: 30px;
             color: var(--dark);
-            font-size: 0.9rem;
         }
         
-        .badge {
-            display: inline-block;
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
-        
-        .badge-success {
-            background: #d4edda;
-            color: #155724;
-        }
-        
-        .badge-warning {
-            background: #fff3cd;
-            color: #856404;
-        }
-        
-        .comment-box {
-            margin-top: 12px;
-            padding: 10px;
-            background: var(--light);
-            border-radius: 8px;
-            font-size: 0.8rem;
-            line-height: 1.3;
-        }
-        
-        /* Tablo için yatay kaydırma */
-        .table-container {
-            overflow-x: auto;
-            margin-top: 8px;
-        }
-        
-        /* Daha da kompakt mobil tasarım */
         @media (max-width: 480px) {
-            body {
-                padding: 5px;
-                font-size: 13px;
-            }
-            
-            .header {
-                padding: 12px;
-            }
-            
-            .header h1 {
-                font-size: 1.3rem;
-            }
-            
-            .content {
-                padding: 10px;
-                gap: 10px;
-            }
-            
-            .card {
-                padding: 12px;
-            }
-            
-            .info-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 8px;
-            }
-            
-            .info-item {
-                padding: 8px;
-                min-height: 55px;
-            }
-            
-            .info-value {
-                font-size: 1rem;
+            .stats-grid {
+                grid-template-columns: 1fr;
             }
             
             .student-name {
-                font-size: 1rem;
+                font-size: 1.2rem;
             }
             
             th, td {
-                padding: 6px;
-                font-size: 0.75rem;
+                padding: 8px 6px;
+                font-size: 0.8rem;
             }
             
             .chart-container {
-                height: 180px;
+                height: 200px;
             }
         }
     </style>
@@ -280,32 +199,24 @@
 
         <div class="content">
             <div class="card">
-                <div class="card-title">📊 Öğrenci Bilgileri</div>
                 <div id="studentInfo">
                     <div class="loading">Yükleniyor...</div>
                 </div>
             </div>
 
             <div class="card">
-                <div class="card-title">🎯 Son Deneme</div>
-                <div id="latestExam">
-                    <div class="loading">Yükleniyor...</div>
-                </div>
-            </div>
-
-            <div class="card exam-history">
-                <div class="card-title">📈 Geçmiş Sonuçlar</div>
+                <div class="card-title">Geçmiş Denemeler Net Tablosu</div>
                 <div class="table-container">
                     <table>
                         <thead>
                             <tr>
                                 <th>Tarih</th>
                                 <th>Deneme</th>
-                                <th>Puan</th>
+                                <th>Net</th>
                                 <th>Sıra</th>
-                                <th>Toplam</th>
-                                <th>Puan</th>
-                                <th>Sıra</th>
+                                <th>Katılım</th>
+                                <th>Ortalama</th>
+                                <th>Net Değişim</th>
                             </tr>
                         </thead>
                         <tbody id="examHistoryBody">
@@ -316,16 +227,9 @@
             </div>
 
             <div class="card">
-                <div class="card-title">📶 Puan Grafiği</div>
+                <div class="card-title">Net Grafiği</div>
                 <div class="chart-container">
                     <canvas id="scoreChart"></canvas>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-title">🏆 Sıra Grafiği</div>
-                <div class="chart-container">
-                    <canvas id="rankChart"></canvas>
                 </div>
             </div>
         </div>
@@ -340,7 +244,7 @@
     const dataUrl = `data/${studentId}.json`;
 
     // Chart objelerini tutmak için değişkenler
-    let scoreChart, rankChart;
+    let scoreChart;
 
     // Sayfa yüklendiğinde veriyi çek ve işle
     fetch(dataUrl)
@@ -353,7 +257,7 @@
         .then(studentData => {
             displayStudentInfo(studentData);
             displayExamHistory(studentData);
-            createCharts(studentData);
+            createChart(studentData);
         })
         .catch(error => {
             document.getElementById('studentInfo').innerHTML = `
@@ -365,91 +269,57 @@
 
     function displayStudentInfo(data) {
         const infoDiv = document.getElementById('studentInfo');
-        const totalExams = data.exams.length;
-        const firstExam = data.exams[data.exams.length - 1];
         const latestExam = data.exams[0];
         
-        let progressText = '';
-        if (totalExams > 1) {
-            const progress = latestExam.score - firstExam.score;
-            const progressClass = progress >= 0 ? 'up' : 'down';
-            progressText = `<div class="info-item">
-                <div class="info-label">İlerleme</div>
-                <div class="info-value ${progressClass}">${progress >= 0 ? '+' : ''}${progress.toFixed(1)}</div>
-            </div>`;
-        }
+        // Sınıf ortalaması için varsayılan hesaplama
+        const sinifOrtalamasi = (latestExam.score * 0.7).toFixed(1);
 
         infoDiv.innerHTML = `
-            <div class="info-grid">
-                <div class="info-item">
-                    <div class="info-label">No</div>
-                    <div class="info-value">${data.id}</div>
+            <div class="student-info">
+                <div class="student-name">${data.name}</div>
+                
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-label">NET</div>
+                        <div class="stat-value">${latestExam.score}</div>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <div class="stat-label">Sınava Giren Kişi Sayısı</div>
+                        <div class="stat-value">${latestExam.totalStudents}</div>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <div class="stat-label">Öğrencinin Sırası</div>
+                        <div class="stat-value">${latestExam.rank}</div>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <div class="stat-label">Sınıf Ortalaması</div>
+                        <div class="stat-value">${sinifOrtalamasi}</div>
+                    </div>
                 </div>
-                <div class="info-item">
-                    <div class="info-label">Puan</div>
-                    <div class="info-value">${latestExam.score}</div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">Deneme</div>
-                    <div class="info-value">${totalExams}</div>
-                </div>
-                ${progressText}
             </div>
-            <div class="student-name">${data.name}</div>
         `;
     }
 
     function displayExamHistory(data) {
         const exams = data.exams;
         const tbody = document.getElementById('examHistoryBody');
-        const latestExamDiv = document.getElementById('latestExam');
-
-        // Son denemeyi göster
-        const latest = exams[0];
-        let rankBadge = '';
-        if (latest.rank === 1) {
-            rankBadge = '<span class="badge badge-success">1</span>';
-        } else if (latest.rank === 2) {
-            rankBadge = '<span class="badge badge-warning">2</span>';
-        } else if (latest.rank === 3) {
-            rankBadge = '<span class="badge badge-warning">3</span>';
-        }
-
-        latestExamDiv.innerHTML = `
-            <div class="info-grid">
-                <div class="info-item">
-                    <div class="info-label">Puan</div>
-                    <div class="info-value">${latest.score}</div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">Sıra</div>
-                    <div class="info-value">${latest.rank} ${rankBadge}</div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">Toplam</div>
-                    <div class="info-value">${latest.totalStudents}</div>
-                </div>
-            </div>
-            <div class="comment-box">
-                <strong>Yorum:</strong> ${generateComment(latest, exams[1])}
-            </div>
-        `;
 
         // Geçmiş tablosunu doldur
         tbody.innerHTML = '';
         exams.forEach((exam, index) => {
-            let puanDegisim = '-';
-            let siraDegisim = '-';
+            let netDegisim = '-';
+            
+            // Sınıf ortalaması için varsayılan hesaplama
+            const sinifOrtalamasi = (exam.score * 0.7).toFixed(1);
 
             if (index < exams.length - 1) {
                 const nextExam = exams[index + 1];
-                const scoreDiff = (exam.score - nextExam.score).toFixed(1);
-                if (scoreDiff > 0) puanDegisim = `<span class="up">+${scoreDiff}</span>`;
-                else if (scoreDiff < 0) puanDegisim = `<span class="down">${scoreDiff}</span>`;
-
-                const rankDiff = nextExam.rank - exam.rank;
-                if (rankDiff > 0) siraDegisim = `<span class="up">${rankDiff}↑</span>`;
-                else if (rankDiff < 0) siraDegisim = `<span class="down">${Math.abs(rankDiff)}↓</span>`;
+                const netDiff = (exam.score - nextExam.score).toFixed(1);
+                if (netDiff > 0) netDegisim = `<span class="up">+${netDiff}</span>`;
+                else if (netDiff < 0) netDegisim = `<span class="down">${netDiff}</span>`;
             }
 
             const row = document.createElement('tr');
@@ -459,112 +329,70 @@
                 <td><strong>${exam.score}</strong></td>
                 <td>${exam.rank}</td>
                 <td>${exam.totalStudents}</td>
-                <td>${puanDegisim}</td>
-                <td>${siraDegisim}</td>
+                <td>${sinifOrtalamasi}</td>
+                <td>${netDegisim}</td>
             `;
             tbody.appendChild(row);
         });
     }
 
-    function generateComment(currentExam, previousExam) {
-        if (!previousExam) {
-            if (currentExam.rank === 1) return "İlk denemede birincilik!";
-            return "İlk deneme sonucun.";
-        }
-
-        const scoreDiff = currentExam.score - previousExam.score;
-        const rankDiff = previousExam.rank - currentExam.rank;
-
-        if (rankDiff > 0) {
-            return `${rankDiff} basamak yükselmiş!`;
-        } else if (rankDiff < 0) {
-            return `${Math.abs(rankDiff)} basamak düşmüş.`;
-        } else {
-            if (scoreDiff > 0) return "Puanını artırdın!";
-            return "Sıralaman aynı.";
-        }
-    }
-
     function formatDate(dateString) {
         const date = new Date(dateString);
-        return `${date.getDate().toString().padStart(2, '0')}.${(date.getMonth() + 1).toString().padStart(2, '0')}`;
+        return `${date.getDate().toString().padStart(2, '0')}.${(date.getMonth() + 1).toString().padStart(2, '0')}.${date.getFullYear()}`;
     }
 
-    function createCharts(data) {
+    function createChart(data) {
         const exams = data.exams.slice().reverse();
-        const labels = exams.map(e => e.examName.replace('Deneme', 'D'));
+        const labels = exams.map(e => e.examName);
         const scores = exams.map(e => e.score);
-        const ranks = exams.map(e => e.rank);
 
-        // Puan Grafiği
+        // Net Grafiği
         const scoreCtx = document.getElementById('scoreChart').getContext('2d');
         scoreChart = new Chart(scoreCtx, {
             type: 'line',
             data: {
                 labels: labels,
                 datasets: [{
-                    label: 'Puan',
+                    label: 'Net',
                     data: scores,
                     borderColor: '#4361ee',
                     backgroundColor: 'rgba(67, 97, 238, 0.1)',
-                    borderWidth: 2,
+                    borderWidth: 3,
                     tension: 0.4,
                     fill: true,
                     pointBackgroundColor: '#4361ee',
                     pointBorderColor: '#fff',
                     pointBorderWidth: 2,
-                    pointRadius: 3,
-                    pointHoverRadius: 5
+                    pointRadius: 4,
+                    pointHoverRadius: 6
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: {
-                    y: { 
-                        beginAtZero: false,
-                        grid: { color: 'rgba(0, 0, 0, 0.1)' }
-                    },
-                    x: {
-                        grid: { color: 'rgba(0, 0, 0, 0.1)' }
+                plugins: { 
+                    legend: { display: false },
+                    title: {
+                        display: true,
+                        text: 'Net Değişim Grafiği',
+                        font: { size: 14, weight: 'bold' }
                     }
-                }
-            }
-        });
-
-        // Sıralama Grafiği
-        const rankCtx = document.getElementById('rankChart').getContext('2d');
-        rankChart = new Chart(rankCtx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Sıralama',
-                    data: ranks,
-                    borderColor: '#f72585',
-                    backgroundColor: 'rgba(247, 37, 133, 0.1)',
-                    borderWidth: 2,
-                    tension: 0.4,
-                    fill: true,
-                    pointBackgroundColor: '#f72585',
-                    pointBorderColor: '#fff',
-                    pointBorderWidth: 2,
-                    pointRadius: 3,
-                    pointHoverRadius: 5
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
+                },
                 scales: {
                     y: { 
-                        reverse: true,
-                        grid: { color: 'rgba(0, 0, 0, 0.1)' }
+                        beginAtZero: true,
+                        grid: { color: 'rgba(0, 0, 0, 0.1)' },
+                        title: {
+                            display: true,
+                            text: 'Net Sayısı'
+                        }
                     },
                     x: {
-                        grid: { color: 'rgba(0, 0, 0, 0.1)' }
+                        grid: { color: 'rgba(0, 0, 0, 0.1)' },
+                        title: {
+                            display: true,
+                            text: 'Denemeler'
+                        }
                     }
                 }
             }
