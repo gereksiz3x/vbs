@@ -9,23 +9,30 @@
         body { font-family: Arial, sans-serif; background: #f0f2f5; padding: 15px; margin: 0; }
         .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
         h1 { text-align: center; color: #2c3e50; margin-bottom: 10px; font-size: 22px; }
+        
+        .ayar-alani { background: #e3f2fd; padding: 15px; border-radius: 10px; margin-bottom: 15px; border: 1px solid #bbdefb; }
         .token-alani { background: #fff3cd; padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #ffeeba; }
-        .token-alani input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; margin-top: 5px; }
-        .sinif-listesi { max-height: 60vh; overflow-y: auto; border: 2px solid #e9ecef; border-radius: 10px; padding: 10px; margin-bottom: 20px; }
+        
+        .ayar-alani input, .token-alani input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; margin-top: 5px; font-size: 15px; }
+        
+        .sinif-listesi { max-height: 50vh; overflow-y: auto; border: 2px solid #e9ecef; border-radius: 10px; padding: 10px; margin-bottom: 20px; }
         .ogrenci-satiri { display: flex; align-items: center; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; }
         .ogrenci-bilgi { flex: 1; }
         .ogrenci-adi { font-weight: bold; color: #2c3e50; font-size: 15px; }
         .ogrenci-id { font-size: 11px; color: #888; }
-        .net-input { width: 70px; padding: 8px; border: 1px solid #ddd; border-radius: 5px; text-align: center; font-size: 15px; margin-right: 10px; }
+        .net-input { width: 80px; padding: 8px; border: 1px solid #ddd; border-radius: 5px; text-align: center; font-size: 15px; margin-right: 10px; }
+        
         .buttons { display: flex; gap: 10px; }
         button { flex: 1; padding: 15px; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.2s; }
         .btn-olustur { background: #28a745; color: white; }
         .btn-olustur:hover { background: #218838; }
         .btn-temizle { background: #6c757d; color: white; }
+        
         .sonuc { margin-top: 20px; padding: 15px; border-radius: 8px; display: none; }
         .success { background: #d4edda; color: #155724; display: block; }
         .error { background: #f8d7da; color: #721c24; display: block; }
         .info { background: #d1ecf1; color: #0c5460; display: block; }
+        
         .girmedi-checkbox { transform: scale(1.3); margin-left: 10px; }
         @media (max-width: 600px) { .ogrenci-satiri { flex-direction: column; align-items: flex-start; gap: 10px; } .net-input { width: 100%; margin-right: 0; margin-bottom: 5px; } }
     </style>
@@ -37,6 +44,12 @@
         <div class="token-alani">
             <label><strong>🔑 GitHub Token:</strong> (Sadece bir kez girilir, tarayıcıda saklanır)</label>
             <input type="password" id="tokenInput" placeholder="ghp_... şeklinde token">
+        </div>
+
+        <div class="ayar-alani">
+            <label><strong>📝 Bu Denemenin Toplam Soru Sayısı:</strong></label>
+            <input type="number" id="soruSayisiInput" value="80" min="1" placeholder="Örn: 80">
+            <div style="font-size:12px; color:#666; margin-top:5px;">*Girdiğiniz netlerin yüzdesi bu sayıya göre hesaplanacaktır.</div>
         </div>
 
         <div class="sinif-listesi" id="sinifListesi">
@@ -52,30 +65,28 @@
     </div>
 
     <script>
-    // --- AYARLAR ---
+    // --- GITHUB BİLGİLERİ ---
     const GITHUB_USER = "gereksiz3x";
     const GITHUB_REPO = "vbs";
     const BRANCH = "main";
 
-    // Sınıf Listesi (Okul numaraları ve isimler)
+    // --- SINIF LİSTESİ (Senin Öğrencilerin) ---
     const sinifListesi = [
-        {id: "192", name: "Eslik, Selin Sude"},
-        {id: "874", name: "Esen, Berat Talha"},
-        {id: "123", name: "Kaya, Nizamettin"},
-        {id: "822", name: "Emir, Cansu"},
-        {id: "725", name: "Erdoğdu, Zeynep"},
-        {id: "532", name: "Beycioğlu, Ayşe Sude"},
-        {id: "466", name: "Colak, Batuhan"},
-        {id: "199", name: "Turtur, Nisanur"},
-        {id: "233", name: "Karadepe, Merve"},
-        {id: "476", name: "Sarıbıyık, Gökçe"},
-        {id: "326", name: "Börklü, Kübra"},
-        {id: "315", name: "Kaya, Yaren"},
-        {id: "1060", name: "Kuru, Işık Zeren"},
-        {id: "187", name: "Dölen, Mustafa Cem"},
-        {id: "866", name: "Türkoğlu, Ata"},
-        {id: "987", name: "Ozer, Elif Ece"},
-        {id: "935", name: "Bereket, Melike"}
+        {id: "562", name: "Akkanat, Durmuş Efe"},
+        {id: "145", name: "Aşık, Hilal"},
+        {id: "462", name: "Barsan, Efe"},
+        {id: "811", name: "Bila, Hülya"},
+        {id: "371", name: "Bindebir, Begüm"},
+        {id: "756", name: "Çağlar, Yarım"},
+        {id: "752", name: "Cifçi, Belinay"},
+        {id: "1076", name: "Karahanlı, Büşra"},
+        {id: "981", name: "Karataş, Nurten"},
+        {id: "801", name: "Kaya, Emir"},
+        {id: "893", name: "Kılınç, Hacer"},
+        {id: "1023", name: "Sert, Ece"},
+        {id: "157", name: "Türkmenoğlu, Ömer Beren"},
+        {id: "1142", name: "Yılmaz, Nur Eymen"},
+        {id: "853", name: "Atalan, İclal"}
     ];
 
     window.onload = function() {
@@ -144,12 +155,19 @@
     async function jsonOlustur() {
         const sonucDiv = document.getElementById('sonuc');
         const token = document.getElementById('tokenInput').value.trim();
+        const toplamSoru = parseFloat(document.getElementById('soruSayisiInput').value);
         
         if (!token) {
             sonucDiv.className = 'sonuc error';
             sonucDiv.innerHTML = '❌ Lütfen GitHub Token girin!';
             return;
         }
+        if (!toplamSoru || toplamSoru <= 0) {
+            sonucDiv.className = 'sonuc error';
+            sonucDiv.innerHTML = '❌ Lütfen geçerli bir toplam soru sayısı girin!';
+            return;
+        }
+        
         localStorage.setItem('vbs_token', token);
 
         const girilenler = [];
@@ -170,7 +188,7 @@
         }
 
         sonucDiv.className = 'sonuc info';
-        sonucDiv.innerHTML = '⏳ Sıralamalar hesaplanıyor ve GitHub\'a kaydediliyor... Lütfen bekleyin...';
+        sonucDiv.innerHTML = '⏳ Sıralamalar ve yüzdeler hesaplanıyor, GitHub\'a kaydediliyor... Lütfen bekleyin...';
 
         const siraliVeri = girilenler.sort((a, b) => b.score - a.score);
         siraliVeri.forEach((ogr, index) => { ogr.rank = index + 1; });
@@ -197,10 +215,13 @@
 
             if (!checkbox.checked && !isNaN(net)) {
                 const ogrSirasi = siraliVeri.find(o => o.id === ogr.id);
+                const yuzde = ((net / toplamSoru) * 100).toFixed(1);
+                
                 mevcutExams.unshift({
                     examName: `${mevcutExams.length + 1}. Deneme`,
                     examDate: bugun,
                     score: net,
+                    yuzde: yuzde,
                     rank: ogrSirasi.rank,
                     totalStudents: toplamOgrenci
                 });
@@ -219,11 +240,11 @@
 
         if (hataSayisi === 0) {
             sonucDiv.className = 'sonuc success';
-            sonucDiv.innerHTML = `✅ Başarıyla tamamlandı! ${basariliSayisi} öğrencinin verisi GitHub'a kaydedildi. <br><br><i>Not: GitHub Pages'in güncellenmesi 1-2 dakika sürebilir.</i>`;
+            sonucDiv.innerHTML = `✅ Başarıyla tamamlandı! ${basariliSayisi} öğrencinin verisi kaydedildi. <br><br><i>Not: Sonuç sayfasının güncellenmesi 1-2 dakika sürebilir.</i>`;
             temizle();
         } else {
             sonucDiv.className = 'sonuc error';
-            sonucDiv.innerHTML = `⚠️ İşlem tamamlandı ancak ${hataSayisi} öğrencide hata oluştu. Token'ınızı kontrol edin.`;
+            sonucDiv.innerHTML = `⚠️ İşlem tamamlandı ancak ${hataSayisi} öğrencide hata oluştu.`;
         }
     }
 
