@@ -1,0 +1,14 @@
+{
+  "id": "1023",
+  "name": "Sert, Ece",
+  "exams": [
+    {
+      "examName": "1. Deneme",
+      "examDate": "2026-11-05",
+      "score": 78,
+      "yuzde": "97.5",
+      "rank": 1,
+      "totalStudents": 15
+    }
+  ]
+}
