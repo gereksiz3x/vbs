@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VBS Yönetici Paneli</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f0f2f5; padding: 15px; margin: 0; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #2c3e50; margin-bottom: 10px; font-size: 22px; }
+        .token-alani { background: #fff3cd; padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #ffeeba; }
+        .token-alani input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; margin-top: 5px; }
+        .sinif-listesi { max-height: 60vh; overflow-y: auto; border: 2px solid #e9ecef; border-radius: 10px; padding: 10px; margin-bottom: 20px; }
+        .ogrenci-satiri { display: flex; align-items: center; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; }
+        .ogrenci-bilgi { flex: 1; }
+        .ogrenci-adi { font-weight: bold; color: #2c3e50; font-size: 15px; }
+        .ogrenci-id { font-size: 11px; color: #888; }
+        .net-input { width: 70px; padding: 8px; border: 1px solid #ddd; border-radius: 5px; text-align: center; font-size: 15px; margin-right: 10px; }
+        .buttons { display: flex; gap: 10px; }
+        button { flex: 1; padding: 15px; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn-olustur { background: #28a745; color: white; }
+        .btn-olustur:hover { background: #218838; }
+        .btn-temizle { background: #6c757d; color: white; }
+        .sonuc { margin-top: 20px; padding: 15px; border-radius: 8px; display: none; }
+        .success { background: #d4edda; color: #155724; display: block; }
+        .error { background: #f8d7da; color: #721c24; display: block; }
+        .info { background: #d1ecf1; color: #0c5460; display: block; }
+        .girmedi-checkbox { transform: scale(1.3); margin-left: 10px; }
+        @media (max-width: 600px) { .ogrenci-satiri { flex-direction: column; align-items: flex-start; gap: 10px; } .net-input { width: 100%; margin-right: 0; margin-bottom: 5px; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 VBS Net Girişi</h1>
+        
+        <div class="token-alani">
+            <label><strong>🔑 GitHub Token:</strong> (Sadece bir kez girilir, tarayıcıda saklanır)</label>
+            <input type="password" id="tokenInput" placeholder="ghp_... şeklinde token">
+        </div>
+
+        <div class="sinif-listesi" id="sinifListesi">
+            <!-- JS ile dolacak -->
+        </div>
+
+        <div class="buttons">
+            <button class="btn-olustur" onclick="jsonOlustur()">🚀 OLUŞTUR ve KAYDET</button>
+            <button class="btn-temizle" onclick="temizle()">🗑️ TEMİZLE</button>
+        </div>
+
+        <div id="sonuc" class="sonuc"></div>
+    </div>
+
+    <script>
+    // --- AYARLAR ---
+    const GITHUB_USER = "gereksiz3x";
+    const GITHUB_REPO = "vbs";
+    const BRANCH = "main";
+
+    // Sınıf Listesi (Okul numaraları ve isimler)
+    const sinifListesi = [
+        {id: "192", name: "Eslik, Selin Sude"},
+        {id: "874", name: "Esen, Berat Talha"},
+        {id: "123", name: "Kaya, Nizamettin"},
+        {id: "822", name: "Emir, Cansu"},
+        {id: "725", name: "Erdoğdu, Zeynep"},
+        {id: "532", name: "Beycioğlu, Ayşe Sude"},
+        {id: "466", name: "Colak, Batuhan"},
+        {id: "199", name: "Turtur, Nisanur"},
+        {id: "233", name: "Karadepe, Merve"},
+        {id: "476", name: "Sarıbıyık, Gökçe"},
+        {id: "326", name: "Börklü, Kübra"},
+        {id: "315", name: "Kaya, Yaren"},
+        {id: "1060", name: "Kuru, Işık Zeren"},
+        {id: "187", name: "Dölen, Mustafa Cem"},
+        {id: "866", name: "Türkoğlu, Ata"},
+        {id: "987", name: "Ozer, Elif Ece"},
+        {id: "935", name: "Bereket, Melike"}
+    ];
+
+    window.onload = function() {
+        const savedToken = localStorage.getItem('vbs_token');
+        if (savedToken) document.getElementById('tokenInput').value = savedToken;
+        listeyiOlustur();
+    };
+
+    function listeyiOlustur() {
+        const listDiv = document.getElementById('sinifListesi');
+        listDiv.innerHTML = '';
+        sinifListesi.forEach(ogrenci => {
+            const satir = document.createElement('div');
+            satir.className = 'ogrenci-satiri';
+            satir.innerHTML = `
+                <div class="ogrenci-bilgi">
+                    <div class="ogrenci-adi">${ogrenci.name}</div>
+                    <div class="ogrenci-id">No: ${ogrenci.id}</div>
+                </div>
+                <div>
+                    <input type="number" class="net-input" id="net_${ogrenci.id}" placeholder="Net" step="0.25" min="0">
+                    <input type="checkbox" class="girmedi-checkbox" id="girmedi_${ogrenci.id}">
+                    <label for="girmedi_${ogrenci.id}" style="font-size:12px; color:#777;">Girmedi</label>
+                </div>
+            `;
+            listDiv.appendChild(satir);
+
+            const checkbox = satir.querySelector(`#girmedi_${ogrenci.id}`);
+            const input = satir.querySelector(`#net_${ogrenci.id}`);
+            checkbox.addEventListener('change', function() {
+                input.disabled = this.checked;
+                if(this.checked) input.value = '';
+            });
+        });
+    }
+
+    async function githubaKaydet(dosyaAdi, icerik, token) {
+        const url = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/data/${dosyaAdi}`;
+        
+        let sha = null;
+        const kontrol = await fetch(url, { headers: { Authorization: `token ${token}` } });
+        if (kontrol.ok) {
+            const veri = await kontrol.json();
+            sha = veri.sha;
+        }
+
+        const base64Icerik = btoa(unescape(encodeURIComponent(icerik)));
+
+        const response = await fetch(url, {
+            method: 'PUT',
+            headers: {
+                Authorization: `token ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                message: `Otomatik güncelleme: ${dosyaAdi}`,
+                content: base64Icerik,
+                sha: sha,
+                branch: BRANCH
+            })
+        });
+
+        return response.ok;
+    }
+
+    async function jsonOlustur() {
+        const sonucDiv = document.getElementById('sonuc');
+        const token = document.getElementById('tokenInput').value.trim();
+        
+        if (!token) {
+            sonucDiv.className = 'sonuc error';
+            sonucDiv.innerHTML = '❌ Lütfen GitHub Token girin!';
+            return;
+        }
+        localStorage.setItem('vbs_token', token);
+
+        const girilenler = [];
+        for (let ogr of sinifListesi) {
+            const input = document.getElementById(`net_${ogr.id}`);
+            const checkbox = document.getElementById(`girmedi_${ogr.id}`);
+            const net = parseFloat(input.value);
+
+            if (!checkbox.checked && !isNaN(net)) {
+                girilenler.push({ ...ogr, score: net });
+            }
+        }
+
+        if (girilenler.length === 0) {
+            sonucDiv.className = 'sonuc error';
+            sonucDiv.innerHTML = '❌ Hiç net girilmemiş!';
+            return;
+        }
+
+        sonucDiv.className = 'sonuc info';
+        sonucDiv.innerHTML = '⏳ Sıralamalar hesaplanıyor ve GitHub\'a kaydediliyor... Lütfen bekleyin...';
+
+        const siraliVeri = girilenler.sort((a, b) => b.score - a.score);
+        siraliVeri.forEach((ogr, index) => { ogr.rank = index + 1; });
+        const toplamOgrenci = siraliVeri.length;
+        const bugun = new Date().toISOString().split('T')[0];
+
+        let basariliSayisi = 0;
+        let hataSayisi = 0;
+
+        for (let ogr of sinifListesi) {
+            const input = document.getElementById(`net_${ogr.id}`);
+            const checkbox = document.getElementById(`girmedi_${ogr.id}`);
+            const net = parseFloat(input.value);
+            const dosyaAdi = `${ogr.id}.json`;
+            
+            let mevcutExams = [];
+            try {
+                const res = await fetch(`data/${dosyaAdi}?t=${Date.now()}`);
+                if (res.ok) {
+                    const eskiData = await res.json();
+                    mevcutExams = eskiData.exams || [];
+                }
+            } catch (e) {}
+
+            if (!checkbox.checked && !isNaN(net)) {
+                const ogrSirasi = siraliVeri.find(o => o.id === ogr.id);
+                mevcutExams.unshift({
+                    examName: `${mevcutExams.length + 1}. Deneme`,
+                    examDate: bugun,
+                    score: net,
+                    rank: ogrSirasi.rank,
+                    totalStudents: toplamOgrenci
+                });
+            }
+
+            const yeniData = { id: ogr.id, name: ogr.name, exams: mevcutExams };
+
+            try {
+                const basarili = await githubaKaydet(dosyaAdi, JSON.stringify(yeniData, null, 2), token);
+                if (basarili) basariliSayisi++;
+                else hataSayisi++;
+            } catch (error) {
+                hataSayisi++;
+            }
+        }
+
+        if (hataSayisi === 0) {
+            sonucDiv.className = 'sonuc success';
+            sonucDiv.innerHTML = `✅ Başarıyla tamamlandı! ${basariliSayisi} öğrencinin verisi GitHub'a kaydedildi. <br><br><i>Not: GitHub Pages'in güncellenmesi 1-2 dakika sürebilir.</i>`;
+            temizle();
+        } else {
+            sonucDiv.className = 'sonuc error';
+            sonucDiv.innerHTML = `⚠️ İşlem tamamlandı ancak ${hataSayisi} öğrencide hata oluştu. Token'ınızı kontrol edin.`;
+        }
+    }
+
+    function temizle() {
+        sinifListesi.forEach(ogrenci => {
+            const input = document.getElementById(`net_${ogrenci.id}`);
+            const checkbox = document.getElementById(`girmedi_${ogrenci.id}`);
+            input.value = '';
+            input.disabled = false;
+            checkbox.checked = false;
+        });
+    }
+    </script>
+</body>
+</html>
