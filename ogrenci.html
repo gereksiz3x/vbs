@@ -9,140 +9,135 @@
         :root {
             --primary: #4361ee;
             --secondary: #3a0ca3;
-            --success: #4cc9f0;
-            --danger: #f72585;
-            --warning: #fca311;
-            --info: #4895ef;
+            --success: #2ec4b6;
+            --danger: #e71d36;
             --light: #f8f9fa;
             --dark: #212529;
             --border: #dee2e6;
         }
         
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 10px;
-            font-size: 14px;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
         }
         
         .container {
+            width: 100%;
             max-width: 1000px;
-            margin: 0 auto;
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
             overflow: hidden;
         }
         
         .header {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
-            padding: 15px;
+            padding: 25px 20px;
             text-align: center;
         }
         
-        .header h1 { font-size: 1.5rem; margin-bottom: 5px; font-weight: 700; }
-        .header p { font-size: 0.9rem; opacity: 0.9; }
+        .header h1 { font-size: 1.8rem; margin-bottom: 8px; }
+        .header p { font-size: 1rem; opacity: 0.8; }
         
-        .content { padding: 15px; display: flex; flex-direction: column; gap: 15px; }
+        .content { padding: 25px; display: flex; flex-direction: column; gap: 25px; }
         
         .card {
             background: white;
-            border-radius: 10px;
-            padding: 15px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
             border: 1px solid var(--border);
         }
         
         .card-title {
             color: var(--primary);
-            font-size: 1.1rem;
-            margin-bottom: 12px;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
             font-weight: 600;
+            border-bottom: 2px solid var(--light);
+            padding-bottom: 10px;
         }
         
-        .student-info { text-align: center; margin-bottom: 15px; }
-        
         .student-name {
-            font-size: 1.4rem;
-            font-weight: 600;
+            font-size: 1.6rem;
+            font-weight: 700;
             color: var(--secondary);
-            margin-bottom: 10px;
+            text-align: center;
+            margin-bottom: 20px;
         }
         
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-bottom: 15px;
+            gap: 15px;
         }
         
         .stat-item {
             background: var(--light);
-            padding: 12px;
-            border-radius: 8px;
+            padding: 15px;
+            border-radius: 10px;
             text-align: center;
+            border: 1px solid var(--border);
         }
         
-        .stat-label { font-size: 0.8rem; color: var(--dark); margin-bottom: 5px; }
-        .stat-value { font-size: 1.3rem; font-weight: bold; color: var(--primary); }
+        .stat-label { font-size: 0.9rem; color: #6c757d; margin-bottom: 8px; font-weight: 600; }
+        .stat-value { font-size: 1.5rem; font-weight: bold; color: var(--primary); }
         
-        .chart-container { position: relative; height: 250px; margin: 15px 0; }
-        
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.85rem; }
-        th, td { padding: 10px; text-align: center; border-bottom: 1px solid var(--border); }
+        .table-responsive { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+        th, td { padding: 12px; text-align: center; border-bottom: 1px solid var(--border); }
         th { background: var(--primary); color: white; font-weight: 600; }
         tr:nth-child(even) { background: var(--light); }
         
-        .up { color: #28a745; font-weight: bold; }
-        .down { color: #dc3545; font-weight: bold; }
-        .loading { text-align: center; padding: 30px; color: var(--dark); font-weight: bold; }
+        .up { color: var(--success); font-weight: bold; }
+        .down { color: var(--danger); font-weight: bold; }
         
-        .error-box {
-            background: #f8d7da;
-            color: #721c24;
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
-        }
+        .chart-container { position: relative; height: 300px; width: 100%; }
         
-        @media (max-width: 480px) {
+        .loading { text-align: center; padding: 40px; font-size: 1.2rem; color: var(--primary); font-weight: bold; }
+        .error-box { background: #f8d7da; color: #721c24; padding: 30px; border-radius: 10px; text-align: center; }
+        
+        @media (max-width: 600px) {
             .stats-grid { grid-template-columns: 1fr; }
-            .student-name { font-size: 1.2rem; }
-            th, td { padding: 8px 6px; font-size: 0.8rem; }
-            .chart-container { height: 200px; }
+            th, td { padding: 10px 8px; font-size: 0.85rem; }
+            .header h1 { font-size: 1.5rem; }
+            .chart-container { height: 250px; }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>Öğrenci Deneme Sonuçları</h1>
+            <h1>Öğrenci Sonuç Belgesi</h1>
             <p>Detaylı performans analizi</p>
         </div>
 
         <div class="content">
-            <div class="card">
+            <div class="card" id="infoCard">
                 <div id="studentInfo">
                     <div class="loading">Veriler Yükleniyor...</div>
                 </div>
             </div>
 
-            <div class="card">
-                <div class="card-title">Geçmiş Denemeler Net Tablosu</div>
-                <div style="overflow-x: auto;">
+            <div class="card" id="historyCard">
+                <div class="card-title">📅 Geçmiş Denemeler</div>
+                <div class="table-responsive">
                     <table>
                         <thead>
                             <tr>
                                 <th>Tarih</th>
                                 <th>Deneme</th>
                                 <th>Net</th>
+                                <th>Yüzde (%)</th>
                                 <th>Sıra</th>
                                 <th>Katılım</th>
-                                <th>Ortalama</th>
                                 <th>Net Değişim</th>
                             </tr>
                         </thead>
@@ -151,8 +146,8 @@
                 </div>
             </div>
 
-            <div class="card">
-                <div class="card-title">Net Grafiği</div>
+            <div class="card" id="chartCard">
+                <div class="card-title">📈 Net Değişim Grafiği</div>
                 <div class="chart-container">
                     <canvas id="scoreChart"></canvas>
                 </div>
@@ -161,47 +156,35 @@
     </div>
 
     <script>
-    // URL'den öğrenci numarasını al
     const urlParams = new URLSearchParams(window.location.search);
-    const studentId = urlParams.get('id'); // ID yoksa null döner
+    const studentId = urlParams.get('id');
 
     if (!studentId) {
-        document.getElementById('studentInfo').innerHTML = `
-            <div class="error-box">
-                <h3>Hata</h3>
-                <p>Lütfen geçerli bir öğrenci numarası girin. (Örnek: ogrenci.html?id=874)</p>
-            </div>
-        `;
+        document.getElementById('studentInfo').innerHTML = `<div class="error-box"><h3>Hata</h3><p>Lütfen geçerli bir öğrenci numarası girin.</p></div>`;
+        document.getElementById('historyCard').style.display = 'none';
+        document.getElementById('chartCard').style.display = 'none';
     } else {
-        // Gerçek veriyi GitHub'dan (JSON dosyasından) çek
-        fetch(`data/${studentId}.json`)
+        fetch(`data/${studentId}.json?t=${Date.now()}`)
             .then(response => {
-                if (!response.ok) {
-                    throw new Error('Öğrenci bulunamadı.');
-                }
+                if (!response.ok) throw new Error('Kayıt bulunamadı');
                 return response.json();
             })
             .then(data => {
+                if (!data.exams || data.exams.length === 0) {
+                    document.getElementById('studentInfo').innerHTML = `<div class="error-box"><h3>Veri Yok</h3><p>Bu öğrenciye ait henüz girilmiş bir sonuç bulunmuyor.</p></div>`;
+                    document.getElementById('historyCard').style.display = 'none';
+                    document.getElementById('chartCard').style.display = 'none';
+                    return;
+                }
                 displayStudentInfo(data);
                 displayExamHistory(data);
                 createChart(data);
             })
             .catch(error => {
-                document.getElementById('studentInfo').innerHTML = `
-                    <div class="error-box">
-                        <h3>Kayıt Bulunamadı</h3>
-                        <p>${studentId} numaralı öğrenciye ait bir veri bulunamadı.</p>
-                    </div>
-                `;
-                // Hata durumunda boş kartları gizle
-                document.querySelectorAll('.card')[1].style.display = 'none';
-                document.querySelectorAll('.card')[2].style.display = 'none';
+                document.getElementById('studentInfo').innerHTML = `<div class="error-box"><h3>Kayıt Bulunamadı</h3><p>${studentId} numaralı öğrenciye ait veri yok.</p></div>`;
+                document.getElementById('historyCard').style.display = 'none';
+                document.getElementById('chartCard').style.display = 'none';
             });
-    }
-
-    function sinifOrtalamasiHesapla(exam) {
-        // Şimdilik matematiksel bir varsayım (sadece örnek)
-        return (exam.score * 0.7).toFixed(1); 
     }
 
     function formatDate(dateString) {
@@ -211,35 +194,30 @@
 
     function displayStudentInfo(data) {
         const infoDiv = document.getElementById('studentInfo');
-        const latestExam = data.exams[0];
-
-        if (!latestExam) {
-            infoDiv.innerHTML = `<div class="error-box">Henüz girilmiş bir deneme sonucu yok.</div>`;
-            return;
-        }
-
-        const ortalama = sinifOrtalamasiHesapla(latestExam);
+        const latest = data.exams[0];
+        
+        // Eğer eski bir kayıtsa ve yüzde yoksa hesapla (soru sayısını bilmiyoruz ama örnek 80 kabul edelim veya veriden alalım)
+        // Yeni sistemde yuzde JSON'a kaydediliyor.
+        const yuzdeGosterim = latest.yuzde ? `%${latest.yuzde}` : '-';
 
         infoDiv.innerHTML = `
-            <div class="student-info">
-                <div class="student-name">${data.name}</div>
-                <div class="stats-grid">
-                    <div class="stat-item">
-                        <div class="stat-label">NET</div>
-                        <div class="stat-value">${latestExam.score}</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-label">Sınava Giren Kişi Sayısı</div>
-                        <div class="stat-value">${latestExam.totalStudents}</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-label">Öğrencinin Sırası</div>
-                        <div class="stat-value">${latestExam.rank}</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-label">Sınıf Ortalaması</div>
-                        <div class="stat-value">${ortalama}</div>
-                    </div>
+            <div class="student-name">${data.name}</div>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-label">Son Deneme Neti</div>
+                    <div class="stat-value">${latest.score}</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Başarı Yüzdesi</div>
+                    <div class="stat-value" style="color: var(--success);">${yuzdeGosterim}</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Sınıf Sırası</div>
+                    <div class="stat-value">${latest.rank} <small style="font-size:0.9rem; color:#666;">/ ${latest.totalStudents}</small></div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Son Deneme Tarihi</div>
+                    <div class="stat-value" style="font-size: 1.2rem; margin-top: 5px;">${formatDate(latest.examDate)}</div>
                 </div>
             </div>
         `;
@@ -248,8 +226,6 @@
     function displayExamHistory(data) {
         const tbody = document.getElementById('examHistoryBody');
         tbody.innerHTML = '';
-        
-        if (!data.exams || data.exams.length === 0) return;
 
         data.exams.forEach((exam, index) => {
             let netDegisim = '-';
@@ -258,16 +234,19 @@
                 const diff = (exam.score - prev.score).toFixed(1);
                 if (diff > 0) netDegisim = `<span class="up">+${diff}</span>`;
                 else if (diff < 0) netDegisim = `<span class="down">${diff}</span>`;
+                else netDegisim = '0';
             }
-            const ort = sinifOrtalamasiHesapla(exam);
+            
+            const yuzde = exam.yuzde ? `%${exam.yuzde}` : '-';
+
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${formatDate(exam.examDate)}</td>
                 <td>${exam.examName}</td>
                 <td><strong>${exam.score}</strong></td>
+                <td>${yuzde}</td>
                 <td>${exam.rank}</td>
                 <td>${exam.totalStudents}</td>
-                <td>${ort}</td>
                 <td>${netDegisim}</td>
             `;
             tbody.appendChild(row);
@@ -275,8 +254,6 @@
     }
 
     function createChart(data) {
-        if (!data.exams || data.exams.length === 0) return;
-
         const exams = data.exams.slice().reverse();
         const labels = exams.map(e => e.examName);
         const scores = exams.map(e => e.score);
@@ -292,25 +269,29 @@
                     borderColor: '#4361ee',
                     backgroundColor: 'rgba(67, 97, 238, 0.1)',
                     borderWidth: 3,
-                    tension: 0.4,
+                    tension: 0.3,
                     fill: true,
                     pointBackgroundColor: '#4361ee',
                     pointBorderColor: '#fff',
                     pointBorderWidth: 2,
-                    pointRadius: 4,
-                    pointHoverRadius: 6
+                    pointRadius: 5,
+                    pointHoverRadius: 7
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: { 
-                    legend: { display: false },
-                    title: { display: true, text: 'Net Değişim Grafiği', font: { size: 14 } }
+                    legend: { display: false }
                 },
                 scales: {
-                    y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.1)' }, title: { display: true, text: 'Net' } },
-                    x: { grid: { color: 'rgba(0,0,0,0.1)' }, title: { display: true, text: 'Denemeler' } }
+                    y: { 
+                        beginAtZero: true, 
+                        grid: { color: 'rgba(0,0,0,0.05)' } 
+                    },
+                    x: { 
+                        grid: { display: false } 
+                    }
                 }
             }
         });
