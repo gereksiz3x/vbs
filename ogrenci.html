@@ -29,7 +29,7 @@
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
             background: white;
             border-radius: 12px;
@@ -47,9 +47,7 @@
         .header h1 { font-size: 1.5rem; margin-bottom: 5px; font-weight: 700; }
         .header p { font-size: 0.9rem; opacity: 0.9; }
         
-        .content { padding: 15px; display: grid; grid-template-columns: 1fr; gap: 15px; }
-        
-        @media (min-width: 768px) { .content { grid-template-columns: 1fr; } }
+        .content { padding: 15px; display: flex; flex-direction: column; gap: 15px; }
         
         .card {
             background: white;
@@ -102,6 +100,14 @@
         .up { color: #28a745; font-weight: bold; }
         .down { color: #dc3545; font-weight: bold; }
         .loading { text-align: center; padding: 30px; color: var(--dark); font-weight: bold; }
+        
+        .error-box {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
         
         @media (max-width: 480px) {
             .stats-grid { grid-template-columns: 1fr; }
@@ -157,29 +163,45 @@
     <script>
     // URL'den öğrenci numarasını al
     const urlParams = new URLSearchParams(window.location.search);
-    const studentId = urlParams.get('id') || "874"; // Eğer id yoksa test için 874 kullan
+    const studentId = urlParams.get('id'); // ID yoksa null döner
 
-    // TEST İÇİN GÖMÜLÜ VERİ (Şimdilik)
-    const testVerisi = {
-        "id": "874",
-        "name": "Esen, Berat Talha",
-        "exams": [
-            { "examName": "2. Deneme", "examDate": "2025-01-15", "score": 80, "rank": 3, "totalStudents": 17 },
-            { "examName": "1. Deneme", "examDate": "2024-12-20", "score": 60, "rank": 5, "totalStudents": 16 }
-        ]
-    };
-
-    // Normalde burada fetch(data/${studentId}.json) olacak ama test için yukarıdaki veriyi kullanıyoruz.
-    function veriyiYukle() {
-        const data = testVerisi; // Sonraki adımda fetch ile değiştirilecek
-        
-        displayStudentInfo(data);
-        displayExamHistory(data);
-        createChart(data);
+    if (!studentId) {
+        document.getElementById('studentInfo').innerHTML = `
+            <div class="error-box">
+                <h3>Hata</h3>
+                <p>Lütfen geçerli bir öğrenci numarası girin. (Örnek: ogrenci.html?id=874)</p>
+            </div>
+        `;
+    } else {
+        // Gerçek veriyi GitHub'dan (JSON dosyasından) çek
+        fetch(`data/${studentId}.json`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Öğrenci bulunamadı.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                displayStudentInfo(data);
+                displayExamHistory(data);
+                createChart(data);
+            })
+            .catch(error => {
+                document.getElementById('studentInfo').innerHTML = `
+                    <div class="error-box">
+                        <h3>Kayıt Bulunamadı</h3>
+                        <p>${studentId} numaralı öğrenciye ait bir veri bulunamadı.</p>
+                    </div>
+                `;
+                // Hata durumunda boş kartları gizle
+                document.querySelectorAll('.card')[1].style.display = 'none';
+                document.querySelectorAll('.card')[2].style.display = 'none';
+            });
     }
 
     function sinifOrtalamasiHesapla(exam) {
-        return (exam.score * 0.7).toFixed(1); // Şimdilik sahte ortalama
+        // Şimdilik matematiksel bir varsayım (sadece örnek)
+        return (exam.score * 0.7).toFixed(1); 
     }
 
     function formatDate(dateString) {
@@ -190,6 +212,12 @@
     function displayStudentInfo(data) {
         const infoDiv = document.getElementById('studentInfo');
         const latestExam = data.exams[0];
+
+        if (!latestExam) {
+            infoDiv.innerHTML = `<div class="error-box">Henüz girilmiş bir deneme sonucu yok.</div>`;
+            return;
+        }
+
         const ortalama = sinifOrtalamasiHesapla(latestExam);
 
         infoDiv.innerHTML = `
@@ -220,6 +248,9 @@
     function displayExamHistory(data) {
         const tbody = document.getElementById('examHistoryBody');
         tbody.innerHTML = '';
+        
+        if (!data.exams || data.exams.length === 0) return;
+
         data.exams.forEach((exam, index) => {
             let netDegisim = '-';
             if (index < data.exams.length - 1) {
@@ -244,6 +275,8 @@
     }
 
     function createChart(data) {
+        if (!data.exams || data.exams.length === 0) return;
+
         const exams = data.exams.slice().reverse();
         const labels = exams.map(e => e.examName);
         const scores = exams.map(e => e.score);
@@ -282,9 +315,6 @@
             }
         });
     }
-
-    // Çalıştır
-    veriyiYukle();
     </script>
 </body>
 </html>
