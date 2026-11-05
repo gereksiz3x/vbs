@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Öğrenci Deneme Sonuçları</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --warning: #fca311;
+            --info: #4895ef;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --border: #dee2e6;
+        }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+            font-size: 14px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .header h1 { font-size: 1.5rem; margin-bottom: 5px; font-weight: 700; }
+        .header p { font-size: 0.9rem; opacity: 0.9; }
+        
+        .content { padding: 15px; display: grid; grid-template-columns: 1fr; gap: 15px; }
+        
+        @media (min-width: 768px) { .content { grid-template-columns: 1fr; } }
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+        }
+        
+        .card-title {
+            color: var(--primary);
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        
+        .student-info { text-align: center; margin-bottom: 15px; }
+        
+        .student-name {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--secondary);
+            margin-bottom: 10px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .stat-item {
+            background: var(--light);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .stat-label { font-size: 0.8rem; color: var(--dark); margin-bottom: 5px; }
+        .stat-value { font-size: 1.3rem; font-weight: bold; color: var(--primary); }
+        
+        .chart-container { position: relative; height: 250px; margin: 15px 0; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.85rem; }
+        th, td { padding: 10px; text-align: center; border-bottom: 1px solid var(--border); }
+        th { background: var(--primary); color: white; font-weight: 600; }
+        tr:nth-child(even) { background: var(--light); }
+        
+        .up { color: #28a745; font-weight: bold; }
+        .down { color: #dc3545; font-weight: bold; }
+        .loading { text-align: center; padding: 30px; color: var(--dark); font-weight: bold; }
+        
+        @media (max-width: 480px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .student-name { font-size: 1.2rem; }
+            th, td { padding: 8px 6px; font-size: 0.8rem; }
+            .chart-container { height: 200px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Öğrenci Deneme Sonuçları</h1>
+            <p>Detaylı performans analizi</p>
+        </div>
+
+        <div class="content">
+            <div class="card">
+                <div id="studentInfo">
+                    <div class="loading">Veriler Yükleniyor...</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Geçmiş Denemeler Net Tablosu</div>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tarih</th>
+                                <th>Deneme</th>
+                                <th>Net</th>
+                                <th>Sıra</th>
+                                <th>Katılım</th>
+                                <th>Ortalama</th>
+                                <th>Net Değişim</th>
+                            </tr>
+                        </thead>
+                        <tbody id="examHistoryBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Net Grafiği</div>
+                <div class="chart-container">
+                    <canvas id="scoreChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // URL'den öğrenci numarasını al
+    const urlParams = new URLSearchParams(window.location.search);
+    const studentId = urlParams.get('id') || "874"; // Eğer id yoksa test için 874 kullan
+
+    // TEST İÇİN GÖMÜLÜ VERİ (Şimdilik)
+    const testVerisi = {
+        "id": "874",
+        "name": "Esen, Berat Talha",
+        "exams": [
+            { "examName": "2. Deneme", "examDate": "2025-01-15", "score": 80, "rank": 3, "totalStudents": 17 },
+            { "examName": "1. Deneme", "examDate": "2024-12-20", "score": 60, "rank": 5, "totalStudents": 16 }
+        ]
+    };
+
+    // Normalde burada fetch(data/${studentId}.json) olacak ama test için yukarıdaki veriyi kullanıyoruz.
+    function veriyiYukle() {
+        const data = testVerisi; // Sonraki adımda fetch ile değiştirilecek
+        
+        displayStudentInfo(data);
+        displayExamHistory(data);
+        createChart(data);
+    }
+
+    function sinifOrtalamasiHesapla(exam) {
+        return (exam.score * 0.7).toFixed(1); // Şimdilik sahte ortalama
+    }
+
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        return `${date.getDate().toString().padStart(2, '0')}.${(date.getMonth() + 1).toString().padStart(2, '0')}.${date.getFullYear()}`;
+    }
+
+    function displayStudentInfo(data) {
+        const infoDiv = document.getElementById('studentInfo');
+        const latestExam = data.exams[0];
+        const ortalama = sinifOrtalamasiHesapla(latestExam);
+
+        infoDiv.innerHTML = `
+            <div class="student-info">
+                <div class="student-name">${data.name}</div>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-label">NET</div>
+                        <div class="stat-value">${latestExam.score}</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Sınava Giren Kişi Sayısı</div>
+                        <div class="stat-value">${latestExam.totalStudents}</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Öğrencinin Sırası</div>
+                        <div class="stat-value">${latestExam.rank}</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Sınıf Ortalaması</div>
+                        <div class="stat-value">${ortalama}</div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    function displayExamHistory(data) {
+        const tbody = document.getElementById('examHistoryBody');
+        tbody.innerHTML = '';
+        data.exams.forEach((exam, index) => {
+            let netDegisim = '-';
+            if (index < data.exams.length - 1) {
+                const prev = data.exams[index + 1];
+                const diff = (exam.score - prev.score).toFixed(1);
+                if (diff > 0) netDegisim = `<span class="up">+${diff}</span>`;
+                else if (diff < 0) netDegisim = `<span class="down">${diff}</span>`;
+            }
+            const ort = sinifOrtalamasiHesapla(exam);
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${formatDate(exam.examDate)}</td>
+                <td>${exam.examName}</td>
+                <td><strong>${exam.score}</strong></td>
+                <td>${exam.rank}</td>
+                <td>${exam.totalStudents}</td>
+                <td>${ort}</td>
+                <td>${netDegisim}</td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    function createChart(data) {
+        const exams = data.exams.slice().reverse();
+        const labels = exams.map(e => e.examName);
+        const scores = exams.map(e => e.score);
+
+        const ctx = document.getElementById('scoreChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Net',
+                    data: scores,
+                    borderColor: '#4361ee',
+                    backgroundColor: 'rgba(67, 97, 238, 0.1)',
+                    borderWidth: 3,
+                    tension: 0.4,
+                    fill: true,
+                    pointBackgroundColor: '#4361ee',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { 
+                    legend: { display: false },
+                    title: { display: true, text: 'Net Değişim Grafiği', font: { size: 14 } }
+                },
+                scales: {
+                    y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.1)' }, title: { display: true, text: 'Net' } },
+                    x: { grid: { color: 'rgba(0,0,0,0.1)' }, title: { display: true, text: 'Denemeler' } }
+                }
+            }
+        });
+    }
+
+    // Çalıştır
+    veriyiYukle();
+    </script>
+</body>
+</html>
