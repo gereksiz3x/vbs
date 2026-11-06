@@ -53,11 +53,11 @@
         </div>
 
         <div class="ayar-alani">
-            <label><strong>📝 Deneme Adı (Örn: 1. Deneme):</strong></label>
+            <label><strong>📝 Deneme Adı:</strong></label>
             <input type="text" id="denemeAdiInput" placeholder="Örn: 1. Deneme">
             
             <label style="margin-top:10px; display:block;"><strong>📊 Toplam Soru Sayısı:</strong></label>
-            <input type="number" id="soruSayisiInput" value="80" min="1" placeholder="Örn: 80">
+            <input type="number" id="soruSayisiInput" min="1" placeholder="Örn: 80">
         </div>
 
         <div class="sinif-listesi" id="sinifListesi"></div>
@@ -76,7 +76,6 @@
     const GITHUB_REPO = "vbs";
     const BRANCH = "main";
 
-    // Öğrenci numarasına göre sıralı liste
     const sinifListesi = [
         {id: "145", name: "Aşık, Hilal"},
         {id: "157", name: "Türkmenoğlu, Ömer Beren"},
@@ -95,7 +94,7 @@
         {id: "1142", name: "Yılmaz, Nur Eymen"}
     ];
 
-    let hataliOgrenciler = []; // Hata verenlerin ID'lerini tutar
+    let hataliOgrenciler = []; 
 
     window.onload = function() {
         const savedToken = localStorage.getItem('vbs_token');
@@ -177,7 +176,6 @@
         localStorage.setItem('vbs_token', token);
         localStorage.setItem('vbs_deneme', denemeAdi);
 
-        // Girilen verileri topla
         const islenecekler = [];
         const tumSiniNetleri = [];
 
@@ -186,14 +184,12 @@
             const checkbox = document.getElementById(`girmedi_${ogr.id}`);
             const net = parseFloat(input.value);
 
-            // Eğer sadece hatalıları deniyorsak ve bu öğrenci hatalı değilse atla
             if (sadeceHatalilar && !hataliOgrenciler.includes(ogr.id)) continue;
 
             if (!checkbox.checked && !isNaN(net)) {
                 islenecekler.push({ ...ogr, score: net });
                 tumSiniNetleri.push(net);
             } else if (!sadeceHatalilar) {
-                // Eğer normal kayıt yapılıyorsa ve öğrenci girmediyse, onu da listeye ekle (verisini güncellememek için)
                 islenecekler.push({ ...ogr, score: null });
             }
         }
@@ -207,17 +203,15 @@
         sonucDiv.className = 'sonuc info';
         sonucDiv.innerHTML = '⏳ İşleniyor, lütfen bekleyin...';
 
-        // Sıralama hesapla (sadece girenler arasında)
         const girenler = islenecekler.filter(o => o.score !== null);
         girenler.sort((a, b) => b.score - a.score);
         girenler.forEach((ogr, index) => { ogr.rank = index + 1; });
         
-        // Sınıf ortalamasını hesapla
         const sinifOrtalamasi = girenler.length > 0 ? (tumSiniNetleri.reduce((a,b)=>a+b, 0) / tumSiniNetleri.length).toFixed(1) : 0;
         const bugun = new Date().toISOString().split('T')[0];
 
         let basariliSayisi = 0;
-        hataliOgrenciler = []; // Sıfırla
+        hataliOgrenciler = []; 
 
         for (let ogr of islenecekler) {
             const dosyaAdi = `${ogr.id}.json`;
@@ -231,14 +225,12 @@
                 }
             } catch (e) {}
 
-            // Çift kayıt kontrolü
             const zatenVar = mevcutExams.find(e => e.examName === denemeAdi);
             if (zatenVar) {
                 document.getElementById(`satir_${ogr.id}`).className = 'ogrenci-satiri basarili';
-                continue; // Bu öğrenci zaten bu denemeye kaydedilmiş, atla
+                continue; 
             }
 
-            // Yeni deneme verisi hazırla
             if (ogr.score !== null) {
                 const ogrSirasi = girenler.find(o => o.id === ogr.id);
                 const yuzde = ((ogr.score / toplamSoru) * 100).toFixed(1);
@@ -271,7 +263,6 @@
             }
         }
 
-        // Sonuç ekranı
         if (hataliOgrenciler.length === 0) {
             sonucDiv.className = 'sonuc success';
             sonucDiv.innerHTML = `✅ Başarıyla tamamlandı! ${basariliSayisi} öğrenci işlendi.`;
