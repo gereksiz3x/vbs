@@ -1,0 +1,15 @@
+{
+  "id": "752",
+  "name": "Cifçi, Belinay",
+  "exams": [
+    {
+      "examName": "1.deneme",
+      "examDate": "2026-11-06",
+      "score": 76,
+      "yuzde": "95.0",
+      "rank": 1,
+      "totalStudents": 15,
+      "classAverage": 50.5
+    }
+  ]
+}
