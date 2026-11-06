@@ -29,7 +29,8 @@
         
         .student-name { font-size: 1.6rem; font-weight: 700; color: var(--secondary); text-align: center; margin-bottom: 20px; }
         
-        /* Yeni İstatistik Paneli */
+        .section-title { color: var(--secondary); font-size: 1.1rem; font-weight: 600; margin-bottom: 10px; margin-top: 15px; }
+        
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 15px; }
         .stat-item { background: var(--light); padding: 15px; border-radius: 10px; text-align: center; border: 1px solid var(--border); }
         .stat-label { font-size: 0.85rem; color: #6c757d; margin-bottom: 8px; font-weight: 600; }
@@ -107,13 +108,11 @@
         document.getElementById('historyCard').style.display = 'none';
         document.getElementById('chartCard').style.display = 'none';
     } else {
-        // Asenkron olarak hem kendi verisini hem de genel sıralama için diğerlerini çek
         verileriYukle();
     }
 
     async function verileriYukle() {
         try {
-            // 1. Öğrencinin kendi verisini çek
             const res = await fetch(`data/${studentId}.json?t=${Date.now()}`);
             if (!res.ok) throw new Error('Kayıt bulunamadı');
             const data = await res.json();
@@ -125,10 +124,8 @@
                 return;
             }
 
-            // 2. Genel Sıralama için sınıf listesini al (Paneldeki liste ile aynı olmalı)
             const sinifListesi = ["145","157","371","462","562","752","756","801","811","853","893","981","1023","1076","1142"];
             
-            // Tüm öğrencilerin ortalamalarını hesapla
             const tumVeriler = await Promise.all(sinifListesi.map(async id => {
                 try {
                     const r = await fetch(`data/${id}.json?t=${Date.now()}`);
@@ -137,7 +134,6 @@
                 return null;
             }));
 
-            // Genel ortalamaları hesaplayıp sırala
             const ortalamalar = tumVeriler.filter(v => v !== null && v.exams && v.exams.length > 0).map(v => {
                 const toplam = v.exams.reduce((sum, e) => sum + e.score, 0);
                 return { id: v.id, name: v.name, ortalama: toplam / v.exams.length };
@@ -149,7 +145,6 @@
             const genelSiralama = ogrIndex !== -1 ? ogrIndex + 1 : null;
             const genelToplamOgrenci = ortalamalar.length;
             
-            // Öğrencinin kendi genel ortalaması
             const ogrToplamNet = data.exams.reduce((sum, e) => sum + e.score, 0);
             const ogrOrtalama = (ogrToplamNet / data.exams.length).toFixed(1);
 
@@ -184,18 +179,8 @@
         infoDiv.innerHTML = `
             <div class="student-name">${data.name}</div>
             
-            <div class="stats-grid">
-                <div class="stat-item" style="grid-column: span 2; background: #e3f2fd;">
-                    <div class="stat-label">Genel Net Ortalaması</div>
-                    <div class="stat-value" style="font-size: 1.8rem;">${ogrOrtalama}</div>
-                </div>
-                <div class="stat-item" style="grid-column: span 2; background: #fff3cd;">
-                    <div class="stat-label">Genel Sınıf Sıralaması (Ortalamaya Göre)</div>
-                    <div class="stat-value" style="font-size: 1.8rem;">${genelSiralamaText}</div>
-                </div>
-            </div>
-
-            <div class="card-title" style="margin-top: 20px;">Son Deneme Detayları</div>
+            <!-- 1. Son Deneme Detayları -->
+            <div class="section-title">Son Deneme Detayları</div>
             <div class="stats-grid">
                 <div class="stat-item">
                     <div class="stat-label">Son Deneme Neti</div>
@@ -212,6 +197,19 @@
                 <div class="stat-item">
                     <div class="stat-label">Deneme Sırası</div>
                     <div class="stat-value">${latest.rank} <small style="font-size:0.9rem; color:#666;">/ ${latest.totalStudents}</small></div>
+                </div>
+            </div>
+
+            <!-- 2. Genel Durum -->
+            <div class="section-title" style="margin-top: 25px;">Genel Durum (Tüm Denemeler)</div>
+            <div class="stats-grid">
+                <div class="stat-item" style="grid-column: span 1; background: #e3f2fd; border-color: #bbdefb;">
+                    <div class="stat-label">Genel Net Ortalaması</div>
+                    <div class="stat-value" style="font-size: 1.6rem;">${ogrOrtalama}</div>
+                </div>
+                <div class="stat-item" style="grid-column: span 1; background: #fff3cd; border-color: #ffeeba;">
+                    <div class="stat-label">Genel Sınıf Sıralaması</div>
+                    <div class="stat-value" style="font-size: 1.6rem;">${genelSiralamaText}</div>
                 </div>
             </div>
         `;
