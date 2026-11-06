@@ -10,103 +10,46 @@
             --primary: #4361ee;
             --secondary: #3a0ca3;
             --success: #2ec4b6;
+            --warning: #ff9f1c;
             --danger: #e71d36;
             --light: #f8f9fa;
-            --dark: #212529;
             --border: #dee2e6;
         }
-        
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; display: flex; justify-content: center; }
+        .container { width: 100%; max-width: 1000px; background: white; border-radius: 16px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); overflow: hidden; }
         
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-        }
-        
-        .container {
-            width: 100%;
-            max-width: 1000px;
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            overflow: hidden;
-        }
-        
-        .header {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 25px 20px;
-            text-align: center;
-        }
-        
+        .header { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 25px 20px; text-align: center; }
         .header h1 { font-size: 1.8rem; margin-bottom: 8px; }
         .header p { font-size: 1rem; opacity: 0.8; }
         
         .content { padding: 25px; display: flex; flex-direction: column; gap: 25px; }
+        .card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid var(--border); }
+        .card-title { color: var(--primary); font-size: 1.2rem; margin-bottom: 15px; font-weight: 600; border-bottom: 2px solid var(--light); padding-bottom: 10px; }
         
-        .card {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            border: 1px solid var(--border);
-        }
+        .student-name { font-size: 1.6rem; font-weight: 700; color: var(--secondary); text-align: center; margin-bottom: 20px; }
         
-        .card-title {
-            color: var(--primary);
-            font-size: 1.2rem;
-            margin-bottom: 15px;
-            font-weight: 600;
-            border-bottom: 2px solid var(--light);
-            padding-bottom: 10px;
-        }
-        
-        .student-name {
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: var(--secondary);
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-        }
-        
-        .stat-item {
-            background: var(--light);
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            border: 1px solid var(--border);
-        }
-        
-        .stat-label { font-size: 0.9rem; color: #6c757d; margin-bottom: 8px; font-weight: 600; }
-        .stat-value { font-size: 1.5rem; font-weight: bold; color: var(--primary); }
+        /* Yeni İstatistik Paneli */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 15px; }
+        .stat-item { background: var(--light); padding: 15px; border-radius: 10px; text-align: center; border: 1px solid var(--border); }
+        .stat-label { font-size: 0.85rem; color: #6c757d; margin-bottom: 8px; font-weight: 600; }
+        .stat-value { font-size: 1.4rem; font-weight: bold; color: var(--primary); }
         
         .table-responsive { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
         th, td { padding: 12px; text-align: center; border-bottom: 1px solid var(--border); }
         th { background: var(--primary); color: white; font-weight: 600; }
         tr:nth-child(even) { background: var(--light); }
-        
         .up { color: var(--success); font-weight: bold; }
         .down { color: var(--danger); font-weight: bold; }
         
         .chart-container { position: relative; height: 300px; width: 100%; }
-        
         .loading { text-align: center; padding: 40px; font-size: 1.2rem; color: var(--primary); font-weight: bold; }
         .error-box { background: #f8d7da; color: #721c24; padding: 30px; border-radius: 10px; text-align: center; }
         
         @media (max-width: 600px) {
-            .stats-grid { grid-template-columns: 1fr; }
-            th, td { padding: 10px 8px; font-size: 0.85rem; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            th, td { padding: 10px 5px; font-size: 0.8rem; }
             .header h1 { font-size: 1.5rem; }
             .chart-container { height: 250px; }
         }
@@ -137,7 +80,7 @@
                                 <th>Net</th>
                                 <th>Yüzde (%)</th>
                                 <th>Sıra</th>
-                                <th>Katılım</th>
+                                <th>Sınıf Ort.</th>
                                 <th>Net Değişim</th>
                             </tr>
                         </thead>
@@ -164,27 +107,61 @@
         document.getElementById('historyCard').style.display = 'none';
         document.getElementById('chartCard').style.display = 'none';
     } else {
-        fetch(`data/${studentId}.json?t=${Date.now()}`)
-            .then(response => {
-                if (!response.ok) throw new Error('Kayıt bulunamadı');
-                return response.json();
-            })
-            .then(data => {
-                if (!data.exams || data.exams.length === 0) {
-                    document.getElementById('studentInfo').innerHTML = `<div class="error-box"><h3>Veri Yok</h3><p>Bu öğrenciye ait henüz girilmiş bir sonuç bulunmuyor.</p></div>`;
-                    document.getElementById('historyCard').style.display = 'none';
-                    document.getElementById('chartCard').style.display = 'none';
-                    return;
-                }
-                displayStudentInfo(data);
-                displayExamHistory(data);
-                createChart(data);
-            })
-            .catch(error => {
-                document.getElementById('studentInfo').innerHTML = `<div class="error-box"><h3>Kayıt Bulunamadı</h3><p>${studentId} numaralı öğrenciye ait veri yok.</p></div>`;
+        // Asenkron olarak hem kendi verisini hem de genel sıralama için diğerlerini çek
+        verileriYukle();
+    }
+
+    async function verileriYukle() {
+        try {
+            // 1. Öğrencinin kendi verisini çek
+            const res = await fetch(`data/${studentId}.json?t=${Date.now()}`);
+            if (!res.ok) throw new Error('Kayıt bulunamadı');
+            const data = await res.json();
+
+            if (!data.exams || data.exams.length === 0) {
+                document.getElementById('studentInfo').innerHTML = `<div class="error-box"><h3>Veri Yok</h3><p>Bu öğrenciye ait henüz girilmiş bir sonuç bulunmuyor.</p></div>`;
                 document.getElementById('historyCard').style.display = 'none';
                 document.getElementById('chartCard').style.display = 'none';
+                return;
+            }
+
+            // 2. Genel Sıralama için sınıf listesini al (Paneldeki liste ile aynı olmalı)
+            const sinifListesi = ["145","157","371","462","562","752","756","801","811","853","893","981","1023","1076","1142"];
+            
+            // Tüm öğrencilerin ortalamalarını hesapla
+            const tumVeriler = await Promise.all(sinifListesi.map(async id => {
+                try {
+                    const r = await fetch(`data/${id}.json?t=${Date.now()}`);
+                    if (r.ok) return await r.json();
+                } catch(e) { return null; }
+                return null;
+            }));
+
+            // Genel ortalamaları hesaplayıp sırala
+            const ortalamalar = tumVeriler.filter(v => v !== null && v.exams && v.exams.length > 0).map(v => {
+                const toplam = v.exams.reduce((sum, e) => sum + e.score, 0);
+                return { id: v.id, name: v.name, ortalama: toplam / v.exams.length };
             });
+
+            ortalamalar.sort((a, b) => b.ortalama - a.ortalama);
+            
+            const ogrIndex = ortalamalar.findIndex(o => o.id === studentId);
+            const genelSiralama = ogrIndex !== -1 ? ogrIndex + 1 : null;
+            const genelToplamOgrenci = ortalamalar.length;
+            
+            // Öğrencinin kendi genel ortalaması
+            const ogrToplamNet = data.exams.reduce((sum, e) => sum + e.score, 0);
+            const ogrOrtalama = (ogrToplamNet / data.exams.length).toFixed(1);
+
+            displayStudentInfo(data, ogrOrtalama, genelSiralama, genelToplamOgrenci);
+            displayExamHistory(data);
+            createChart(data);
+
+        } catch (error) {
+            document.getElementById('studentInfo').innerHTML = `<div class="error-box"><h3>Kayıt Bulunamadı</h3><p>${studentId} numaralı öğrenciye ait veri yok.</p></div>`;
+            document.getElementById('historyCard').style.display = 'none';
+            document.getElementById('chartCard').style.display = 'none';
+        }
     }
 
     function formatDate(dateString) {
@@ -192,16 +169,33 @@
         return `${date.getDate().toString().padStart(2, '0')}.${(date.getMonth() + 1).toString().padStart(2, '0')}.${date.getFullYear()}`;
     }
 
-    function displayStudentInfo(data) {
+    function displayStudentInfo(data, ogrOrtalama, genelSiralama, genelToplamOgrenci) {
         const infoDiv = document.getElementById('studentInfo');
         const latest = data.exams[0];
         
-        // Eğer eski bir kayıtsa ve yüzde yoksa hesapla (soru sayısını bilmiyoruz ama örnek 80 kabul edelim veya veriden alalım)
-        // Yeni sistemde yuzde JSON'a kaydediliyor.
-        const yuzdeGosterim = latest.yuzde ? `%${latest.yuzde}` : '-';
+        const yuzde = latest.yuzde ? `%${latest.yuzde}` : '-';
+        const sinifOrt = latest.classAverage ? latest.classAverage : '-';
+        
+        let genelSiralamaText = '-';
+        if (genelSiralama) {
+            genelSiralamaText = `${genelSiralama} <span style="font-size: 1rem; color:#666;">/ ${genelToplamOgrenci}</span>`;
+        }
 
         infoDiv.innerHTML = `
             <div class="student-name">${data.name}</div>
+            
+            <div class="stats-grid">
+                <div class="stat-item" style="grid-column: span 2; background: #e3f2fd;">
+                    <div class="stat-label">Genel Net Ortalaması</div>
+                    <div class="stat-value" style="font-size: 1.8rem;">${ogrOrtalama}</div>
+                </div>
+                <div class="stat-item" style="grid-column: span 2; background: #fff3cd;">
+                    <div class="stat-label">Genel Sınıf Sıralaması (Ortalamaya Göre)</div>
+                    <div class="stat-value" style="font-size: 1.8rem;">${genelSiralamaText}</div>
+                </div>
+            </div>
+
+            <div class="card-title" style="margin-top: 20px;">Son Deneme Detayları</div>
             <div class="stats-grid">
                 <div class="stat-item">
                     <div class="stat-label">Son Deneme Neti</div>
@@ -209,15 +203,15 @@
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">Başarı Yüzdesi</div>
-                    <div class="stat-value" style="color: var(--success);">${yuzdeGosterim}</div>
+                    <div class="stat-value" style="color: var(--success);">${yuzde}</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-label">Sınıf Sırası</div>
+                    <div class="stat-label">Sınıf Ortalaması</div>
+                    <div class="stat-value" style="color: var(--warning);">${sinifOrt}</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Deneme Sırası</div>
                     <div class="stat-value">${latest.rank} <small style="font-size:0.9rem; color:#666;">/ ${latest.totalStudents}</small></div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-label">Son Deneme Tarihi</div>
-                    <div class="stat-value" style="font-size: 1.2rem; margin-top: 5px;">${formatDate(latest.examDate)}</div>
                 </div>
             </div>
         `;
@@ -238,6 +232,7 @@
             }
             
             const yuzde = exam.yuzde ? `%${exam.yuzde}` : '-';
+            const sinifOrt = exam.classAverage ? exam.classAverage : '-';
 
             const row = document.createElement('tr');
             row.innerHTML = `
@@ -246,7 +241,7 @@
                 <td><strong>${exam.score}</strong></td>
                 <td>${yuzde}</td>
                 <td>${exam.rank}</td>
-                <td>${exam.totalStudents}</td>
+                <td>${sinifOrt}</td>
                 <td>${netDegisim}</td>
             `;
             tbody.appendChild(row);
@@ -281,17 +276,10 @@
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { 
-                    legend: { display: false }
-                },
+                plugins: { legend: { display: false } },
                 scales: {
-                    y: { 
-                        beginAtZero: true, 
-                        grid: { color: 'rgba(0,0,0,0.05)' } 
-                    },
-                    x: { 
-                        grid: { display: false } 
-                    }
+                    y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } },
+                    x: { grid: { display: false } }
                 }
             }
         });
