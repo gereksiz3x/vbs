@@ -1,0 +1,15 @@
+{
+  "id": "801",
+  "name": "Kaya, Emir",
+  "exams": [
+    {
+      "examName": "1.deneme",
+      "examDate": "2026-11-06",
+      "score": 52.75,
+      "yuzde": "65.9",
+      "rank": 8,
+      "totalStudents": 15,
+      "classAverage": 50.5
+    }
+  ]
+}
