@@ -31,7 +31,6 @@
         
         .section-title { color: var(--secondary); font-size: 1.1rem; font-weight: 600; margin-bottom: 10px; margin-top: 15px; }
         
-        /* 5'li grid yapısı için */
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin-bottom: 15px; }
         .stat-item { background: var(--light); padding: 15px 10px; border-radius: 10px; text-align: center; border: 1px solid var(--border); }
         .stat-label { font-size: 0.8rem; color: #6c757d; margin-bottom: 8px; font-weight: 600; }
@@ -172,10 +171,7 @@
         const yuzde = latest.yuzde ? `%${latest.yuzde}` : '-';
         const sinifOrt = latest.classAverage ? latest.classAverage : '-';
         
-        let genelSiralamaText = '-';
-        if (genelSiralama) {
-            genelSiralamaText = genelSiralama;
-        }
+        let genelSiralamaText = genelSiralama ? genelSiralama : '-';
 
         infoDiv.innerHTML = `
             <div class="student-name">${data.name}</div>
@@ -205,16 +201,20 @@
                 </div>
             </div>
 
-            <!-- 2. Genel Durum -->
+            <!-- 2. Genel Durum (Tüm Denemeler) -->
             <div class="section-title" style="margin-top: 25px;">Genel Durum (Tüm Denemeler)</div>
-            <div class="stats-grid" style="grid-template-columns: 1fr 1fr;">
+            <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr);">
                 <div class="stat-item" style="background: #e3f2fd; border-color: #bbdefb;">
                     <div class="stat-label">Genel Net Ortalaması</div>
                     <div class="stat-value" style="font-size: 1.6rem;">${ogrOrtalama}</div>
                 </div>
                 <div class="stat-item" style="background: #fff3cd; border-color: #ffeeba;">
-                    <div class="stat-label">Genel Sınıf Sıralaması</div>
-                    <div class="stat-value" style="font-size: 1.6rem;">${genelSiralamaText} <small style="font-size: 1rem; color:#666;">/ ${genelToplamOgrenci}</small></div>
+                    <div class="stat-label">Genel Sıralama</div>
+                    <div class="stat-value" style="font-size: 1.6rem;">${genelSiralamaText}</div>
+                </div>
+                <div class="stat-item" style="background: #d4edda; border-color: #c3e6cb;">
+                    <div class="stat-label">Sınıf Mevcudu</div>
+                    <div class="stat-value" style="font-size: 1.6rem;">${genelToplamOgrenci}</div>
                 </div>
             </div>
         `;
