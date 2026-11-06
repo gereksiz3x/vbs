@@ -3,6 +3,15 @@
   "name": "Kılınç, Hacer",
   "exams": [
     {
+      "examName": "1.deneme",
+      "examDate": "2026-11-06",
+      "score": 75,
+      "yuzde": "93.8",
+      "rank": 2,
+      "totalStudents": 15,
+      "classAverage": 49.4
+    },
+    {
       "examName": "2. Deneme",
       "examDate": "2026-11-05",
       "score": 74,
