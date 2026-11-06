@@ -10,22 +10,28 @@
         .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
         h1 { text-align: center; color: #2c3e50; margin-bottom: 10px; font-size: 22px; }
         
-        .ayar-alani { background: #e3f2fd; padding: 15px; border-radius: 10px; margin-bottom: 15px; border: 1px solid #bbdefb; }
-        .token-alani { background: #fff3cd; padding: 15px; border-radius: 10px; margin-bottom: 20px; border: 1px solid #ffeeba; }
+        .ayar-alani, .token-alani { padding: 15px; border-radius: 10px; margin-bottom: 15px; }
+        .token-alani { background: #fff3cd; border: 1px solid #ffeeba; }
+        .ayar-alani { background: #e3f2fd; border: 1px solid #bbdefb; }
         
         .ayar-alani input, .token-alani input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; margin-top: 5px; font-size: 15px; }
         
         .sinif-listesi { max-height: 50vh; overflow-y: auto; border: 2px solid #e9ecef; border-radius: 10px; padding: 10px; margin-bottom: 20px; }
-        .ogrenci-satiri { display: flex; align-items: center; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; }
+        .ogrenci-satiri { display: flex; align-items: center; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; transition: 0.3s; }
+        .ogrenci-satiri.basarili { background-color: #d4edda; pointer-events: none; opacity: 0.7; }
+        .ogrenci-satiri.hatali { background-color: #f8d7da; }
+        
         .ogrenci-bilgi { flex: 1; }
         .ogrenci-adi { font-weight: bold; color: #2c3e50; font-size: 15px; }
         .ogrenci-id { font-size: 11px; color: #888; }
         .net-input { width: 80px; padding: 8px; border: 1px solid #ddd; border-radius: 5px; text-align: center; font-size: 15px; margin-right: 10px; }
         
-        .buttons { display: flex; gap: 10px; }
-        button { flex: 1; padding: 15px; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .buttons { display: flex; gap: 10px; flex-wrap: wrap; }
+        button { flex: 1; padding: 15px; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.2s; min-width: 200px; }
         .btn-olustur { background: #28a745; color: white; }
         .btn-olustur:hover { background: #218838; }
+        .btn-tekrar { background: #dc3545; color: white; display: none; }
+        .btn-tekrar:hover { background: #c82333; }
         .btn-temizle { background: #6c757d; color: white; }
         
         .sonuc { margin-top: 20px; padding: 15px; border-radius: 8px; display: none; }
@@ -42,22 +48,23 @@
         <h1>🎯 VBS Net Girişi</h1>
         
         <div class="token-alani">
-            <label><strong>🔑 GitHub Token:</strong> (Sadece bir kez girilir, tarayıcıda saklanır)</label>
+            <label><strong>🔑 GitHub Token:</strong> (Sadece bir kez girilir)</label>
             <input type="password" id="tokenInput" placeholder="ghp_... şeklinde token">
         </div>
 
         <div class="ayar-alani">
-            <label><strong>📝 Bu Denemenin Toplam Soru Sayısı:</strong></label>
+            <label><strong>📝 Deneme Adı (Örn: 1. Deneme):</strong></label>
+            <input type="text" id="denemeAdiInput" placeholder="Örn: 1. Deneme">
+            
+            <label style="margin-top:10px; display:block;"><strong>📊 Toplam Soru Sayısı:</strong></label>
             <input type="number" id="soruSayisiInput" value="80" min="1" placeholder="Örn: 80">
-            <div style="font-size:12px; color:#666; margin-top:5px;">*Girdiğiniz netlerin yüzdesi bu sayıya göre hesaplanacaktır.</div>
         </div>
 
-        <div class="sinif-listesi" id="sinifListesi">
-            <!-- JS ile dolacak -->
-        </div>
+        <div class="sinif-listesi" id="sinifListesi"></div>
 
         <div class="buttons">
-            <button class="btn-olustur" onclick="jsonOlustur()">🚀 OLUŞTUR ve KAYDET</button>
+            <button class="btn-olustur" id="btnOlustur" onclick="jsonOlustur(false)">🚀 OLUŞTUR ve KAYDET</button>
+            <button class="btn-tekrar" id="btnTekrar" onclick="jsonOlustur(true)">🔄 SADECE HATALILARI TEKRAR DENE</button>
             <button class="btn-temizle" onclick="temizle()">🗑️ TEMİZLE</button>
         </div>
 
@@ -65,12 +72,11 @@
     </div>
 
     <script>
-    // --- GITHUB BİLGİLERİ ---
     const GITHUB_USER = "gereksiz3x";
     const GITHUB_REPO = "vbs";
     const BRANCH = "main";
 
-    // --- SINIF LİSTESİ (Öğrenci Numarasına Göre Sıralı) ---
+    // Öğrenci numarasına göre sıralı liste
     const sinifListesi = [
         {id: "145", name: "Aşık, Hilal"},
         {id: "157", name: "Türkmenoğlu, Ömer Beren"},
@@ -89,9 +95,13 @@
         {id: "1142", name: "Yılmaz, Nur Eymen"}
     ];
 
+    let hataliOgrenciler = []; // Hata verenlerin ID'lerini tutar
+
     window.onload = function() {
         const savedToken = localStorage.getItem('vbs_token');
         if (savedToken) document.getElementById('tokenInput').value = savedToken;
+        const savedDeneme = localStorage.getItem('vbs_deneme');
+        if (savedDeneme) document.getElementById('denemeAdiInput').value = savedDeneme;
         listeyiOlustur();
     };
 
@@ -101,6 +111,7 @@
         sinifListesi.forEach(ogrenci => {
             const satir = document.createElement('div');
             satir.className = 'ogrenci-satiri';
+            satir.id = `satir_${ogrenci.id}`;
             satir.innerHTML = `
                 <div class="ogrenci-bilgi">
                     <div class="ogrenci-adi">${ogrenci.name}</div>
@@ -125,24 +136,23 @@
 
     async function githubaKaydet(dosyaAdi, icerik, token) {
         const url = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/data/${dosyaAdi}`;
-        
         let sha = null;
-        const kontrol = await fetch(url, { headers: { Authorization: `token ${token}` } });
-        if (kontrol.ok) {
-            const veri = await kontrol.json();
-            sha = veri.sha;
-        }
+        
+        try {
+            const kontrol = await fetch(url, { headers: { Authorization: `token ${token}` } });
+            if (kontrol.ok) {
+                const veri = await kontrol.json();
+                sha = veri.sha;
+            }
+        } catch(e) {}
 
         const base64Icerik = btoa(unescape(encodeURIComponent(icerik)));
 
         const response = await fetch(url, {
             method: 'PUT',
-            headers: {
-                Authorization: `token ${token}`,
-                'Content-Type': 'application/json'
-            },
+            headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                message: `Otomatik güncelleme: ${dosyaAdi}`,
+                message: `Güncelleme: ${dosyaAdi}`,
                 content: base64Icerik,
                 sha: sha,
                 branch: BRANCH
@@ -152,59 +162,67 @@
         return response.ok;
     }
 
-    async function jsonOlustur() {
+    async function jsonOlustur(sadeceHatalilar) {
         const sonucDiv = document.getElementById('sonuc');
         const token = document.getElementById('tokenInput').value.trim();
+        const denemeAdi = document.getElementById('denemeAdiInput').value.trim();
         const toplamSoru = parseFloat(document.getElementById('soruSayisiInput').value);
         
-        if (!token) {
+        if (!token || !denemeAdi || !toplamSoru) {
             sonucDiv.className = 'sonuc error';
-            sonucDiv.innerHTML = '❌ Lütfen GitHub Token girin!';
-            return;
-        }
-        if (!toplamSoru || toplamSoru <= 0) {
-            sonucDiv.className = 'sonuc error';
-            sonucDiv.innerHTML = '❌ Lütfen geçerli bir toplam soru sayısı girin!';
+            sonucDiv.innerHTML = '❌ Lütfen Token, Deneme Adı ve Soru Sayısı alanlarını doldurun!';
             return;
         }
         
         localStorage.setItem('vbs_token', token);
+        localStorage.setItem('vbs_deneme', denemeAdi);
 
-        const girilenler = [];
+        // Girilen verileri topla
+        const islenecekler = [];
+        const tumSiniNetleri = [];
+
         for (let ogr of sinifListesi) {
             const input = document.getElementById(`net_${ogr.id}`);
             const checkbox = document.getElementById(`girmedi_${ogr.id}`);
             const net = parseFloat(input.value);
 
+            // Eğer sadece hatalıları deniyorsak ve bu öğrenci hatalı değilse atla
+            if (sadeceHatalilar && !hataliOgrenciler.includes(ogr.id)) continue;
+
             if (!checkbox.checked && !isNaN(net)) {
-                girilenler.push({ ...ogr, score: net });
+                islenecekler.push({ ...ogr, score: net });
+                tumSiniNetleri.push(net);
+            } else if (!sadeceHatalilar) {
+                // Eğer normal kayıt yapılıyorsa ve öğrenci girmediyse, onu da listeye ekle (verisini güncellememek için)
+                islenecekler.push({ ...ogr, score: null });
             }
         }
 
-        if (girilenler.length === 0) {
+        if (islenecekler.length === 0) {
             sonucDiv.className = 'sonuc error';
-            sonucDiv.innerHTML = '❌ Hiç net girilmemiş!';
+            sonucDiv.innerHTML = '❌ İşlenecek öğrenci bulunamadı!';
             return;
         }
 
         sonucDiv.className = 'sonuc info';
-        sonucDiv.innerHTML = '⏳ Sıralamalar ve yüzdeler hesaplanıyor, GitHub\'a kaydediliyor... Lütfen bekleyin...';
+        sonucDiv.innerHTML = '⏳ İşleniyor, lütfen bekleyin...';
 
-        const siraliVeri = girilenler.sort((a, b) => b.score - a.score);
-        siraliVeri.forEach((ogr, index) => { ogr.rank = index + 1; });
-        const toplamOgrenci = siraliVeri.length;
+        // Sıralama hesapla (sadece girenler arasında)
+        const girenler = islenecekler.filter(o => o.score !== null);
+        girenler.sort((a, b) => b.score - a.score);
+        girenler.forEach((ogr, index) => { ogr.rank = index + 1; });
+        
+        // Sınıf ortalamasını hesapla
+        const sinifOrtalamasi = girenler.length > 0 ? (tumSiniNetleri.reduce((a,b)=>a+b, 0) / tumSiniNetleri.length).toFixed(1) : 0;
         const bugun = new Date().toISOString().split('T')[0];
 
         let basariliSayisi = 0;
-        let hataSayisi = 0;
+        hataliOgrenciler = []; // Sıfırla
 
-        for (let ogr of sinifListesi) {
-            const input = document.getElementById(`net_${ogr.id}`);
-            const checkbox = document.getElementById(`girmedi_${ogr.id}`);
-            const net = parseFloat(input.value);
+        for (let ogr of islenecekler) {
             const dosyaAdi = `${ogr.id}.json`;
-            
             let mevcutExams = [];
+            
             try {
                 const res = await fetch(`data/${dosyaAdi}?t=${Date.now()}`);
                 if (res.ok) {
@@ -213,17 +231,26 @@
                 }
             } catch (e) {}
 
-            if (!checkbox.checked && !isNaN(net)) {
-                const ogrSirasi = siraliVeri.find(o => o.id === ogr.id);
-                const yuzde = ((net / toplamSoru) * 100).toFixed(1);
+            // Çift kayıt kontrolü
+            const zatenVar = mevcutExams.find(e => e.examName === denemeAdi);
+            if (zatenVar) {
+                document.getElementById(`satir_${ogr.id}`).className = 'ogrenci-satiri basarili';
+                continue; // Bu öğrenci zaten bu denemeye kaydedilmiş, atla
+            }
+
+            // Yeni deneme verisi hazırla
+            if (ogr.score !== null) {
+                const ogrSirasi = girenler.find(o => o.id === ogr.id);
+                const yuzde = ((ogr.score / toplamSoru) * 100).toFixed(1);
                 
                 mevcutExams.unshift({
-                    examName: `${mevcutExams.length + 1}. Deneme`,
+                    examName: denemeAdi,
                     examDate: bugun,
-                    score: net,
+                    score: ogr.score,
                     yuzde: yuzde,
                     rank: ogrSirasi.rank,
-                    totalStudents: toplamOgrenci
+                    totalStudents: girenler.length,
+                    classAverage: parseFloat(sinifOrtalamasi)
                 });
             }
 
@@ -231,31 +258,47 @@
 
             try {
                 const basarili = await githubaKaydet(dosyaAdi, JSON.stringify(yeniData, null, 2), token);
-                if (basarili) basariliSayisi++;
-                else hataSayisi++;
+                if (basarili) {
+                    basariliSayisi++;
+                    document.getElementById(`satir_${ogr.id}`).className = 'ogrenci-satiri basarili';
+                } else {
+                    hataliOgrenciler.push(ogr.id);
+                    document.getElementById(`satir_${ogr.id}`).className = 'ogrenci-satiri hatali';
+                }
             } catch (error) {
-                hataSayisi++;
+                hataliOgrenciler.push(ogr.id);
+                document.getElementById(`satir_${ogr.id}`).className = 'ogrenci-satiri hatali';
             }
         }
 
-        if (hataSayisi === 0) {
+        // Sonuç ekranı
+        if (hataliOgrenciler.length === 0) {
             sonucDiv.className = 'sonuc success';
-            sonucDiv.innerHTML = `✅ Başarıyla tamamlandı! ${basariliSayisi} öğrencinin verisi kaydedildi. <br><br><i>Not: Sonuç sayfasının güncellenmesi 1-2 dakika sürebilir.</i>`;
-            temizle();
+            sonucDiv.innerHTML = `✅ Başarıyla tamamlandı! ${basariliSayisi} öğrenci işlendi.`;
+            document.getElementById('btnTekrar').style.display = 'none';
+            document.getElementById('btnOlustur').style.display = 'block';
         } else {
             sonucDiv.className = 'sonuc error';
-            sonucDiv.innerHTML = `⚠️ İşlem tamamlandı ancak ${hataSayisi} öğrencide hata oluştu.`;
+            sonucDiv.innerHTML = `⚠️ ${hataliOgrenciler.length} öğrencide hata oluştu. Kırmızı satırları kontrol edip "Hatalıları Tekrar Dene" butonuna basın.`;
+            document.getElementById('btnTekrar').style.display = 'block';
+            document.getElementById('btnOlustur').style.display = 'none';
         }
     }
 
     function temizle() {
+        hataliOgrenciler = [];
         sinifListesi.forEach(ogrenci => {
             const input = document.getElementById(`net_${ogrenci.id}`);
             const checkbox = document.getElementById(`girmedi_${ogrenci.id}`);
+            const satir = document.getElementById(`satir_${ogrenci.id}`);
             input.value = '';
             input.disabled = false;
             checkbox.checked = false;
+            satir.className = 'ogrenci-satiri';
         });
+        document.getElementById('btnTekrar').style.display = 'none';
+        document.getElementById('btnOlustur').style.display = 'block';
+        document.getElementById('sonuc').className = 'sonuc';
     }
     </script>
 </body>
