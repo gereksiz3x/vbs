@@ -3,6 +3,15 @@
   "name": "Bindebir, Begüm",
   "exams": [
     {
+      "examName": "e2",
+      "examDate": "2026-11-10",
+      "score": 71.25,
+      "yuzde": 89.1,
+      "rank": 4,
+      "totalStudents": 15,
+      "classAverage": 60.1
+    },
+    {
       "examName": "j2",
       "examDate": "2026-11-10",
       "score": 69,
