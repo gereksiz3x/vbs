@@ -189,11 +189,7 @@
         const ortalama = girenler.reduce((sum, o) => sum + o.score, 0) / girenler.length;
         const sira = girenler.findIndex(o => o.score === ogrScore) + 1; 
 
-        return { 
-            rank: sira, 
-            avg: ortalama.toFixed(1), 
-            total: girenler.length 
-        };
+        return { rank: sira, avg: ortalama.toFixed(1), total: girenler.length };
     }
 
     function showAllExams() {
@@ -270,13 +266,16 @@
         const tbody = document.getElementById('examHistoryBody');
         tbody.innerHTML = '';
 
-        const examsToShow = data.exams.slice(0, limit);
+        // DÜZELTME BURADA: reverse() eklenerek en son girilen deneme en üste alındı.
+        const examsToShow = data.exams.slice().reverse().slice(0, limit);
 
         examsToShow.forEach((exam, index) => {
             let netDegisim = '-';
-            const globalIndex = data.exams.findIndex(e => e === exam);
-            if (globalIndex < data.exams.length - 1) {
-                const prev = data.exams[globalIndex + 1];
+            
+            // Değişim hesaplaması için doğru veriyi bulma
+            const originalIndex = data.exams.findIndex(e => e.examName === exam.examName);
+            if (originalIndex < data.exams.length - 1) {
+                const prev = data.exams[originalIndex + 1];
                 const diff = (exam.score - prev.score).toFixed(1);
                 if (diff > 0) netDegisim = `<span class="up">+${diff}</span>`;
                 else if (diff < 0) netDegisim = `<span class="down">${diff}</span>`;
@@ -286,7 +285,6 @@
             const hesaplanan = gecmisDenemeHesapla(exam.examName, exam.score);
             const gosterilecekOrt = exam.classAverage || hesaplanan.avg;
             const gosterilecekSira = exam.rank || hesaplanan.rank;
-
             const yuzde = exam.yuzde ? `%${exam.yuzde}` : '-';
 
             const row = document.createElement('tr');
@@ -304,8 +302,8 @@
     }
 
     function createChart(data) {
-        // DÜZELTME: reverse() kaldırıldı. En eski veri en solda olacak.
-        const exams = data.exams.slice(); 
+        // Grafikte de en eski solda, en yeni sağda olsun diye ters çeviriyoruz
+        const exams = data.exams.slice().reverse(); 
         const labels = exams.map(e => e.examName);
         const scores = exams.map(e => e.score);
 
