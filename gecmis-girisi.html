@@ -73,21 +73,22 @@
     const GITHUB_REPO = "vbs";
     const BRANCH = "main";
 
+    // SOYADI ALFABETİK SIRALI LİSTE
     const sinifListesi = [
-        {id: "145", name: "Aşık, Hilal"},
-        {id: "157", name: "Türkmenoğlu, Ömer Beren"},
-        {id: "371", name: "Bindebir, Begüm"},
-        {id: "462", name: "Barsan, Efe"},
         {id: "562", name: "Akkanat, Durmuş Efe"},
-        {id: "752", name: "Cifçi, Belinay"},
-        {id: "756", name: "Çağlar, Yarım"},
-        {id: "801", name: "Kaya, Emir"},
-        {id: "811", name: "Bila, Hülya"},
+        {id: "145", name: "Aşık, Hilal"},
         {id: "853", name: "Atalan, İclal"},
-        {id: "893", name: "Kılınç, Hacer"},
-        {id: "981", name: "Karataş, Nurten"},
-        {id: "1023", name: "Sert, Ece"},
+        {id: "462", name: "Barsan, Efe"},
+        {id: "811", name: "Bila, Hülya"},
+        {id: "371", name: "Bindebir, Begüm"},
+        {id: "756", name: "Çağlar, Yarım"},
+        {id: "752", name: "Cifçi, Belinay"},
         {id: "1076", name: "Karahanlı, Büşra"},
+        {id: "981", name: "Karataş, Nurten"},
+        {id: "801", name: "Kaya, Emir"},
+        {id: "893", name: "Kılınç, Hacer"},
+        {id: "1023", name: "Sert, Ece"},
+        {id: "157", name: "Türkmenoğlu, Ömer Beren"},
         {id: "1142", name: "Yılmaz, Nur Eymen"}
     ];
 
@@ -178,11 +179,9 @@
 
             if (sadeceHatalilar && !hataliOgrenciler.includes(ogr.id)) continue;
 
-            // Eğer kutu boşsa ve girmedi işaretli değilse atla (kaydetme)
             if (!checkbox.checked && !isNaN(net)) {
                 islenecekler.push({ ...ogr, score: net });
             } else if (checkbox.checked) {
-                // Girmediyse listeye ekle ama skor yok
                 islenecekler.push({ ...ogr, score: null });
             }
         }
@@ -196,9 +195,7 @@
         sonucDiv.className = 'sonuc info';
         sonucDiv.innerHTML = '⏳ Geçmiş veriler GitHub\'a kaydediliyor... Lütfen bekleyin...';
 
-        // Tarih girmiyoruz, geçmiş veri olduğu için bugünün tarihini atıyoruz.
         const bugun = new Date().toISOString().split('T')[0];
-
         let basariliSayisi = 0;
         hataliOgrenciler = []; 
 
@@ -214,7 +211,6 @@
                 }
             } catch (e) {}
 
-            // Çift kayıt kontrolü
             const zatenVar = mevcutExams.find(e => e.examName === denemeAdi);
             if (zatenVar) {
                 document.getElementById(`satir_${ogr.id}`).className = 'ogrenci-satiri basarili';
@@ -222,14 +218,12 @@
             }
 
             if (ogr.score !== null) {
-                // Yüzde hesaplamak için soru sayısını bilmiyoruz. 
-                // Geçmiş veride yüzde yoksa veya elimizde soru sayısı yoksa null bırakıyoruz.
-                mevcutExams.push({ // push ile en sona (eskiye) ekliyoruz, unshift ile en başa (yeniye) ekliyorduk.
+                mevcutExams.push({ 
                     examName: denemeAdi,
                     examDate: bugun,
                     score: ogr.score,
-                    yuzde: null, // Geçmiş veri olduğu için hesaplanamadı
-                    rank: null,  // Geçmiş veri olduğu için sıralama yok
+                    yuzde: null,
+                    rank: null,
                     totalStudents: null,
                     classAverage: null
                 });
@@ -258,10 +252,7 @@
             document.getElementById('btnTekrar').style.display = 'none';
             document.getElementById('btnOlustur').style.display = 'block';
             
-            // Başarılı olunca deneme adını temizle ki hemen yenisini girebilesin
             document.getElementById('denemeAdiInput').value = '';
-            
-            // İsteyen olursa diye temizle() fonksiyonunu çağırmıyoruz, sadece yeşil bırakıyoruz.
         } else {
             sonucDiv.className = 'sonuc error';
             sonucDiv.innerHTML = `⚠️ ${hataliOgrenciler.length} öğrencide hata oluştu. Kırmızı satırları kontrol edip "Hatalıları Tekrar Dene" butonuna basın.`;
@@ -284,8 +275,6 @@
         document.getElementById('btnTekrar').style.display = 'none';
         document.getElementById('btnOlustur').style.display = 'block';
         document.getElementById('sonuc').className = 'sonuc';
-        // Deneme adını da temizle ki yeni girişe hazır olsun
-        // document.getElementById('denemeAdiInput').value = ''; // Eğer her seferinde silinmesini istersen bu satırı aç
     }
     </script>
 </body>
