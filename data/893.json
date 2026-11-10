@@ -1,0 +1,15 @@
+{
+  "id": "893",
+  "name": "Kılınç, Hacer",
+  "exams": [
+    {
+      "examName": "j1",
+      "examDate": "2026-11-10",
+      "score": 56.25,
+      "yuzde": 70.3,
+      "rank": 6,
+      "totalStudents": 14,
+      "classAverage": 51.7
+    }
+  ]
+}
