@@ -1,0 +1,15 @@
+{
+  "id": "371",
+  "name": "Bindebir, Begüm",
+  "exams": [
+    {
+      "examName": "j1",
+      "examDate": "2026-11-10",
+      "score": 64.5,
+      "yuzde": 80.6,
+      "rank": 4,
+      "totalStudents": 14,
+      "classAverage": 51.7
+    }
+  ]
+}
