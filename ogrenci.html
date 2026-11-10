@@ -44,6 +44,13 @@
         .up { color: var(--success); font-weight: bold; }
         .down { color: var(--danger); font-weight: bold; }
         
+        .btn-show-all { 
+            display: block; width: 100%; padding: 12px; margin-top: 15px; 
+            background: #e3f2fd; color: var(--primary); border: 1px solid #bbdefb; 
+            border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s;
+        }
+        .btn-show-all:hover { background: #bbdefb; }
+
         .chart-container { position: relative; height: 300px; width: 100%; }
         .loading { text-align: center; padding: 40px; font-size: 1.2rem; color: var(--primary); font-weight: bold; }
         .error-box { background: #f8d7da; color: #721c24; padding: 30px; border-radius: 10px; text-align: center; }
@@ -88,10 +95,11 @@
                         <tbody id="examHistoryBody"></tbody>
                     </table>
                 </div>
+                <button class="btn-show-all" id="btnShowAll" onclick="showAllExams()" style="display: none;">Tümünü Gör</button>
             </div>
 
             <div class="card" id="chartCard">
-                <div class="card-title">📈 Net Değişim Grafiği</div>
+                <div class="card-title">📈 Net Değişim Grafiği (Tüm Denemeler)</div>
                 <div class="chart-container">
                     <canvas id="scoreChart"></canvas>
                 </div>
@@ -102,6 +110,7 @@
     <script>
     const urlParams = new URLSearchParams(window.location.search);
     const studentId = urlParams.get('id');
+    let globalData = null; // Veriyi buton için saklayacağız
 
     if (!studentId) {
         document.getElementById('studentInfo').innerHTML = `<div class="error-box"><h3>Hata</h3><p>Lütfen geçerli bir öğrenci numarası girin.</p></div>`;
@@ -116,6 +125,7 @@
             const res = await fetch(`data/${studentId}.json?t=${Date.now()}`);
             if (!res.ok) throw new Error('Kayıt bulunamadı');
             const data = await res.json();
+            globalData = data; // Sakla
 
             if (!data.exams || data.exams.length === 0) {
                 document.getElementById('studentInfo').innerHTML = `<div class="error-box"><h3>Veri Yok</h3><p>Bu öğrenciye ait henüz girilmiş bir sonuç bulunmuyor.</p></div>`;
@@ -149,13 +159,28 @@
             const ogrOrtalama = (ogrToplamNet / data.exams.length).toFixed(1);
 
             displayStudentInfo(data, ogrOrtalama, genelSiralama, genelToplamOgrenci);
-            displayExamHistory(data);
+            
+            // İlk yüklemede son 5 denemeyi göster
+            displayExamHistory(data, 5);
+            
+            // Eğer 5'ten fazla deneme varsa butonu göster
+            if (data.exams.length > 5) {
+                document.getElementById('btnShowAll').style.display = 'block';
+            }
+
             createChart(data);
 
         } catch (error) {
             document.getElementById('studentInfo').innerHTML = `<div class="error-box"><h3>Kayıt Bulunamadı</h3><p>${studentId} numaralı öğrenciye ait veri yok.</p></div>`;
             document.getElementById('historyCard').style.display = 'none';
             document.getElementById('chartCard').style.display = 'none';
+        }
+    }
+
+    function showAllExams() {
+        if (globalData) {
+            displayExamHistory(globalData, globalData.exams.length);
+            document.getElementById('btnShowAll').style.display = 'none'; // Butonu gizle
         }
     }
 
@@ -220,14 +245,20 @@
         `;
     }
 
-    function displayExamHistory(data) {
+    // Limite göre tabloyu doldurur
+    function displayExamHistory(data, limit) {
         const tbody = document.getElementById('examHistoryBody');
         tbody.innerHTML = '';
 
-        data.exams.forEach((exam, index) => {
+        // Sadece belirtilen limite kadar olanları al
+        const examsToShow = data.exams.slice(0, limit);
+
+        examsToShow.forEach((exam, index) => {
             let netDegisim = '-';
-            if (index < data.exams.length - 1) {
-                const prev = data.exams[index + 1];
+            // Değişim hesaplarken tüm verideki bir sonraki sınava bakmalıyız
+            const globalIndex = data.exams.findIndex(e => e === exam);
+            if (globalIndex < data.exams.length - 1) {
+                const prev = data.exams[globalIndex + 1];
                 const diff = (exam.score - prev.score).toFixed(1);
                 if (diff > 0) netDegisim = `<span class="up">+${diff}</span>`;
                 else if (diff < 0) netDegisim = `<span class="down">${diff}</span>`;
@@ -252,7 +283,7 @@
     }
 
     function createChart(data) {
-        const exams = data.exams.slice().reverse();
+        const exams = data.exams.slice().reverse(); // Grafikte en eskiden en yeniye doğru gitsin
         const labels = exams.map(e => e.examName);
         const scores = exams.map(e => e.score);
 
