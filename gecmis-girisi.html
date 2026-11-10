@@ -76,7 +76,6 @@
     const GITHUB_REPO = "vbs";
     const BRANCH = "main";
 
-    // SOYADI ALFABETİK SIRALI LİSTE
     const sinifListesi = [
         {id: "562", name: "Akkanat, Durmuş Efe"},
         {id: "145", name: "Aşık, Hilal"},
@@ -174,7 +173,6 @@
         
         localStorage.setItem('vbs_token', token);
 
-        // 1. Girilen netleri topla
         const islenecekler = [];
         for (let ogr of sinifListesi) {
             const input = document.getElementById(`net_${ogr.id}`);
@@ -199,7 +197,6 @@
         sonucDiv.className = 'sonuc info';
         sonucDiv.innerHTML = '⏳ Tüm sınıf verileri okunuyor, sıralamalar hesaplanıyor... Lütfen bekleyin...';
 
-        // 2. Sınıf ortalamasını ve sıralamayı hesaplamak için mevcut tüm verileri hafızaya al
         const mevcutTumVeriler = {};
         await Promise.all(sinifListesi.map(async ogr => {
             try {
@@ -214,7 +211,6 @@
             }
         }));
 
-        // 3. Sadece Sınava Girenlerin Netlerini Alıp Sıralama Hesapla
         const girenler = islenecekler.filter(o => o.score !== null);
         girenler.sort((a, b) => b.score - a.score);
         
@@ -222,7 +218,6 @@
             ? (girenler.reduce((sum, o) => sum + o.score, 0) / girenler.length).toFixed(1) 
             : 0;
 
-        // Sıralamaları öğrencilere ata
         girenler.forEach((ogr, index) => {
             ogr.rank = index + 1;
             ogr.yuzde = ((ogr.score / toplamSoru) * 100).toFixed(1);
@@ -237,7 +232,6 @@
         sonucDiv.className = 'sonuc info';
         sonucDiv.innerHTML = '⏳ Veriler GitHub\'a kaydediliyor... Lütfen bekleyin...';
 
-        // 4. Kaydetme İşlemi
         for (let ogr of islenecekler) {
             const dosyaAdi = `${ogr.id}.json`;
             let mevcutExams = mevcutTumVeriler[ogr.id].exams || [];
@@ -249,8 +243,8 @@
             }
 
             if (ogr.score !== null) {
-                // Geçmiş girişi olduğu için "push" ile en sona ekliyoruz
-                mevcutExams.push({ 
+                // DÜZELTME: En yeni denemeyi en başa almak için 'push' yerine 'unshift' kullanıldı
+                mevcutExams.unshift({ 
                     examName: denemeAdi,
                     examDate: bugun,
                     score: ogr.score,
