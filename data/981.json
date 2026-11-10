@@ -1,0 +1,15 @@
+{
+  "id": "981",
+  "name": "Karataş, Nurten",
+  "exams": [
+    {
+      "examName": "j1",
+      "examDate": "2026-11-10",
+      "score": 54.25,
+      "yuzde": 67.8,
+      "rank": 8,
+      "totalStudents": 14,
+      "classAverage": 51.7
+    }
+  ]
+}
