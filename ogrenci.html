@@ -35,9 +35,13 @@
         .general-status-card { background-color: #fffde7; border: 2px solid #fff59d; }
         .general-status-card .section-title { color: #f57f17; font-size: 1.2rem; font-weight: 600; margin-bottom: 15px; border-bottom: 2px solid #fff176; padding-bottom: 8px; display: flex; align-items: center; gap: 8px; }
 
-        /* 8 Kutu İçin Grid Sistemi */
-        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-        .stat-item { background: white; padding: 15px 10px; border-radius: 10px; text-align: center; border: 1px solid #e0e0e0; box-shadow: 0 2px 5px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: center; }
+        /* Grid Sistemleri */
+        .latest-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+        
+        /* Genel Durum 6 Kutu: PC'de 6 yan yana, Mobilde 2'li alt alta */
+        .general-stats-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
+        
+        .stat-item { background: white; padding: 15px 8px; border-radius: 10px; text-align: center; border: 1px solid #e0e0e0; box-shadow: 0 2px 5px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: center; }
         .stat-label { font-size: 0.8rem; color: #6c757d; margin-bottom: 8px; font-weight: 600; line-height: 1.2; }
         .stat-value { font-size: 1.3rem; font-weight: bold; color: var(--primary); }
         
@@ -61,16 +65,17 @@
         .loading { text-align: center; padding: 40px; font-size: 1.2rem; color: var(--primary); font-weight: bold; }
         .error-box { background: #f8d7da; color: #721c24; padding: 30px; border-radius: 10px; text-align: center; }
         
-        /* MOBİL DÜZELTMELERİ */
+        /* EKRAN BOYUTLARINA GÖRE UYARLAMA */
         @media (max-width: 900px) {
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .latest-stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .general-stats-grid { grid-template-columns: repeat(2, 1fr); } /* Mobilde 2 sütun x 3 satır */
         }
-        @media (max-width: 600px) {
-            .header h1 { font-size: 1.4rem; }
+        @media (max-width: 500px) {
             th, td { padding: 10px 5px; font-size: 0.8rem; }
+            .header h1 { font-size: 1.4rem; }
             .chart-container { height: 250px; }
-            .stat-value { font-size: 1.2rem; }
-            .stat-label { font-size: 0.75rem; }
+            .stat-value { font-size: 1.1rem; }
+            .stat-label { font-size: 0.7rem; }
         }
     </style>
 </head>
@@ -88,7 +93,7 @@
                 <!-- Son Deneme Detayları -->
                 <div class="section-card latest-exam-card" id="latestExamContainer">
                     <div class="section-title">🎯 Son Deneme Detayları <span id="latestExamName"></span></div>
-                    <div class="stats-grid" id="latestStatsGrid"></div>
+                    <div class="latest-stats-grid" id="latestStatsGrid"></div>
                     
                     <!-- Yapay Zeka Yorum Kutusu -->
                     <div class="ai-box" id="aiCommentBox" style="display: none;">
@@ -99,7 +104,7 @@
                 <!-- Genel Durum -->
                 <div class="section-card general-status-card" id="generalStatusContainer">
                     <div class="section-title">📊 Genel Durum (Tüm Denemeler)</div>
-                    <div class="stats-grid" id="generalStatsGrid" style="grid-template-columns: repeat(3, 1fr);"></div>
+                    <div class="general-stats-grid" id="generalStatsGrid"></div>
                 </div>
             </div>
 
@@ -170,6 +175,7 @@
 
             globalData = data;
             
+            // Genel Sıralama Hesaplamaları
             const ortalamalar = tumSinifVerileri.filter(v => v !== null && v.exams && v.exams.length > 0).map(v => {
                 const toplam = v.exams.reduce((sum, e) => sum + e.score, 0);
                 return { id: String(v.id), name: v.name, ortalama: toplam / v.exams.length };
@@ -183,7 +189,19 @@
             const ogrToplamNet = data.exams.reduce((sum, e) => sum + e.score, 0);
             const ogrOrtalama = (ogrToplamNet / data.exams.length).toFixed(2);
 
-            displayStudentInfo(data, ogrOrtalama, genelSiralama, genelToplamOgrenci);
+            // Sınıf Genel Ortalaması (Tüm öğrencilerin tüm netlerinin ortalaması)
+            let tumNetler = [];
+            tumSinifVerileri.forEach(v => {
+                if(v && v.exams) {
+                    v.exams.forEach(e => { if(e.score !== null) tumNetler.push(e.score); });
+                }
+            });
+            const sinifGenelOrtalamasi = tumNetler.length > 0 ? (tumNetler.reduce((a,b)=>a+b, 0) / tumNetler.length).toFixed(2) : '-';
+
+            // Toplam Yapılan Denemeler (En çok denemesi olan öğrencinin deneme sayısı)
+            const maxDeneme = Math.max(...tumSinifVerileri.filter(v => v !== null && v.exams).map(v => v.exams.length));
+
+            displayStudentInfo(data, ogrOrtalama, genelSiralama, genelToplamOgrenci, sinifGenelOrtalamasi, maxDeneme);
             displayExamHistory(data, 5);
             
             if (data.exams.length > 5) {
@@ -225,40 +243,32 @@
         }
     }
 
-    // Yapay Zeka Yorumunu Üreten Fonksiyon
-    function generateAIComment(data, latestExam, previousExam, hesaplananOrt, hesaplananSira) {
+    function generateAIComment(data, latestExam, previousExam, hesaplananOrt) {
         const score = latestExam.score;
         const classAvg = parseFloat(hesaplananOrt);
         
-        // 1. İlk Deneme Durumu
         if (data.exams.length === 1) {
             return "🎉 Sisteme hoş geldin! İlk deneme sonucun kaydedildi. Buradan gelişimini takip edebilirsin.";
         }
 
-        // Rekor kontrolü
         const previousScores = data.exams.slice(1).map(e => e.score);
         const maxScore = Math.max(...previousScores);
 
-        // 2. Rekor Durumu
         if (score > maxScore) {
             return `🏆 Harika! Bu denemede kendi rekorunu kırdın. Önceki en yüksek netin ${maxScore} idi, şimdi ${score} yaptın. Tebrikler!`;
         }
 
-        // 3. Net Değişimi (Yükseliş / Düşüş / Aynı)
         const scoreDiff = (score - previousExam.score).toFixed(2);
         
         if (scoreDiff > 0) {
-             // Yükseliş var, ama ortalamaya göre nasıl?
              if (classAvg && score > classAvg) {
                  return `📈 Bir önceki denemene göre netini ${scoreDiff} puan artırdın ve sınıf ortalamasının (${classAvg}) üzerindesin. Bu istikrarı korumaya devam et.`;
              } else {
                  return `📈 Bir önceki denemene göre netini ${scoreDiff} puan artırdın. Gelişim devam ediyor, eksik konularına odaklanmayı sürdür.`;
              }
         } else if (scoreDiff < 0) {
-            // Düşüş var
             return `📉 Bir önceki denemene göre netin ${Math.abs(scoreDiff)} puan düştü. Eksik olduğun konuları tekrar etmende fayda var. Her düşüş yeni bir başlangıçtır.`;
         } else {
-            // Aynı net (İstikrar)
             if (classAvg && score > classAvg) {
                 return `🎯 Netin bir önceki denemeyle aynı. Sınıf ortalamasının (${classAvg}) üzerinde, başarılı seviyeni koruyorsun.`;
             } else {
@@ -267,11 +277,11 @@
         }
     }
 
-    function displayStudentInfo(data, ogrOrtalama, genelSiralama, genelToplamOgrenci) {
+    function displayStudentInfo(data, ogrOrtalama, genelSiralama, genelToplamOgrenci, sinifGenelOrtalamasi, maxDeneme) {
         document.getElementById('studentNameDisplay').innerText = data.name;
         
         const latest = data.exams[0];
-        const previous = data.exams[1]; // 2. deneme (varsa)
+        const previous = data.exams[1]; 
         
         document.getElementById('latestExamName').innerText = `(${latest.examName})`;
         
@@ -282,11 +292,9 @@
         const gosterilecekKatilim = latest.totalStudents || hesaplanan.total;
         const yuzde = latest.yuzde ? `%${latest.yuzde}` : '-';
 
-        // En İyi Net (Rekor)
         const allScores = data.exams.map(e => e.score);
         const kisiselRekor = Math.max(...allScores);
 
-        // Net Değişimi Hesaplama
         let netDegisimText = '-';
         let netDegisimRenk = 'var(--primary)';
         if (previous) {
@@ -304,7 +312,6 @@
 
         let genelSiralamaText = genelSiralama ? genelSiralama : '-';
 
-        // 8'li Kutu Düzeni
         document.getElementById('latestStatsGrid').innerHTML = `
             <div class="stat-item">
                 <div class="stat-label">Net</div>
@@ -312,7 +319,7 @@
             </div>
             <div class="stat-item">
                 <div class="stat-label">Soru Sayısı</div>
-                <div class="stat-value">${latest.examDate ? '80' : '80'}</div> <!-- Geçici olarak 80, ileride JSON'dan çekilebilir -->
+                <div class="stat-value">80</div>
             </div>
             <div class="stat-item">
                 <div class="stat-label">Başarı Yüzdesi</div>
@@ -340,24 +347,35 @@
             </div>
         `;
 
-        // Genel Durum
+        // Senin Belirlediğin Sıralama ile 6'lı Genel Durum
         document.getElementById('generalStatsGrid').innerHTML = `
             <div class="stat-item">
-                <div class="stat-label">Genel Net Ortalaması</div>
-                <div class="stat-value" style="font-size: 1.6rem;">${ogrOrtalama}</div>
+                <div class="stat-label">Toplam Deneme Sayısı</div>
+                <div class="stat-value" style="font-size: 1.5rem;">${maxDeneme}</div>
             </div>
             <div class="stat-item">
-                <div class="stat-label">Genel Sıralama</div>
-                <div class="stat-value" style="font-size: 1.6rem;">${genelSiralamaText}</div>
+                <div class="stat-label">Öğrencinin Katıldığı Deneme</div>
+                <div class="stat-value" style="font-size: 1.5rem;">${data.exams.length}</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Sınıfın Genel Ortalaması</div>
+                <div class="stat-value" style="font-size: 1.5rem; color: #6a4c93;">${sinifGenelOrtalamasi}</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Öğrencinin Genel Ortalaması</div>
+                <div class="stat-value" style="font-size: 1.5rem; color: var(--success);">${ogrOrtalama}</div>
             </div>
             <div class="stat-item">
                 <div class="stat-label">Sınıf Mevcudu</div>
-                <div class="stat-value" style="font-size: 1.6rem;">${genelToplamOgrenci}</div>
+                <div class="stat-value" style="font-size: 1.5rem;">${genelToplamOgrenci}</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Öğrencinin Genel Sıralaması</div>
+                <div class="stat-value" style="font-size: 1.5rem;">${genelSiralamaText}</div>
             </div>
         `;
 
-        // Yapay Zeka Yorumu Ekle
-        const aiComment = generateAIComment(data, latest, previous, gosterilecekOrt, gosterilecekSira);
+        const aiComment = generateAIComment(data, latest, previous, gosterilecekOrt);
         document.getElementById('aiCommentText').innerText = aiComment;
         document.getElementById('aiCommentBox').style.display = 'block';
     }
@@ -375,7 +393,6 @@
             const yuzde = exam.yuzde ? `%${exam.yuzde}` : '-';
 
             const row = document.createElement('tr');
-            // Tarih sütunu kaldırıldı, sadece Deneme adı ve metrikler var
             row.innerHTML = `
                 <td>${exam.examName}</td>
                 <td><strong>${exam.score}</strong></td>
