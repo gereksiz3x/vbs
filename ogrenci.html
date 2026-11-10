@@ -143,6 +143,7 @@
             
             const ortalamalar = tumSinifVerileri.filter(v => v !== null && v.exams && v.exams.length > 0).map(v => {
                 const toplam = v.exams.reduce((sum, e) => sum + e.score, 0);
+                // Yuvarlama kaldırıldı, tam sayı döndürüyor
                 return { id: String(v.id), name: v.name, ortalama: toplam / v.exams.length };
             });
             ortalamalar.sort((a, b) => b.ortalama - a.ortalama);
@@ -152,7 +153,8 @@
             const genelToplamOgrenci = ortalamalar.length;
             
             const ogrToplamNet = data.exams.reduce((sum, e) => sum + e.score, 0);
-            const ogrOrtalama = (ogrToplamNet / data.exams.length).toFixed(1);
+            // Yuvarlama kaldırıldı, tam sayı döndürüyor
+            const ogrOrtalama = ogrToplamNet / data.exams.length;
 
             displayStudentInfo(data, ogrOrtalama, genelSiralama, genelToplamOgrenci);
             displayExamHistory(data, 5);
@@ -186,7 +188,8 @@
         const ortalama = girenler.reduce((sum, o) => sum + o.score, 0) / girenler.length;
         const sira = girenler.findIndex(o => o.score === ogrScore) + 1; 
 
-        return { rank: sira, avg: ortalama.toFixed(1), total: girenler.length };
+        // Yuvarlama kaldırıldı
+        return { rank: sira, avg: ortalama, total: girenler.length };
     }
 
     function showAllExams() {
