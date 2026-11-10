@@ -1,0 +1,15 @@
+{
+  "id": "756",
+  "name": "Çağlar, Yarım",
+  "exams": [
+    {
+      "examName": "j1",
+      "examDate": "2026-11-10",
+      "score": 69.5,
+      "yuzde": 86.9,
+      "rank": 3,
+      "totalStudents": 14,
+      "classAverage": 51.7
+    }
+  ]
+}
