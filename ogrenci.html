@@ -41,8 +41,6 @@
         th, td { padding: 12px; text-align: center; border-bottom: 1px solid var(--border); }
         th { background: var(--primary); color: white; font-weight: 600; }
         tr:nth-child(even) { background: var(--light); }
-        .up { color: var(--success); font-weight: bold; }
-        .down { color: var(--danger); font-weight: bold; }
         
         .btn-show-all { 
             display: block; width: 100%; padding: 12px; margin-top: 15px; 
@@ -89,7 +87,6 @@
                                 <th>Yüzde (%)</th>
                                 <th>Sıra</th>
                                 <th>Sınıf Ort.</th>
-                                <th>Net Değişim</th>
                             </tr>
                         </thead>
                         <tbody id="examHistoryBody"></tbody>
@@ -266,22 +263,10 @@
         const tbody = document.getElementById('examHistoryBody');
         tbody.innerHTML = '';
 
-        // DÜZELTME BURADA: reverse() eklenerek en son girilen deneme en üste alındı.
-        const examsToShow = data.exams.slice().reverse().slice(0, limit);
+        const reversedExams = data.exams.slice().reverse();
+        const examsToShow = reversedExams.slice(0, limit);
 
-        examsToShow.forEach((exam, index) => {
-            let netDegisim = '-';
-            
-            // Değişim hesaplaması için doğru veriyi bulma
-            const originalIndex = data.exams.findIndex(e => e.examName === exam.examName);
-            if (originalIndex < data.exams.length - 1) {
-                const prev = data.exams[originalIndex + 1];
-                const diff = (exam.score - prev.score).toFixed(1);
-                if (diff > 0) netDegisim = `<span class="up">+${diff}</span>`;
-                else if (diff < 0) netDegisim = `<span class="down">${diff}</span>`;
-                else netDegisim = '0';
-            }
-            
+        examsToShow.forEach((exam) => {
             const hesaplanan = gecmisDenemeHesapla(exam.examName, exam.score);
             const gosterilecekOrt = exam.classAverage || hesaplanan.avg;
             const gosterilecekSira = exam.rank || hesaplanan.rank;
@@ -295,14 +280,12 @@
                 <td>${yuzde}</td>
                 <td>${gosterilecekSira !== null ? gosterilecekSira : '-'}</td>
                 <td>${gosterilecekOrt !== null ? gosterilecekOrt : '-'}</td>
-                <td>${netDegisim}</td>
             `;
             tbody.appendChild(row);
         });
     }
 
     function createChart(data) {
-        // Grafikte de en eski solda, en yeni sağda olsun diye ters çeviriyoruz
         const exams = data.exams.slice().reverse(); 
         const labels = exams.map(e => e.examName);
         const scores = exams.map(e => e.score);
