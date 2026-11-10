@@ -55,6 +55,9 @@
         <div class="ayar-alani">
             <label><strong>📝 Geçmiş Deneme Adı:</strong></label>
             <input type="text" id="denemeAdiInput" placeholder="Örn: 1. Deneme (veya 2023 Güz)">
+            
+            <label style="margin-top:10px; display:block;"><strong>📊 Toplam Soru Sayısı:</strong></label>
+            <input type="number" id="soruSayisiInput" min="1" placeholder="Örn: 80">
         </div>
 
         <div class="sinif-listesi" id="sinifListesi"></div>
@@ -161,17 +164,18 @@
         const sonucDiv = document.getElementById('sonuc');
         const token = document.getElementById('tokenInput').value.trim();
         const denemeAdi = document.getElementById('denemeAdiInput').value.trim();
+        const toplamSoru = parseFloat(document.getElementById('soruSayisiInput').value);
         
-        if (!token || !denemeAdi) {
+        if (!token || !denemeAdi || !toplamSoru) {
             sonucDiv.className = 'sonuc error';
-            sonucDiv.innerHTML = '❌ Lütfen Token ve Deneme Adı alanlarını doldurun!';
+            sonucDiv.innerHTML = '❌ Lütfen Token, Deneme Adı ve Soru Sayısı alanlarını doldurun!';
             return;
         }
         
         localStorage.setItem('vbs_token', token);
 
+        // 1. Girilen netleri topla
         const islenecekler = [];
-
         for (let ogr of sinifListesi) {
             const input = document.getElementById(`net_${ogr.id}`);
             const checkbox = document.getElementById(`girmedi_${ogr.id}`);
@@ -193,24 +197,51 @@
         }
 
         sonucDiv.className = 'sonuc info';
-        sonucDiv.innerHTML = '⏳ Geçmiş veriler GitHub\'a kaydediliyor... Lütfen bekleyin...';
+        sonucDiv.innerHTML = '⏳ Tüm sınıf verileri okunuyor, sıralamalar hesaplanıyor... Lütfen bekleyin...';
+
+        // 2. Sınıf ortalamasını ve sıralamayı hesaplamak için mevcut tüm verileri hafızaya al
+        const mevcutTumVeriler = {};
+        await Promise.all(sinifListesi.map(async ogr => {
+            try {
+                const res = await fetch(`data/${ogr.id}.json?t=${Date.now()}`);
+                if (res.ok) {
+                    mevcutTumVeriler[ogr.id] = await res.json();
+                } else {
+                    mevcutTumVeriler[ogr.id] = { id: ogr.id, name: ogr.name, exams: [] };
+                }
+            } catch (e) {
+                mevcutTumVeriler[ogr.id] = { id: ogr.id, name: ogr.name, exams: [] };
+            }
+        }));
+
+        // 3. Sadece Sınava Girenlerin Netlerini Alıp Sıralama Hesapla
+        const girenler = islenecekler.filter(o => o.score !== null);
+        girenler.sort((a, b) => b.score - a.score);
+        
+        const sinifOrtalamasi = girenler.length > 0 
+            ? (girenler.reduce((sum, o) => sum + o.score, 0) / girenler.length).toFixed(1) 
+            : 0;
+
+        // Sıralamaları öğrencilere ata
+        girenler.forEach((ogr, index) => {
+            ogr.rank = index + 1;
+            ogr.yuzde = ((ogr.score / toplamSoru) * 100).toFixed(1);
+            ogr.totalStudents = girenler.length;
+            ogr.classAverage = parseFloat(sinifOrtalamasi);
+        });
 
         const bugun = new Date().toISOString().split('T')[0];
         let basariliSayisi = 0;
         hataliOgrenciler = []; 
 
+        sonucDiv.className = 'sonuc info';
+        sonucDiv.innerHTML = '⏳ Veriler GitHub\'a kaydediliyor... Lütfen bekleyin...';
+
+        // 4. Kaydetme İşlemi
         for (let ogr of islenecekler) {
             const dosyaAdi = `${ogr.id}.json`;
-            let mevcutExams = [];
+            let mevcutExams = mevcutTumVeriler[ogr.id].exams || [];
             
-            try {
-                const res = await fetch(`data/${dosyaAdi}?t=${Date.now()}`);
-                if (res.ok) {
-                    const eskiData = await res.json();
-                    mevcutExams = eskiData.exams || [];
-                }
-            } catch (e) {}
-
             const zatenVar = mevcutExams.find(e => e.examName === denemeAdi);
             if (zatenVar) {
                 document.getElementById(`satir_${ogr.id}`).className = 'ogrenci-satiri basarili';
@@ -218,14 +249,15 @@
             }
 
             if (ogr.score !== null) {
+                // Geçmiş girişi olduğu için "push" ile en sona ekliyoruz
                 mevcutExams.push({ 
                     examName: denemeAdi,
                     examDate: bugun,
                     score: ogr.score,
-                    yuzde: null,
-                    rank: null,
-                    totalStudents: null,
-                    classAverage: null
+                    yuzde: parseFloat(ogr.yuzde),
+                    rank: ogr.rank,
+                    totalStudents: ogr.totalStudents,
+                    classAverage: ogr.classAverage
                 });
             }
 
