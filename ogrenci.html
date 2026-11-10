@@ -143,7 +143,6 @@
             
             const ortalamalar = tumSinifVerileri.filter(v => v !== null && v.exams && v.exams.length > 0).map(v => {
                 const toplam = v.exams.reduce((sum, e) => sum + e.score, 0);
-                // Yuvarlama kaldırıldı, tam sayı döndürüyor
                 return { id: String(v.id), name: v.name, ortalama: toplam / v.exams.length };
             });
             ortalamalar.sort((a, b) => b.ortalama - a.ortalama);
@@ -153,8 +152,7 @@
             const genelToplamOgrenci = ortalamalar.length;
             
             const ogrToplamNet = data.exams.reduce((sum, e) => sum + e.score, 0);
-            // Yuvarlama kaldırıldı, tam sayı döndürüyor
-            const ogrOrtalama = ogrToplamNet / data.exams.length;
+            const ogrOrtalama = (ogrToplamNet / data.exams.length).toFixed(2);
 
             displayStudentInfo(data, ogrOrtalama, genelSiralama, genelToplamOgrenci);
             displayExamHistory(data, 5);
@@ -188,8 +186,7 @@
         const ortalama = girenler.reduce((sum, o) => sum + o.score, 0) / girenler.length;
         const sira = girenler.findIndex(o => o.score === ogrScore) + 1; 
 
-        // Yuvarlama kaldırıldı
-        return { rank: sira, avg: ortalama, total: girenler.length };
+        return { rank: sira, avg: ortalama.toFixed(2), total: girenler.length };
     }
 
     function showAllExams() {
@@ -266,8 +263,8 @@
         const tbody = document.getElementById('examHistoryBody');
         tbody.innerHTML = '';
 
-        const reversedExams = data.exams.slice().reverse();
-        const examsToShow = reversedExams.slice(0, limit);
+        // DÜZELTME BURADA: reverse() kaldırıldı. En son eklenen (e2) en üstte görünecek.
+        const examsToShow = data.exams.slice(0, limit);
 
         examsToShow.forEach((exam) => {
             const hesaplanan = gecmisDenemeHesapla(exam.examName, exam.score);
@@ -289,6 +286,7 @@
     }
 
     function createChart(data) {
+        // Grafikte en eski solda, en yeni sağda olsun diye ters çeviriyoruz (buna dokunmuyoruz)
         const exams = data.exams.slice().reverse(); 
         const labels = exams.map(e => e.examName);
         const scores = exams.map(e => e.score);
