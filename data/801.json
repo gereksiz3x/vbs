@@ -10,6 +10,15 @@
       "rank": null,
       "totalStudents": null,
       "classAverage": null
+    },
+    {
+      "examName": "j2",
+      "examDate": "2026-11-10",
+      "score": 28.75,
+      "yuzde": null,
+      "rank": null,
+      "totalStudents": null,
+      "classAverage": null
     }
   ]
 }
