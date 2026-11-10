@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Öğrenci Deneme Sonuçları</title>
+    <title>Deneme Sonuç Sistemi</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
@@ -27,24 +27,24 @@
         
         .student-name { font-size: 1.6rem; font-weight: 700; color: var(--secondary); text-align: center; margin-bottom: 10px; }
 
-        /* ANA KARTLAR (Son Deneme ve Genel Durum için) */
         .section-card { border-radius: 12px; padding: 20px; margin-bottom: 15px; }
         
-        /* Son Deneme Detayları Kutusu (Mavi Tema) */
         .latest-exam-card { background-color: #f0f7ff; border: 2px solid #bbdefb; }
         .latest-exam-card .section-title { color: #1565c0; font-size: 1.2rem; font-weight: 600; margin-bottom: 15px; border-bottom: 2px solid #90caf9; padding-bottom: 8px; display: flex; align-items: center; gap: 8px; }
         
-        /* Genel Durum Kutusu (Sarı/Turuncu Tema) */
         .general-status-card { background-color: #fffde7; border: 2px solid #fff59d; }
         .general-status-card .section-title { color: #f57f17; font-size: 1.2rem; font-weight: 600; margin-bottom: 15px; border-bottom: 2px solid #fff176; padding-bottom: 8px; display: flex; align-items: center; gap: 8px; }
 
-        /* İstatistik Kutucukları */
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; }
-        .stat-item { background: white; padding: 15px 10px; border-radius: 10px; text-align: center; border: 1px solid #e0e0e0; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
-        .stat-label { font-size: 0.85rem; color: #6c757d; margin-bottom: 8px; font-weight: 600; }
-        .stat-value { font-size: 1.5rem; font-weight: bold; color: var(--primary); }
+        /* 8 Kutu İçin Grid Sistemi */
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+        .stat-item { background: white; padding: 15px 10px; border-radius: 10px; text-align: center; border: 1px solid #e0e0e0; box-shadow: 0 2px 5px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: center; }
+        .stat-label { font-size: 0.8rem; color: #6c757d; margin-bottom: 8px; font-weight: 600; line-height: 1.2; }
+        .stat-value { font-size: 1.3rem; font-weight: bold; color: var(--primary); }
         
-        /* Diğer Kartlar (Tablo ve Grafik) */
+        /* Yapay Zeka Kutusu */
+        .ai-box { margin-top: 15px; background: linear-gradient(135deg, #f3e7e9 0%, #e3eeff 100%); border-left: 5px solid var(--primary); padding: 15px; border-radius: 8px; font-size: 0.95rem; line-height: 1.5; color: #333; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .ai-box strong { color: var(--primary); }
+
         .card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid var(--border); }
         .card-title { color: var(--primary); font-size: 1.2rem; margin-bottom: 15px; font-weight: 600; border-bottom: 2px solid var(--light); padding-bottom: 10px; display: flex; align-items: center; gap: 8px; }
         
@@ -54,44 +54,49 @@
         th { background: var(--primary); color: white; font-weight: 600; }
         tr:nth-child(even) { background: var(--light); }
         
-        .btn-show-all { 
-            display: block; width: 100%; padding: 12px; margin-top: 15px; 
-            background: #e3f2fd; color: var(--primary); border: 1px solid #bbdefb; 
-            border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s;
-        }
+        .btn-show-all { display: block; width: 100%; padding: 12px; margin-top: 15px; background: #e3f2fd; color: var(--primary); border: 1px solid #bbdefb; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
         .btn-show-all:hover { background: #bbdefb; }
 
         .chart-container { position: relative; height: 300px; width: 100%; }
         .loading { text-align: center; padding: 40px; font-size: 1.2rem; color: var(--primary); font-weight: bold; }
         .error-box { background: #f8d7da; color: #721c24; padding: 30px; border-radius: 10px; text-align: center; }
         
+        /* MOBİL DÜZELTMELERİ */
+        @media (max-width: 900px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
         @media (max-width: 600px) {
-            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .header h1 { font-size: 1.4rem; }
             th, td { padding: 10px 5px; font-size: 0.8rem; }
-            .header h1 { font-size: 1.5rem; }
             .chart-container { height: 250px; }
+            .stat-value { font-size: 1.2rem; }
+            .stat-label { font-size: 0.75rem; }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>Öğrenci Sonuç Belgesi</h1>
-            <p>Detaylı performans analizi</p>
+            <h1>Deneme Sonuç Sistemi</h1>
+            <p>Detaylı performans ve gelişim analizi</p>
         </div>
 
         <div class="content">
-            <!-- Öğrenci Bilgi ve İstatistik Kartı -->
-            <div class="card" id="infoCard" style="padding-bottom: 10px;">
+            <div class="card" id="infoCard" style="padding-bottom: 15px;">
                 <div class="student-name" id="studentNameDisplay"></div>
                 
-                <!-- Son Deneme Detayları (Ayrı Kutu) -->
+                <!-- Son Deneme Detayları -->
                 <div class="section-card latest-exam-card" id="latestExamContainer">
                     <div class="section-title">🎯 Son Deneme Detayları <span id="latestExamName"></span></div>
                     <div class="stats-grid" id="latestStatsGrid"></div>
+                    
+                    <!-- Yapay Zeka Yorum Kutusu -->
+                    <div class="ai-box" id="aiCommentBox" style="display: none;">
+                        <strong>🤖 Değerlendirme:</strong> <span id="aiCommentText"></span>
+                    </div>
                 </div>
 
-                <!-- Genel Durum (Ayrı Kutu) -->
+                <!-- Genel Durum -->
                 <div class="section-card general-status-card" id="generalStatusContainer">
                     <div class="section-title">📊 Genel Durum (Tüm Denemeler)</div>
                     <div class="stats-grid" id="generalStatsGrid" style="grid-template-columns: repeat(3, 1fr);"></div>
@@ -105,7 +110,6 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>Tarih</th>
                                 <th>Deneme</th>
                                 <th>Net</th>
                                 <th>Yüzde (%)</th>
@@ -221,15 +225,54 @@
         }
     }
 
-    function formatDate(dateString) {
-        const date = new Date(dateString);
-        return `${date.getDate().toString().padStart(2, '0')}.${(date.getMonth() + 1).toString().padStart(2, '0')}.${date.getFullYear()}`;
+    // Yapay Zeka Yorumunu Üreten Fonksiyon
+    function generateAIComment(data, latestExam, previousExam, hesaplananOrt, hesaplananSira) {
+        const score = latestExam.score;
+        const classAvg = parseFloat(hesaplananOrt);
+        
+        // 1. İlk Deneme Durumu
+        if (data.exams.length === 1) {
+            return "🎉 Sisteme hoş geldin! İlk deneme sonucun kaydedildi. Buradan gelişimini takip edebilirsin.";
+        }
+
+        // Rekor kontrolü
+        const previousScores = data.exams.slice(1).map(e => e.score);
+        const maxScore = Math.max(...previousScores);
+
+        // 2. Rekor Durumu
+        if (score > maxScore) {
+            return `🏆 Harika! Bu denemede kendi rekorunu kırdın. Önceki en yüksek netin ${maxScore} idi, şimdi ${score} yaptın. Tebrikler!`;
+        }
+
+        // 3. Net Değişimi (Yükseliş / Düşüş / Aynı)
+        const scoreDiff = (score - previousExam.score).toFixed(2);
+        
+        if (scoreDiff > 0) {
+             // Yükseliş var, ama ortalamaya göre nasıl?
+             if (classAvg && score > classAvg) {
+                 return `📈 Bir önceki denemene göre netini ${scoreDiff} puan artırdın ve sınıf ortalamasının (${classAvg}) üzerindesin. Bu istikrarı korumaya devam et.`;
+             } else {
+                 return `📈 Bir önceki denemene göre netini ${scoreDiff} puan artırdın. Gelişim devam ediyor, eksik konularına odaklanmayı sürdür.`;
+             }
+        } else if (scoreDiff < 0) {
+            // Düşüş var
+            return `📉 Bir önceki denemene göre netin ${Math.abs(scoreDiff)} puan düştü. Eksik olduğun konuları tekrar etmende fayda var. Her düşüş yeni bir başlangıçtır.`;
+        } else {
+            // Aynı net (İstikrar)
+            if (classAvg && score > classAvg) {
+                return `🎯 Netin bir önceki denemeyle aynı. Sınıf ortalamasının (${classAvg}) üzerinde, başarılı seviyeni koruyorsun.`;
+            } else {
+                return `🎯 Netin bir önceki denemeyle aynı. İlerleme kaydetmek için yeni bir çalışma yöntemi denemelisin.`;
+            }
+        }
     }
 
     function displayStudentInfo(data, ogrOrtalama, genelSiralama, genelToplamOgrenci) {
         document.getElementById('studentNameDisplay').innerText = data.name;
         
         const latest = data.exams[0];
+        const previous = data.exams[1]; // 2. deneme (varsa)
+        
         document.getElementById('latestExamName').innerText = `(${latest.examName})`;
         
         const hesaplanan = gecmisDenemeHesapla(latest.examName, latest.score);
@@ -238,17 +281,46 @@
         const gosterilecekOrt = latest.classAverage || hesaplanan.avg;
         const gosterilecekKatilim = latest.totalStudents || hesaplanan.total;
         const yuzde = latest.yuzde ? `%${latest.yuzde}` : '-';
+
+        // En İyi Net (Rekor)
+        const allScores = data.exams.map(e => e.score);
+        const kisiselRekor = Math.max(...allScores);
+
+        // Net Değişimi Hesaplama
+        let netDegisimText = '-';
+        let netDegisimRenk = 'var(--primary)';
+        if (previous) {
+            const diff = latest.score - previous.score;
+            if (diff > 0) {
+                netDegisimText = `+${diff.toFixed(2)}`;
+                netDegisimRenk = 'var(--success)';
+            } else if (diff < 0) {
+                netDegisimText = `${diff.toFixed(2)}`;
+                netDegisimRenk = 'var(--danger)';
+            } else {
+                netDegisimText = 'Aynı';
+            }
+        }
+
         let genelSiralamaText = genelSiralama ? genelSiralama : '-';
 
-        // 1. Son Deneme Detayları Kutuları
+        // 8'li Kutu Düzeni
         document.getElementById('latestStatsGrid').innerHTML = `
             <div class="stat-item">
                 <div class="stat-label">Net</div>
                 <div class="stat-value">${latest.score}</div>
             </div>
             <div class="stat-item">
+                <div class="stat-label">Soru Sayısı</div>
+                <div class="stat-value">${latest.examDate ? '80' : '80'}</div> <!-- Geçici olarak 80, ileride JSON'dan çekilebilir -->
+            </div>
+            <div class="stat-item">
                 <div class="stat-label">Başarı Yüzdesi</div>
                 <div class="stat-value" style="color: var(--success);">${yuzde}</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">En İyi Net (Rekor)</div>
+                <div class="stat-value" style="color: #f72585;">${kisiselRekor}</div>
             </div>
             <div class="stat-item">
                 <div class="stat-label">Sınıf Ortalaması</div>
@@ -262,9 +334,13 @@
                 <div class="stat-label">Katılan Öğrenci</div>
                 <div class="stat-value">${gosterilecekKatilim !== null ? gosterilecekKatilim : '-'}</div>
             </div>
+            <div class="stat-item">
+                <div class="stat-label">Net Değişimi</div>
+                <div class="stat-value" style="color: ${netDegisimRenk};">${netDegisimText}</div>
+            </div>
         `;
 
-        // 2. Genel Durum Kutuları
+        // Genel Durum
         document.getElementById('generalStatsGrid').innerHTML = `
             <div class="stat-item">
                 <div class="stat-label">Genel Net Ortalaması</div>
@@ -279,6 +355,11 @@
                 <div class="stat-value" style="font-size: 1.6rem;">${genelToplamOgrenci}</div>
             </div>
         `;
+
+        // Yapay Zeka Yorumu Ekle
+        const aiComment = generateAIComment(data, latest, previous, gosterilecekOrt, gosterilecekSira);
+        document.getElementById('aiCommentText').innerText = aiComment;
+        document.getElementById('aiCommentBox').style.display = 'block';
     }
 
     function displayExamHistory(data, limit) {
@@ -294,8 +375,8 @@
             const yuzde = exam.yuzde ? `%${exam.yuzde}` : '-';
 
             const row = document.createElement('tr');
+            // Tarih sütunu kaldırıldı, sadece Deneme adı ve metrikler var
             row.innerHTML = `
-                <td>${formatDate(exam.examDate)}</td>
                 <td>${exam.examName}</td>
                 <td><strong>${exam.score}</strong></td>
                 <td>${yuzde}</td>
