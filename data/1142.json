@@ -1,0 +1,15 @@
+{
+  "id": "1142",
+  "name": "Yılmaz, Nur Eymen",
+  "exams": [
+    {
+      "examName": "j1",
+      "examDate": "2026-11-10",
+      "score": 43,
+      "yuzde": 53.8,
+      "rank": 11,
+      "totalStudents": 14,
+      "classAverage": 51.7
+    }
+  ]
+}
