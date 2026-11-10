@@ -1,5 +1,15 @@
 {
   "id": "1076",
   "name": "Karahanlı, Büşra",
-  "exams": []
+  "exams": [
+    {
+      "examName": "e1",
+      "examDate": "2026-11-10",
+      "score": 68.75,
+      "yuzde": 85.9,
+      "rank": 3,
+      "totalStudents": 14,
+      "classAverage": 56.8
+    }
+  ]
 }
