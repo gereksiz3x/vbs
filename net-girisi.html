@@ -3,72 +3,195 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VBS Geçmiş Girişi</title>
+    <title>VBS Yönetici Paneli</title>
     <style>
-        * { box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; background: #f0f2f5; padding: 15px; margin: 0; }
-        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
-        h1 { text-align: center; color: #2c3e50; margin-bottom: 10px; font-size: 22px; }
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%); padding: 20px; margin: 0; min-height: 100vh; display: flex; justify-content: center; }
         
-        .ayar-alani, .token-alani { padding: 15px; border-radius: 10px; margin-bottom: 15px; }
-        .token-alani { background: #fff3cd; border: 1px solid #ffeeba; }
-        .ayar-alani { background: #e3f2fd; border: 1px solid #bbdefb; }
+        /* Kapsayıcı ve Siyah Çerçeve */
+        .main-wrapper { width: 100%; max-width: 1400px; background: white; border: 3px solid #2c3e50; border-radius: 16px; box-shadow: 0 15px 40px rgba(0,0,0,0.2); overflow: hidden; }
         
-        .ayar-alani input, .token-alani input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; margin-top: 5px; font-size: 15px; }
+        /* Renkli Header */
+        .header { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; padding: 25px 20px; text-align: center; }
+        .header h1 { margin: 0; font-size: 26px; letter-spacing: 1px; }
+
+        /* İki Sütunlu Düzen (PC'de yan yana, Mobilde alt alta) */
+        .layout-grid { display: grid; grid-template-columns: 1fr 350px; gap: 0; }
         
-        .sinif-listesi { max-height: 50vh; overflow-y: auto; border: 2px solid #e9ecef; border-radius: 10px; padding: 10px; margin-bottom: 20px; }
-        .ogrenci-satiri { display: flex; align-items: center; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; transition: 0.3s; }
+        /* Sol Taraf: Ana Form */
+        .left-panel { padding: 30px; border-right: 2px dashed #bdc3c7; }
+        
+        /* Sağ Taraf: Sıralamalar */
+        .right-panel { padding: 30px 20px; background: #f8f9fa; display: flex; flex-direction: column; gap: 25px; }
+
+        /* Ayırıcı Çizgiler ve Bölümler */
+        .section-block { margin-bottom: 25px; padding-bottom: 25px; border-bottom: 2px solid #e9ecef; }
+        .section-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        
+        .section-title { font-size: 16px; font-weight: bold; color: #2c3e50; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+
+        /* Modern Input Kutuları */
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; font-size: 14px; font-weight: 600; color: #34495e; margin-bottom: 6px; }
+        .input-group input { width: 100%; padding: 12px; border: 2px solid #bdc3c7; border-radius: 8px; font-size: 15px; transition: 0.3s; }
+        .input-group input:focus { border-color: #3498db; outline: none; box-shadow: 0 0 8px rgba(52, 152, 219, 0.3); }
+        
+        /* Özel Renkli Çerçeveler (Token için Sarı, Deneme için Mavi) */
+        .token-box { background: #fffdf5; border-left: 5px solid #f1c40f; padding: 15px; border-radius: 8px; }
+        .exam-box { background: #f0f7ff; border-left: 5px solid #3498db; padding: 15px; border-radius: 8px; margin-top: 15px; }
+
+        /* Öğrenci Listesi */
+        .ogrenci-liste-container { max-height: 400px; overflow-y: auto; border: 2px solid #bdc3c7; border-radius: 10px; padding: 10px; background: white; }
+        /* Şık Scrollbar */
+        .ogrenci-liste-container::-webkit-scrollbar { width: 8px; }
+        .ogrenci-liste-container::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+        .ogrenci-liste-container::-webkit-scrollbar-thumb { background: #3498db; border-radius: 10px; }
+        .ogrenci-liste-container::-webkit-scrollbar-thumb:hover { background: #2980b9; }
+
+        .ogrenci-satiri { display: flex; align-items: center; justify-content: space-between; padding: 10px 15px; border-bottom: 1px solid #ecf0f1; transition: 0.3s; }
+        .ogrenci-satiri:last-child { border-bottom: none; }
         .ogrenci-satiri.basarili { background-color: #d4edda; pointer-events: none; opacity: 0.7; }
         .ogrenci-satiri.hatali { background-color: #f8d7da; }
         
         .ogrenci-bilgi { flex: 1; }
         .ogrenci-adi { font-weight: bold; color: #2c3e50; font-size: 15px; }
-        .ogrenci-id { font-size: 11px; color: #888; }
-        .net-input { width: 80px; padding: 8px; border: 1px solid #ddd; border-radius: 5px; text-align: center; font-size: 15px; margin-right: 10px; }
+        .ogrenci-id { font-size: 11px; color: #7f8c8d; }
+        .net-input { width: 80px; padding: 8px; border: 2px solid #bdc3c7; border-radius: 6px; text-align: center; font-size: 15px; margin-right: 10px; font-weight: bold; }
         
-        .buttons { display: flex; gap: 10px; flex-wrap: wrap; }
-        button { flex: 1; padding: 15px; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.2s; min-width: 200px; }
-        .btn-olustur { background: #28a745; color: white; }
-        .btn-olustur:hover { background: #218838; }
-        .btn-tekrar { background: #dc3545; color: white; display: none; }
-        .btn-tekrar:hover { background: #c82333; }
-        .btn-temizle { background: #6c757d; color: white; }
+        /* Butonlar */
+        .buttons { display: flex; gap: 15px; margin-top: 25px; }
+        button { flex: 1; padding: 15px; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .btn-olustur { background: #2ecc71; color: white; }
+        .btn-olustur:hover { background: #27ae60; transform: translateY(-2px); }
+        .btn-tekrar { background: #e74c3c; color: white; display: none; }
+        .btn-tekrar:hover { background: #c0392b; transform: translateY(-2px); }
+        .btn-temizle { background: #95a5a6; color: white; }
+        .btn-temizle:hover { background: #7f8c8d; transform: translateY(-2px); }
+
+        /* Sonuç Ekranı */
+        .sonuc { margin-top: 20px; padding: 15px; border-radius: 8px; display: none; font-weight: bold; text-align: center; }
+        .success { background: #d4edda; color: #155724; border: 2px solid #c3e6cb; display: block; }
+        .error { background: #f8d7da; color: #721c24; border: 2px solid #f5c6cb; display: block; }
+        .info { background: #d1ecf1; color: #0c5460; border: 2px solid #bee5eb; display: block; }
+
+        /* Sağ Panel Tabloları */
+        .mini-card { background: white; border-radius: 10px; border: 1px solid #dcdde1; box-shadow: 0 4px 10px rgba(0,0,0,0.05); overflow: hidden; }
+        .mini-card-header { background: #34495e; color: white; padding: 12px; font-weight: bold; font-size: 14px; text-align: center; }
+        .mini-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .mini-table th { background: #ecf0f1; color: #2c3e50; padding: 8px; text-align: left; border-bottom: 2px solid #bdc3c7; }
+        .mini-table td { padding: 8px; border-bottom: 1px solid #ecf0f1; color: #34495e; }
+        .mini-table tr:last-child td { border-bottom: none; }
+        .mini-table tr:nth-child(even) { background: #f8f9fa; }
         
-        .sonuc { margin-top: 20px; padding: 15px; border-radius: 8px; display: none; }
-        .success { background: #d4edda; color: #155724; display: block; }
-        .error { background: #f8d7da; color: #721c24; display: block; }
-        .info { background: #d1ecf1; color: #0c5460; display: block; }
-        
-        .girmedi-checkbox { transform: scale(1.3); margin-left: 10px; }
-        @media (max-width: 600px) { .ogrenci-satiri { flex-direction: column; align-items: flex-start; gap: 10px; } .net-input { width: 100%; margin-right: 0; margin-bottom: 5px; } }
+        .ozet-kutusu { display: flex; justify-content: space-between; background: #ecf0f1; padding: 10px; border-radius: 8px; font-weight: bold; font-size: 13px; color: #2c3e50; margin-top: 10px; }
+
+        /* MOBİL UYUM */
+        @media (max-width: 1024px) {
+            .layout-grid { grid-template-columns: 1fr; }
+            .left-panel { border-right: none; border-bottom: 2px dashed #bdc3c7; }
+            .ogrenci-liste-container { max-height: none; }
+        }
+        @media (max-width: 600px) {
+            .ogrenci-satiri { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .net-input { width: 100%; margin-right: 0; margin-bottom: 5px; }
+            .buttons { flex-direction: column; }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>📜 VBS Deneme Sonucu Giriş Paneli</h1>
-        
-        <div class="token-alani">
-            <label><strong>🔑 GitHub Token:</strong> (Sadece bir kez girilir)</label>
-            <input type="password" id="tokenInput" placeholder="ghp_... şeklinde token">
+    <div class="main-wrapper">
+        <div class="header">
+            <h1>🎯 VBS Deneme Sonucu Giriş Paneli</h1>
         </div>
 
-        <div class="ayar-alani">
-            <label><strong>📝 Deneme Adı:</strong></label>
-            <input type="text" id="denemeAdiInput" placeholder="Örn: 1. Deneme (veya 2023 Güz)">
-            
-            <label style="margin-top:10px; display:block;"><strong>📊 Toplam Soru Sayısı:</strong></label>
-            <input type="number" id="soruSayisiInput" min="1" placeholder="Örn: 80">
+        <div class="layout-grid">
+            <!-- SOL TARAF: FORMLAR -->
+            <div class="left-panel">
+                <div class="section-block">
+                    <div class="section-title">🔑 Sistem Bağlantısı</div>
+                    <div class="token-box">
+                        <div class="input-group">
+                            <label>GitHub Token (Sadece bir kez girilir)</label>
+                            <input type="password" id="tokenInput" placeholder="ghp_... şeklinde token">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-block">
+                    <div class="section-title">📝 Deneme Bilgileri</div>
+                    <div class="exam-box">
+                        <div class="input-group">
+                            <label>🏷️ Deneme Adı</label>
+                            <input type="text" id="denemeAdiInput" placeholder="Örn: 1. Deneme">
+                        </div>
+                        <div class="input-group" style="margin-bottom:0;">
+                            <label>📚 Toplam Soru Sayısı</label>
+                            <input type="number" id="soruSayisiInput" min="1" placeholder="Örn: 80">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-block">
+                    <div class="section-title">👥 Öğrenci Netleri</div>
+                    <div class="ogrenci-liste-container" id="sinifListesi"></div>
+                </div>
+
+                <div class="buttons">
+                    <button class="btn-olustur" id="btnOlustur" onclick="jsonOlustur(false)">🚀 KAYDET</button>
+                    <button class="btn-tekrar" id="btnTekrar" onclick="jsonOlustur(true)">🔄 HATALILARI TEKRAR DENE</button>
+                    <button class="btn-temizle" onclick="temizle()">🗑️ TEMİZLE</button>
+                </div>
+
+                <div id="sonuc" class="sonuc"></div>
+            </div>
+
+            <!-- SAĞ TARAF: İSTATİSTİKLER -->
+            <div class="right-panel">
+                <div>
+                    <div class="section-title">📊 Anlık Durum</div>
+                    <div class="ozet-kutusu">
+                        <span>Toplam Öğrenci:</span>
+                        <span id="toplamOgrenciSayisi">-</span>
+                    </div>
+                    <div class="ozet-kutusu">
+                        <span>Girilen Son Deneme:</span>
+                        <span id="sonDenemeAdi">-</span>
+                    </div>
+                </div>
+
+                <div class="mini-card">
+                    <div class="mini-card-header" id="sonDenemeBaslik">Son Deneme Sıralaması</div>
+                    <table class="mini-table">
+                        <thead>
+                            <tr>
+                                <th>Sıra</th>
+                                <th>Adı Soyadı</th>
+                                <th>Net</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sonDenemeTablosu">
+                            <tr><td colspan="3" style="text-align:center;">Yükleniyor...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="mini-card">
+                    <div class="mini-card-header">Tüm Zamanlar Sıralaması</div>
+                    <table class="mini-table">
+                        <thead>
+                            <tr>
+                                <th>Sıra</th>
+                                <th>Adı Soyadı</th>
+                                <th>Ort.</th>
+                            </tr>
+                        </thead>
+                        <tbody id="genelSiralamaTablosu">
+                            <tr><td colspan="3" style="text-align:center;">Yükleniyor...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-
-        <div class="sinif-listesi" id="sinifListesi"></div>
-
-        <div class="buttons">
-            <button class="btn-olustur" id="btnOlustur" onclick="jsonOlustur(false)">🚀 KAYDET</button>
-            <button class="btn-tekrar" id="btnTekrar" onclick="jsonOlustur(true)">🔄 SADECE HATALILARI TEKRAR DENE</button>
-            <button class="btn-temizle" onclick="temizle()">🗑️ TEMİZLE</button>
-        </div>
-
-        <div id="sonuc" class="sonuc"></div>
     </div>
 
     <script>
@@ -76,30 +199,33 @@
     const GITHUB_REPO = "vbs";
     const BRANCH = "main";
 
+    // İSİMLER ADI SOYADI FORMATINDA, SIRALAMA SOYADI ALFABETİK KORUNDU
     const sinifListesi = [
-    {id: "562", name: "Akkanat, Durmuş Efe"},
-    {id: "853", name: "Atalan, İclal"},
-    {id: "145", name: "Aşık, Hilal"},
-    {id: "462", name: "Barsan, Efe"},
-    {id: "811", name: "Bila, Hülya"},
-    {id: "371", name: "Bindebir, Begüm"},
-    {id: "756", name: "Çağlar, Yarım"},
-    {id: "752", name: "Cifçi, Belinay"},
-    {id: "1076", name: "Karahanlı, Büşra"},
-    {id: "981", name: "Karataş, Nurten"},
-    {id: "801", name: "Kaya, Emir"},
-    {id: "893", name: "Kılınç, Hacer"},
-    {id: "1023", name: "Sert, Ece"},
-    {id: "157", name: "Türkmenoğlu, Ömer Beren"},
-    {id: "1142", name: "Yılmaz, Nur Eymen"}
-];
+        {id: "562", name: "Durmuş Efe Akkanat"},
+        {id: "853", name: "İclal Atalan"},
+        {id: "145", name: "Hilal Aşık"},
+        {id: "462", name: "Efe Barsan"},
+        {id: "811", name: "Hülya Bila"},
+        {id: "371", name: "Begüm Bindebir"},
+        {id: "756", name: "Yarım Çağlar"},
+        {id: "752", name: "Belinay Cifçi"},
+        {id: "1076", name: "Büşra Karahanlı"},
+        {id: "981", name: "Nurten Karataş"},
+        {id: "801", name: "Emir Kaya"},
+        {id: "893", name: "Hacer Kılınç"},
+        {id: "1023", name: "Ece Sert"},
+        {id: "157", name: "Ömer Beren Türkmenoğlu"},
+        {id: "1142", name: "Nur Eymen Yılmaz"}
+    ];
 
     let hataliOgrenciler = []; 
+    let tumVeriler = {}; // İstatistikler için tüm öğrencilerin verisini tutacağız
 
     window.onload = function() {
         const savedToken = localStorage.getItem('vbs_token');
         if (savedToken) document.getElementById('tokenInput').value = savedToken;
         listeyiOlustur();
+        istatistikleriYukle();
     };
 
     function listeyiOlustur() {
@@ -131,6 +257,80 @@
         });
     }
 
+    // Sağ taraftaki tabloları doldurmak için tüm verileri çeker
+    async function istatistikleriYukle() {
+        document.getElementById('toplamOgrenciSayisi').innerText = sinifListesi.length;
+        
+        tumVeriler = {};
+        const tumSonuclar = await Promise.all(sinifListesi.map(async ogr => {
+            try {
+                const res = await fetch(`data/${ogr.id}.json?t=${Date.now()}`);
+                if (res.ok) {
+                    tumVeriler[ogr.id] = await res.json();
+                } else {
+                    tumVeriler[ogr.id] = { id: ogr.id, name: ogr.name, exams: [] };
+                }
+            } catch (e) {
+                tumVeriler[ogr.id] = { id: ogr.id, name: ogr.name, exams: [] };
+            }
+        }));
+
+        // En son yapılan denemenin adını bul (En çok denemesi olan öğrencinin en üstteki denemesi)
+        let enSonDenemeAdi = "-";
+        let maxExamCount = 0;
+        Object.values(tumVeriler).forEach(v => {
+            if(v.exams && v.exams.length > maxExamCount) {
+                maxExamCount = v.exams.length;
+                if(v.exams.length > 0) enSonDenemeAdi = v.exams[0].examName;
+            }
+        });
+
+        document.getElementById('sonDenemeAdi').innerText = enSonDenemeAdi;
+        document.getElementById('sonDenemeBaslik').innerText = enSonDenemeAdi !== "-" ? `${enSonDenemeAdi} Sıralaması` : "Son Deneme Sıralaması";
+
+        // 1. Son Deneme Sıralaması Tablosu
+        let sonDenemeNetleri = [];
+        Object.values(tumVeriler).forEach(v => {
+            if(v.exams) {
+                const exam = v.exams.find(e => e.examName === enSonDenemeAdi);
+                if(exam && exam.score !== null) {
+                    sonDenemeNetleri.push({ name: v.name, score: exam.score });
+                }
+            }
+        });
+        sonDenemeNetleri.sort((a, b) => b.score - a.score);
+        
+        const sonDenemeTbody = document.getElementById('sonDenemeTablosu');
+        sonDenemeTbody.innerHTML = '';
+        if(sonDenemeNetleri.length === 0) {
+            sonDenemeTbody.innerHTML = '<tr><td colspan="3" style="text-align:center;">Henüz veri yok</td></tr>';
+        } else {
+            sonDenemeNetleri.forEach((ogr, i) => {
+                sonDenemeTbody.innerHTML += `<tr><td><strong>${i+1}</strong></td><td>${ogr.name}</td><td><strong>${ogr.score}</strong></td></tr>`;
+            });
+        }
+
+        // 2. Tüm Zamanlar Sıralaması Tablosu
+        let genelOrtalamalar = [];
+        Object.values(tumVeriler).forEach(v => {
+            if(v.exams && v.exams.length > 0) {
+                const toplam = v.exams.reduce((sum, e) => sum + e.score, 0);
+                genelOrtalamalar.push({ name: v.name, avg: toplam / v.exams.length });
+            }
+        });
+        genelOrtalamalar.sort((a, b) => b.avg - a.avg);
+
+        const genelTbody = document.getElementById('genelSiralamaTablosu');
+        genelTbody.innerHTML = '';
+        if(genelOrtalamalar.length === 0) {
+            genelTbody.innerHTML = '<tr><td colspan="3" style="text-align:center;">Henüz veri yok</td></tr>';
+        } else {
+            genelOrtalamalar.forEach((ogr, i) => {
+                genelTbody.innerHTML += `<tr><td><strong>${i+1}</strong></td><td>${ogr.name}</td><td><strong>${ogr.avg.toFixed(2)}</strong></td></tr>`;
+            });
+        }
+    }
+
     async function githubaKaydet(dosyaAdi, icerik, token) {
         const url = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/data/${dosyaAdi}`;
         let sha = null;
@@ -149,7 +349,7 @@
             method: 'PUT',
             headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                message: `Geçmiş Girişi: ${dosyaAdi}`,
+                message: `Güncelleme: ${dosyaAdi}`,
                 content: base64Icerik,
                 sha: sha,
                 branch: BRANCH
@@ -183,59 +383,42 @@
 
             if (!checkbox.checked && !isNaN(net)) {
                 islenecekler.push({ ...ogr, score: net });
-            } else if (checkbox.checked) {
+            } else if (!sadeceHatalilar) {
                 islenecekler.push({ ...ogr, score: null });
             }
         }
 
         if (islenecekler.length === 0) {
             sonucDiv.className = 'sonuc error';
-            sonucDiv.innerHTML = '❌ İşlenecek öğrenci bulunamadı veya hiç net girilmedi!';
+            sonucDiv.innerHTML = '❌ İşlenecek öğrenci bulunamadı!';
             return;
         }
 
         sonucDiv.className = 'sonuc info';
-        sonucDiv.innerHTML = '⏳ Tüm sınıf verileri okunuyor, sıralamalar hesaplanıyor... Lütfen bekleyin...';
-
-        const mevcutTumVeriler = {};
-        await Promise.all(sinifListesi.map(async ogr => {
-            try {
-                const res = await fetch(`data/${ogr.id}.json?t=${Date.now()}`);
-                if (res.ok) {
-                    mevcutTumVeriler[ogr.id] = await res.json();
-                } else {
-                    mevcutTumVeriler[ogr.id] = { id: ogr.id, name: ogr.name, exams: [] };
-                }
-            } catch (e) {
-                mevcutTumVeriler[ogr.id] = { id: ogr.id, name: ogr.name, exams: [] };
-            }
-        }));
+        sonucDiv.innerHTML = '⏳ İşleniyor, lütfen bekleyin...';
 
         const girenler = islenecekler.filter(o => o.score !== null);
         girenler.sort((a, b) => b.score - a.score);
+        girenler.forEach((ogr, index) => { ogr.rank = index + 1; });
         
-        const sinifOrtalamasi = girenler.length > 0 
-            ? (girenler.reduce((sum, o) => sum + o.score, 0) / girenler.length).toFixed(1) 
-            : 0;
-
-        girenler.forEach((ogr, index) => {
-            ogr.rank = index + 1;
-            ogr.yuzde = ((ogr.score / toplamSoru) * 100).toFixed(1);
-            ogr.totalStudents = girenler.length;
-            ogr.classAverage = parseFloat(sinifOrtalamasi);
-        });
-
+        const sinifOrtalamasi = girenler.length > 0 ? (girenler.reduce((a,b)=>a+b.score, 0) / girenler.length).toFixed(2) : 0;
         const bugun = new Date().toISOString().split('T')[0];
+
         let basariliSayisi = 0;
         hataliOgrenciler = []; 
 
-        sonucDiv.className = 'sonuc info';
-        sonucDiv.innerHTML = '⏳ Veriler kaydediliyor... Lütfen bekleyin...';
-
         for (let ogr of islenecekler) {
             const dosyaAdi = `${ogr.id}.json`;
-            let mevcutExams = mevcutTumVeriler[ogr.id].exams || [];
+            let mevcutExams = [];
             
+            try {
+                const res = await fetch(`data/${dosyaAdi}?t=${Date.now()}`);
+                if (res.ok) {
+                    const eskiData = await res.json();
+                    mevcutExams = eskiData.exams || [];
+                }
+            } catch (e) {}
+
             const zatenVar = mevcutExams.find(e => e.examName === denemeAdi);
             if (zatenVar) {
                 document.getElementById(`satir_${ogr.id}`).className = 'ogrenci-satiri basarili';
@@ -243,15 +426,18 @@
             }
 
             if (ogr.score !== null) {
-                // DÜZELTME: En yeni denemeyi en başa almak için 'push' yerine 'unshift' kullanıldı
-                mevcutExams.unshift({ 
+                const ogrSirasi = girenler.find(o => o.id === ogr.id);
+                const yuzde = ((ogr.score / toplamSoru) * 100).toFixed(2);
+                
+                mevcutExams.unshift({
                     examName: denemeAdi,
                     examDate: bugun,
                     score: ogr.score,
-                    yuzde: parseFloat(ogr.yuzde),
-                    rank: ogr.rank,
-                    totalStudents: ogr.totalStudents,
-                    classAverage: ogr.classAverage
+                    yuzde: yuzde,
+                    rank: ogrSirasi.rank,
+                    totalStudents: girenler.length,
+                    classAverage: parseFloat(sinifOrtalamasi),
+                    totalQuestions: toplamSoru
                 });
             }
 
@@ -274,11 +460,13 @@
 
         if (hataliOgrenciler.length === 0) {
             sonucDiv.className = 'sonuc success';
-            sonucDiv.innerHTML = `✅ Başarıyla kaydedildi! ${basariliSayisi} öğrencinin deneme sonucu sisteme işlendi.`;
+            sonucDiv.innerHTML = `✅ Başarıyla tamamlandı! ${basariliSayisi} öğrenci işlendi.`;
             document.getElementById('btnTekrar').style.display = 'none';
             document.getElementById('btnOlustur').style.display = 'block';
             
-            document.getElementById('denemeAdiInput').value = '';
+            // Kayıt sonrası istatistikleri güncelle
+            setTimeout(istatistikleriYukle, 1500);
+            
         } else {
             sonucDiv.className = 'sonuc error';
             sonucDiv.innerHTML = `⚠️ ${hataliOgrenciler.length} öğrencide hata oluştu. Kırmızı satırları kontrol edip "Hatalıları Tekrar Dene" butonuna basın.`;
