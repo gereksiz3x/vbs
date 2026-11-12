@@ -3,6 +3,15 @@
   "name": "Çağlar, Yarım",
   "exams": [
     {
+      "examName": "e7",
+      "examDate": "2026-11-12",
+      "score": 61.75,
+      "yuzde": 77.2,
+      "rank": 8,
+      "totalStudents": 15,
+      "classAverage": 58.3
+    },
+    {
       "examName": "d2",
       "examDate": "2026-11-12",
       "score": 70.75,
