@@ -8,40 +8,31 @@
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%); padding: 20px; margin: 0; min-height: 100vh; display: flex; justify-content: center; }
         
-        /* Kapsayıcı Genişletildi */
         .main-wrapper { width: 100%; max-width: 1550px; background: white; border: 3px solid #2c3e50; border-radius: 16px; box-shadow: 0 15px 40px rgba(0,0,0,0.2); overflow: hidden; }
         
-        /* Renkli Header */
         .header { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; padding: 25px 20px; text-align: center; }
         .header h1 { margin: 0; font-size: 26px; letter-spacing: 1px; }
 
-        /* İki Sütunlu Düzen */
         .layout-grid { display: grid; grid-template-columns: 1fr 400px; gap: 0; }
         
-        /* Sol Taraf: Ana Form */
         .left-panel { padding: 30px; border-right: 2px dashed #bdc3c7; }
-        
-        /* Sağ Taraf: Sıralamalar */
         .right-panel { padding: 30px 20px; background: #f8f9fa; display: flex; flex-direction: column; gap: 25px; }
 
-        /* Ayırıcı Çizgiler ve Bölümler */
         .section-block { margin-bottom: 25px; padding-bottom: 25px; border-bottom: 2px solid #e9ecef; }
         .section-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
         
         .section-title { font-size: 16px; font-weight: bold; color: #2c3e50; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
 
-        /* Modern Input Kutuları */
         .input-group { margin-bottom: 15px; }
         .input-group label { display: block; font-size: 14px; font-weight: 600; color: #34495e; margin-bottom: 6px; }
         .input-group input { width: 100%; padding: 12px; border: 2px solid #bdc3c7; border-radius: 8px; font-size: 15px; transition: 0.3s; }
         .input-group input:focus { border-color: #3498db; outline: none; box-shadow: 0 0 8px rgba(52, 152, 219, 0.3); }
         
-        /* Özel Renkli Çerçeveler */
         .token-box { background: #fffdf5; border-left: 5px solid #f1c40f; padding: 15px; border-radius: 8px; }
         .exam-box { background: #f0f7ff; border-left: 5px solid #3498db; padding: 15px; border-radius: 8px; margin-top: 15px; }
 
-        /* Öğrenci Listesi (Daha Ferah) */
-        .ogrenci-liste-container { max-height: 500px; overflow-y: auto; border: 2px solid #bdc3c7; border-radius: 10px; padding: 10px; background: white; }
+        /* ÖĞRENCİ LİSTESİ YÜKSEKLİĞİ ARTIRILDI */
+        .ogrenci-liste-container { max-height: 65vh; overflow-y: auto; border: 2px solid #bdc3c7; border-radius: 10px; padding: 10px; background: white; }
         .ogrenci-liste-container::-webkit-scrollbar { width: 8px; }
         .ogrenci-liste-container::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
         .ogrenci-liste-container::-webkit-scrollbar-thumb { background: #3498db; border-radius: 10px; }
@@ -56,10 +47,8 @@
         .ogrenci-adi { font-weight: bold; color: #2c3e50; font-size: 16px; }
         .ogrenci-id { font-size: 12px; color: #7f8c8d; margin-top: 4px; }
         
-        /* Net Kutusu Genişletildi */
         .net-input { width: 120px; padding: 10px; border: 2px solid #bdc3c7; border-radius: 6px; text-align: center; font-size: 16px; margin-right: 15px; font-weight: bold; }
         
-        /* Butonlar */
         .buttons { display: flex; gap: 15px; margin-top: 25px; }
         button { flex: 1; padding: 15px; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .btn-olustur { background: #2ecc71; color: white; }
@@ -69,13 +58,11 @@
         .btn-temizle { background: #95a5a6; color: white; }
         .btn-temizle:hover { background: #7f8c8d; transform: translateY(-2px); }
 
-        /* Sonuç Ekranı */
         .sonuc { margin-top: 20px; padding: 15px; border-radius: 8px; display: none; font-weight: bold; text-align: center; }
         .success { background: #d4edda; color: #155724; border: 2px solid #c3e6cb; display: block; }
         .error { background: #f8d7da; color: #721c24; border: 2px solid #f5c6cb; display: block; }
         .info { background: #d1ecf1; color: #0c5460; border: 2px solid #bee5eb; display: block; }
 
-        /* Sağ Panel Tabloları */
         .mini-card { background: white; border-radius: 10px; border: 1px solid #dcdde1; box-shadow: 0 4px 10px rgba(0,0,0,0.05); overflow: hidden; }
         .mini-card-header { background: #34495e; color: white; padding: 12px; font-weight: bold; font-size: 14px; text-align: center; }
         .mini-table { width: 100%; border-collapse: collapse; font-size: 13px; }
@@ -86,7 +73,6 @@
         
         .ozet-kutusu { display: flex; justify-content: space-between; background: #ecf0f1; padding: 10px; border-radius: 8px; font-weight: bold; font-size: 13px; color: #2c3e50; margin-top: 10px; }
 
-        /* MOBİL UYUM */
         @media (max-width: 1024px) {
             .layout-grid { grid-template-columns: 1fr; }
             .left-panel { border-right: none; border-bottom: 2px dashed #bdc3c7; }
@@ -106,7 +92,6 @@
         </div>
 
         <div class="layout-grid">
-            <!-- SOL TARAF: FORMLAR -->
             <div class="left-panel">
                 <div class="section-block">
                     <div class="section-title">🔑 Sistem Bağlantısı</div>
@@ -146,7 +131,6 @@
                 <div id="sonuc" class="sonuc"></div>
             </div>
 
-            <!-- SAĞ TARAF: İSTATİSTİKLER -->
             <div class="right-panel">
                 <div>
                     <div class="section-title">📊 Anlık Durum</div>
@@ -200,7 +184,6 @@
     const GITHUB_REPO = "vbs";
     const BRANCH = "main";
 
-    // İSİMLER ADI SOYADI FORMATINDA
     const sinifListesi = [
         {id: "562", name: "Durmuş Efe Akkanat"},
         {id: "853", name: "İclal Atalan"},
@@ -287,13 +270,11 @@
         document.getElementById('sonDenemeAdi').innerText = enSonDenemeAdi;
         document.getElementById('sonDenemeBaslik').innerText = enSonDenemeAdi !== "-" ? `${enSonDenemeAdi} Sıralaması` : "Son Yapılan Deneme Sıralaması";
 
-        // 1. Son Deneme Sıralaması
         let sonDenemeNetleri = [];
         Object.values(tumVeriler).forEach(v => {
             if(v.exams) {
                 const exam = v.exams.find(e => e.examName === enSonDenemeAdi);
                 if(exam && exam.score !== null) {
-                    // İsmi sinifListesi'nden Ad Soyad olarak zorla çekiyoruz
                     const ogrObj = sinifListesi.find(o => o.id === String(v.id));
                     const displayName = ogrObj ? ogrObj.name : v.name;
                     sonDenemeNetleri.push({ name: displayName, score: exam.score });
@@ -312,7 +293,6 @@
             });
         }
 
-        // 2. Tüm Zamanlar Sıralaması
         let genelOrtalamalar = [];
         Object.values(tumVeriler).forEach(v => {
             if(v.exams && v.exams.length > 0) {
