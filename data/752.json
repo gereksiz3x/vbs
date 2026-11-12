@@ -3,6 +3,15 @@
   "name": "Cifçi, Belinay",
   "exams": [
     {
+      "examName": "j3",
+      "examDate": "2026-11-12",
+      "score": 56.5,
+      "yuzde": 70.6,
+      "rank": 9,
+      "totalStudents": 14,
+      "classAverage": 58.5
+    },
+    {
       "examName": "e6",
       "examDate": "2026-11-12",
       "score": 55.5,
