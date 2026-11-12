@@ -3,6 +3,15 @@
   "name": "Barsan, Efe",
   "exams": [
     {
+      "examName": "ypd2",
+      "examDate": "2026-11-12",
+      "score": 38.75,
+      "yuzde": 48.4,
+      "rank": 10,
+      "totalStudents": 11,
+      "classAverage": 63.3
+    },
+    {
       "examName": "ypd1",
       "examDate": "2026-11-12",
       "score": 35.25,
