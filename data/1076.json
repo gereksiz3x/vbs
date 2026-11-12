@@ -3,6 +3,15 @@
   "name": "Karahanlı, Büşra",
   "exams": [
     {
+      "examName": "ypd4",
+      "examDate": "2026-11-12",
+      "score": 71.25,
+      "yuzde": 89.1,
+      "rank": 5,
+      "totalStudents": 14,
+      "classAverage": 59.6
+    },
+    {
       "examName": "j3",
       "examDate": "2026-11-12",
       "score": 74,
