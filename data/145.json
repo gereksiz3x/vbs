@@ -3,6 +3,15 @@
   "name": "Aşık, Hilal",
   "exams": [
     {
+      "examName": "d1",
+      "examDate": "2026-11-12",
+      "score": 55.25,
+      "yuzde": 69.1,
+      "rank": 9,
+      "totalStudents": 14,
+      "classAverage": 57.7
+    },
+    {
       "examName": "ypd4",
       "examDate": "2026-11-12",
       "score": 59,
