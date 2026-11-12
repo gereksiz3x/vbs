@@ -8,15 +8,15 @@
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%); padding: 20px; margin: 0; min-height: 100vh; display: flex; justify-content: center; }
         
-        /* Kapsayıcı ve Siyah Çerçeve */
-        .main-wrapper { width: 100%; max-width: 1400px; background: white; border: 3px solid #2c3e50; border-radius: 16px; box-shadow: 0 15px 40px rgba(0,0,0,0.2); overflow: hidden; }
+        /* Kapsayıcı Genişletildi */
+        .main-wrapper { width: 100%; max-width: 1550px; background: white; border: 3px solid #2c3e50; border-radius: 16px; box-shadow: 0 15px 40px rgba(0,0,0,0.2); overflow: hidden; }
         
         /* Renkli Header */
         .header { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; padding: 25px 20px; text-align: center; }
         .header h1 { margin: 0; font-size: 26px; letter-spacing: 1px; }
 
-        /* İki Sütunlu Düzen (PC'de yan yana, Mobilde alt alta) */
-        .layout-grid { display: grid; grid-template-columns: 1fr 350px; gap: 0; }
+        /* İki Sütunlu Düzen */
+        .layout-grid { display: grid; grid-template-columns: 1fr 400px; gap: 0; }
         
         /* Sol Taraf: Ana Form */
         .left-panel { padding: 30px; border-right: 2px dashed #bdc3c7; }
@@ -36,27 +36,28 @@
         .input-group input { width: 100%; padding: 12px; border: 2px solid #bdc3c7; border-radius: 8px; font-size: 15px; transition: 0.3s; }
         .input-group input:focus { border-color: #3498db; outline: none; box-shadow: 0 0 8px rgba(52, 152, 219, 0.3); }
         
-        /* Özel Renkli Çerçeveler (Token için Sarı, Deneme için Mavi) */
+        /* Özel Renkli Çerçeveler */
         .token-box { background: #fffdf5; border-left: 5px solid #f1c40f; padding: 15px; border-radius: 8px; }
         .exam-box { background: #f0f7ff; border-left: 5px solid #3498db; padding: 15px; border-radius: 8px; margin-top: 15px; }
 
-        /* Öğrenci Listesi */
-        .ogrenci-liste-container { max-height: 400px; overflow-y: auto; border: 2px solid #bdc3c7; border-radius: 10px; padding: 10px; background: white; }
-        /* Şık Scrollbar */
+        /* Öğrenci Listesi (Daha Ferah) */
+        .ogrenci-liste-container { max-height: 500px; overflow-y: auto; border: 2px solid #bdc3c7; border-radius: 10px; padding: 10px; background: white; }
         .ogrenci-liste-container::-webkit-scrollbar { width: 8px; }
         .ogrenci-liste-container::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
         .ogrenci-liste-container::-webkit-scrollbar-thumb { background: #3498db; border-radius: 10px; }
         .ogrenci-liste-container::-webkit-scrollbar-thumb:hover { background: #2980b9; }
 
-        .ogrenci-satiri { display: flex; align-items: center; justify-content: space-between; padding: 10px 15px; border-bottom: 1px solid #ecf0f1; transition: 0.3s; }
+        .ogrenci-satiri { display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; border-bottom: 1px solid #ecf0f1; transition: 0.3s; }
         .ogrenci-satiri:last-child { border-bottom: none; }
         .ogrenci-satiri.basarili { background-color: #d4edda; pointer-events: none; opacity: 0.7; }
         .ogrenci-satiri.hatali { background-color: #f8d7da; }
         
         .ogrenci-bilgi { flex: 1; }
-        .ogrenci-adi { font-weight: bold; color: #2c3e50; font-size: 15px; }
-        .ogrenci-id { font-size: 11px; color: #7f8c8d; }
-        .net-input { width: 80px; padding: 8px; border: 2px solid #bdc3c7; border-radius: 6px; text-align: center; font-size: 15px; margin-right: 10px; font-weight: bold; }
+        .ogrenci-adi { font-weight: bold; color: #2c3e50; font-size: 16px; }
+        .ogrenci-id { font-size: 12px; color: #7f8c8d; margin-top: 4px; }
+        
+        /* Net Kutusu Genişletildi */
+        .net-input { width: 120px; padding: 10px; border: 2px solid #bdc3c7; border-radius: 6px; text-align: center; font-size: 16px; margin-right: 15px; font-weight: bold; }
         
         /* Butonlar */
         .buttons { display: flex; gap: 15px; margin-top: 25px; }
@@ -92,7 +93,7 @@
             .ogrenci-liste-container { max-height: none; }
         }
         @media (max-width: 600px) {
-            .ogrenci-satiri { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .ogrenci-satiri { flex-direction: column; align-items: flex-start; gap: 15px; }
             .net-input { width: 100%; margin-right: 0; margin-bottom: 5px; }
             .buttons { flex-direction: column; }
         }
@@ -154,13 +155,13 @@
                         <span id="toplamOgrenciSayisi">-</span>
                     </div>
                     <div class="ozet-kutusu">
-                        <span>Girilen Son Deneme:</span>
+                        <span>Son Yapılan Deneme:</span>
                         <span id="sonDenemeAdi">-</span>
                     </div>
                 </div>
 
                 <div class="mini-card">
-                    <div class="mini-card-header" id="sonDenemeBaslik">Son Deneme Sıralaması</div>
+                    <div class="mini-card-header" id="sonDenemeBaslik">Son Yapılan Deneme Sıralaması</div>
                     <table class="mini-table">
                         <thead>
                             <tr>
@@ -199,7 +200,7 @@
     const GITHUB_REPO = "vbs";
     const BRANCH = "main";
 
-    // İSİMLER ADI SOYADI FORMATINDA, SIRALAMA SOYADI ALFABETİK KORUNDU
+    // İSİMLER ADI SOYADI FORMATINDA
     const sinifListesi = [
         {id: "562", name: "Durmuş Efe Akkanat"},
         {id: "853", name: "İclal Atalan"},
@@ -219,7 +220,7 @@
     ];
 
     let hataliOgrenciler = []; 
-    let tumVeriler = {}; // İstatistikler için tüm öğrencilerin verisini tutacağız
+    let tumVeriler = {};
 
     window.onload = function() {
         const savedToken = localStorage.getItem('vbs_token');
@@ -240,10 +241,10 @@
                     <div class="ogrenci-adi">${ogrenci.name}</div>
                     <div class="ogrenci-id">No: ${ogrenci.id}</div>
                 </div>
-                <div>
+                <div style="display: flex; align-items: center;">
                     <input type="number" class="net-input" id="net_${ogrenci.id}" placeholder="Net" step="0.25" min="0">
                     <input type="checkbox" class="girmedi-checkbox" id="girmedi_${ogrenci.id}">
-                    <label for="girmedi_${ogrenci.id}" style="font-size:12px; color:#777;">Girmedi</label>
+                    <label for="girmedi_${ogrenci.id}" style="font-size:13px; color:#555; font-weight:bold;">Girmedi</label>
                 </div>
             `;
             listDiv.appendChild(satir);
@@ -257,12 +258,11 @@
         });
     }
 
-    // Sağ taraftaki tabloları doldurmak için tüm verileri çeker
     async function istatistikleriYukle() {
         document.getElementById('toplamOgrenciSayisi').innerText = sinifListesi.length;
         
         tumVeriler = {};
-        const tumSonuclar = await Promise.all(sinifListesi.map(async ogr => {
+        await Promise.all(sinifListesi.map(async ogr => {
             try {
                 const res = await fetch(`data/${ogr.id}.json?t=${Date.now()}`);
                 if (res.ok) {
@@ -275,7 +275,6 @@
             }
         }));
 
-        // En son yapılan denemenin adını bul (En çok denemesi olan öğrencinin en üstteki denemesi)
         let enSonDenemeAdi = "-";
         let maxExamCount = 0;
         Object.values(tumVeriler).forEach(v => {
@@ -286,15 +285,18 @@
         });
 
         document.getElementById('sonDenemeAdi').innerText = enSonDenemeAdi;
-        document.getElementById('sonDenemeBaslik').innerText = enSonDenemeAdi !== "-" ? `${enSonDenemeAdi} Sıralaması` : "Son Deneme Sıralaması";
+        document.getElementById('sonDenemeBaslik').innerText = enSonDenemeAdi !== "-" ? `${enSonDenemeAdi} Sıralaması` : "Son Yapılan Deneme Sıralaması";
 
-        // 1. Son Deneme Sıralaması Tablosu
+        // 1. Son Deneme Sıralaması
         let sonDenemeNetleri = [];
         Object.values(tumVeriler).forEach(v => {
             if(v.exams) {
                 const exam = v.exams.find(e => e.examName === enSonDenemeAdi);
                 if(exam && exam.score !== null) {
-                    sonDenemeNetleri.push({ name: v.name, score: exam.score });
+                    // İsmi sinifListesi'nden Ad Soyad olarak zorla çekiyoruz
+                    const ogrObj = sinifListesi.find(o => o.id === String(v.id));
+                    const displayName = ogrObj ? ogrObj.name : v.name;
+                    sonDenemeNetleri.push({ name: displayName, score: exam.score });
                 }
             }
         });
@@ -310,12 +312,14 @@
             });
         }
 
-        // 2. Tüm Zamanlar Sıralaması Tablosu
+        // 2. Tüm Zamanlar Sıralaması
         let genelOrtalamalar = [];
         Object.values(tumVeriler).forEach(v => {
             if(v.exams && v.exams.length > 0) {
                 const toplam = v.exams.reduce((sum, e) => sum + e.score, 0);
-                genelOrtalamalar.push({ name: v.name, avg: toplam / v.exams.length });
+                const ogrObj = sinifListesi.find(o => o.id === String(v.id));
+                const displayName = ogrObj ? ogrObj.name : v.name;
+                genelOrtalamalar.push({ name: displayName, avg: toplam / v.exams.length });
             }
         });
         genelOrtalamalar.sort((a, b) => b.avg - a.avg);
@@ -464,7 +468,6 @@
             document.getElementById('btnTekrar').style.display = 'none';
             document.getElementById('btnOlustur').style.display = 'block';
             
-            // Kayıt sonrası istatistikleri güncelle
             setTimeout(istatistikleriYukle, 1500);
             
         } else {
