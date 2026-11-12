@@ -31,23 +31,26 @@
         .token-box { background: #fffdf5; border-left: 5px solid #f1c40f; padding: 15px; border-radius: 8px; }
         .exam-box { background: #f0f7ff; border-left: 5px solid #3498db; padding: 15px; border-radius: 8px; margin-top: 15px; }
 
-        /* ÖĞRENCİ LİSTESİ YÜKSEKLİĞİ ARTIRILDI */
-        .ogrenci-liste-container { max-height: 65vh; overflow-y: auto; border: 2px solid #bdc3c7; border-radius: 10px; padding: 10px; background: white; }
+        /* ÖĞRENCİ LİSTESİ YÜKSEKLİĞİ VE TASARIMI */
+        .ogrenci-liste-container { max-height: 65vh; overflow-y: auto; border: 2px solid #bdc3c7; border-radius: 10px; background: white; }
         .ogrenci-liste-container::-webkit-scrollbar { width: 8px; }
         .ogrenci-liste-container::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
         .ogrenci-liste-container::-webkit-scrollbar-thumb { background: #3498db; border-radius: 10px; }
         .ogrenci-liste-container::-webkit-scrollbar-thumb:hover { background: #2980b9; }
 
-        .ogrenci-satiri { display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; border-bottom: 1px solid #ecf0f1; transition: 0.3s; }
-        .ogrenci-satiri:last-child { border-bottom: none; }
-        .ogrenci-satiri.basarili { background-color: #d4edda; pointer-events: none; opacity: 0.7; }
-        .ogrenci-satiri.hatali { background-color: #f8d7da; }
+        /* ZEBRA RENKLENDİRME VE DAHA KOMPAKT SATIRLAR */
+        .ogrenci-satiri { display: flex; align-items: center; justify-content: space-between; padding: 10px 15px; transition: 0.2s; }
+        .ogrenci-satiri:nth-child(odd) { background-color: #f8f9fa; } /* Tek satırlar açık gri */
+        .ogrenci-satiri:nth-child(even) { background-color: #ffffff; } /* Çift satırlar beyaz */
+        .ogrenci-satiri:hover { background-color: #e3f2fd; }
+        .ogrenci-satiri.basarili { background-color: #d4edda !important; pointer-events: none; opacity: 0.7; }
+        .ogrenci-satiri.hatali { background-color: #f8d7da !important; }
         
         .ogrenci-bilgi { flex: 1; }
-        .ogrenci-adi { font-weight: bold; color: #2c3e50; font-size: 16px; }
-        .ogrenci-id { font-size: 12px; color: #7f8c8d; margin-top: 4px; }
+        .ogrenci-adi { font-weight: bold; color: #2c3e50; font-size: 15px; }
+        .ogrenci-id { font-size: 11px; color: #7f8c8d; margin-top: 2px; }
         
-        .net-input { width: 120px; padding: 10px; border: 2px solid #bdc3c7; border-radius: 6px; text-align: center; font-size: 16px; margin-right: 15px; font-weight: bold; }
+        .net-input { width: 100px; padding: 8px; border: 2px solid #bdc3c7; border-radius: 6px; text-align: center; font-size: 15px; margin-right: 15px; font-weight: bold; }
         
         .buttons { display: flex; gap: 15px; margin-top: 25px; }
         button { flex: 1; padding: 15px; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
@@ -76,11 +79,13 @@
         @media (max-width: 1024px) {
             .layout-grid { grid-template-columns: 1fr; }
             .left-panel { border-right: none; border-bottom: 2px dashed #bdc3c7; }
-            .ogrenci-liste-container { max-height: none; }
+            .ogrenci-liste-container { max-height: 60vh; }
         }
         @media (max-width: 600px) {
-            .ogrenci-satiri { flex-direction: column; align-items: flex-start; gap: 15px; }
-            .net-input { width: 100%; margin-right: 0; margin-bottom: 5px; }
+            /* Mobilde dikey dizilim ve daha az boşluk */
+            .ogrenci-satiri { flex-direction: column; align-items: flex-start; gap: 8px; padding: 10px; }
+            .ogrenci-satiri > div:last-child { width: 100%; display: flex; justify-content: space-between; align-items: center; }
+            .net-input { width: 60%; margin-right: 0; }
             .buttons { flex-direction: column; }
         }
     </style>
@@ -227,7 +232,7 @@
                 <div style="display: flex; align-items: center;">
                     <input type="number" class="net-input" id="net_${ogrenci.id}" placeholder="Net" step="0.25" min="0">
                     <input type="checkbox" class="girmedi-checkbox" id="girmedi_${ogrenci.id}">
-                    <label for="girmedi_${ogrenci.id}" style="font-size:13px; color:#555; font-weight:bold;">Girmedi</label>
+                    <label for="girmedi_${ogrenci.id}" style="font-size:12px; color:#555; font-weight:bold; margin-left:5px;">Girmedi</label>
                 </div>
             `;
             listDiv.appendChild(satir);
