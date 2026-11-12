@@ -3,6 +3,15 @@
   "name": "Atalan, İclal",
   "exams": [
     {
+      "examName": "e7",
+      "examDate": "2026-11-12",
+      "score": 28.75,
+      "yuzde": 35.9,
+      "rank": 15,
+      "totalStudents": 15,
+      "classAverage": 58.3
+    },
+    {
       "examName": "d1",
       "examDate": "2026-11-12",
       "score": 23.75,
