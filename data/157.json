@@ -3,6 +3,15 @@
   "name": "Türkmenoğlu, Ömer Beren",
   "exams": [
     {
+      "examName": "ypd1",
+      "examDate": "2026-11-12",
+      "score": 76.25,
+      "yuzde": 95.3,
+      "rank": 1,
+      "totalStudents": 14,
+      "classAverage": 57.8
+    },
+    {
       "examName": "e4",
       "examDate": "2026-11-12",
       "score": 68.75,
