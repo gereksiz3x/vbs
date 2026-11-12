@@ -3,6 +3,15 @@
   "name": "Bila, Hülya",
   "exams": [
     {
+      "examName": "e4",
+      "examDate": "2026-11-12",
+      "score": 51.75,
+      "yuzde": 64.7,
+      "rank": 9,
+      "totalStudents": 14,
+      "classAverage": 55.2
+    },
+    {
       "examName": "e3",
       "examDate": "2026-11-12",
       "score": 55.25,
