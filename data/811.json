@@ -3,6 +3,15 @@
   "name": "Bila, Hülya",
   "exams": [
     {
+      "examName": "ypd1",
+      "examDate": "2026-11-12",
+      "score": 50.5,
+      "yuzde": 63.1,
+      "rank": 11,
+      "totalStudents": 14,
+      "classAverage": 57.8
+    },
+    {
       "examName": "e4",
       "examDate": "2026-11-12",
       "score": 51.75,
