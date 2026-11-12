@@ -3,6 +3,15 @@
   "name": "Sert, Ece",
   "exams": [
     {
+      "examName": "ypd2",
+      "examDate": "2026-11-12",
+      "score": 77.5,
+      "yuzde": 96.9,
+      "rank": 1,
+      "totalStudents": 11,
+      "classAverage": 63.3
+    },
+    {
       "examName": "ypd1",
       "examDate": "2026-11-12",
       "score": 71.25,
