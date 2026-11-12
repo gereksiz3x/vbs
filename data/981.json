@@ -3,6 +3,15 @@
   "name": "Karataş, Nurten",
   "exams": [
     {
+      "examName": "ypd2",
+      "examDate": "2026-11-12",
+      "score": 76.25,
+      "yuzde": 95.3,
+      "rank": 3,
+      "totalStudents": 11,
+      "classAverage": 63.3
+    },
+    {
       "examName": "ypd1",
       "examDate": "2026-11-12",
       "score": 72.5,
