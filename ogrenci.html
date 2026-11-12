@@ -17,7 +17,6 @@
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
-        /* ARKA PLAN RENK GEÇİŞİ (Göz yormayan koyu ve yumuşak tonlar) */
         body { 
             background: linear-gradient(135deg, #1e293b 0%, #334155 100%); 
             min-height: 100vh; 
@@ -44,7 +43,6 @@
         .general-status-card { background-color: #fffde7; border: 2px solid #fff59d; }
         .general-status-card .section-title { color: #f57f17; font-size: 1.2rem; font-weight: 600; margin-bottom: 15px; border-bottom: 2px solid #fff176; padding-bottom: 8px; display: flex; align-items: center; gap: 8px; }
 
-        /* 8 Kutu ve 6 Kutu İçin Ortak Grid Sistemi */
         .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
         .general-stats-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
         
@@ -52,7 +50,6 @@
         .stat-label { font-size: 0.8rem; color: #6c757d; margin-bottom: 8px; font-weight: 600; line-height: 1.2; }
         .stat-value { font-size: 1.3rem; font-weight: bold; color: var(--primary); }
         
-        /* Yapay Zeka Kutusu */
         .ai-box { margin-top: 15px; background: linear-gradient(135deg, #f3e7e9 0%, #e3eeff 100%); border-left: 5px solid var(--primary); padding: 15px; border-radius: 8px; font-size: 0.95rem; line-height: 1.5; color: #333; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .ai-box strong { color: var(--primary); }
 
@@ -72,7 +69,6 @@
         .loading { text-align: center; padding: 40px; font-size: 1.2rem; color: var(--primary); font-weight: bold; }
         .error-box { background: #f8d7da; color: #721c24; padding: 30px; border-radius: 10px; text-align: center; }
         
-        /* MOBİL DÜZELTMELERİ */
         @media (max-width: 900px) {
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
             .general-stats-grid { grid-template-columns: repeat(2, 1fr); }
@@ -97,25 +93,21 @@
             <div class="card" id="infoCard" style="padding-bottom: 15px;">
                 <div class="student-name" id="studentNameDisplay"></div>
                 
-                <!-- Son Deneme Detayları -->
                 <div class="section-card latest-exam-card" id="latestExamContainer">
                     <div class="section-title">🎯 Son Deneme Detayları <span id="latestExamName"></span></div>
                     <div class="stats-grid" id="latestStatsGrid"></div>
                     
-                    <!-- Yapay Zeka Yorum Kutusu -->
                     <div class="ai-box" id="aiCommentBox" style="display: none;">
                         <strong>🤖 Değerlendirme:</strong> <span id="aiCommentText"></span>
                     </div>
                 </div>
 
-                <!-- Genel Durum -->
                 <div class="section-card general-status-card" id="generalStatusContainer">
                     <div class="section-title">📊 Genel Durum (Tüm Denemeler)</div>
                     <div class="general-stats-grid" id="generalStatsGrid"></div>
                 </div>
             </div>
 
-            <!-- Geçmiş Denemeler -->
             <div class="card" id="historyCard">
                 <div class="card-title">📅 Geçmiş Denemeler</div>
                 <div class="table-responsive">
@@ -135,7 +127,6 @@
                 <button class="btn-show-all" id="btnShowAll" onclick="showAllExams()" style="display: none;">Tümünü Gör</button>
             </div>
 
-            <!-- Grafik -->
             <div class="card" id="chartCard">
                 <div class="card-title">📈 Net Değişim Grafiği (Tüm Denemeler)</div>
                 <div class="chart-container">
@@ -152,6 +143,15 @@
     let tumSinifVerileri = []; 
 
     const sinifListesi = ["145","157","371","462","562","752","756","801","811","853","893","981","1023","1076","1142"];
+
+    // İSİM DÜZELTİCİ FONKSİYON (Sert, Ece -> Ece Sert)
+    function formatName(name) {
+        if (name && name.includes(',')) {
+            const parts = name.split(',');
+            return parts[1].trim() + ' ' + parts[0].trim();
+        }
+        return name;
+    }
 
     if (!studentId) {
         document.getElementById('infoCard').innerHTML = `<div class="error-box"><h3>Hata</h3><p>Lütfen geçerli bir öğrenci numarası girin.</p></div>`;
@@ -195,7 +195,6 @@
             const ogrToplamNet = data.exams.reduce((sum, e) => sum + e.score, 0);
             const ogrOrtalama = (ogrToplamNet / data.exams.length).toFixed(2);
 
-            // Sınıf Genel Ortalaması
             let tumNetler = [];
             tumSinifVerileri.forEach(v => {
                 if(v && v.exams) {
@@ -204,7 +203,6 @@
             });
             const sinifGenelOrtalamasi = tumNetler.length > 0 ? (tumNetler.reduce((a,b)=>a+b, 0) / tumNetler.length).toFixed(2) : '-';
 
-            // Toplam Yapılan Denemeler
             const maxDeneme = Math.max(...tumSinifVerileri.filter(v => v !== null && v.exams).map(v => v.exams.length));
 
             displayStudentInfo(data, ogrOrtalama, genelSiralama, genelToplamOgrenci, sinifGenelOrtalamasi, maxDeneme);
@@ -249,7 +247,6 @@
         }
     }
 
-    // Yapay Zeka Yorumu (Sınıf ortalaması rakamı kaldırıldı)
     function generateAIComment(data, latestExam, previousExam, hesaplananOrt) {
         const score = latestExam.score;
         const classAvg = parseFloat(hesaplananOrt);
@@ -285,7 +282,8 @@
     }
 
     function displayStudentInfo(data, ogrOrtalama, genelSiralama, genelToplamOgrenci, sinifGenelOrtalamasi, maxDeneme) {
-        document.getElementById('studentNameDisplay').innerText = data.name;
+        // İSİM DÜZELTİCİ BURADA KULLANILIYOR
+        document.getElementById('studentNameDisplay').innerText = formatName(data.name);
         
         const latest = data.exams[0];
         const previous = data.exams[1]; 
@@ -319,6 +317,9 @@
 
         let genelSiralamaText = genelSiralama ? genelSiralama : '-';
 
+        // SORU SAYISI ARTIK DİREKT ÇEKİLİYOR (80 VARSAYILANI KALDIRILDI)
+        const gosterilecekSoruSayisi = latest.totalQuestions ? latest.totalQuestions : '-';
+
         document.getElementById('latestStatsGrid').innerHTML = `
             <div class="stat-item">
                 <div class="stat-label">Net</div>
@@ -326,7 +327,7 @@
             </div>
             <div class="stat-item">
                 <div class="stat-label">Soru Sayısı</div>
-                <div class="stat-value">${latest.totalQuestions || 80}</div>
+                <div class="stat-value">${gosterilecekSoruSayisi}</div>
             </div>
             <div class="stat-item">
                 <div class="stat-label">Başarı Yüzdesi</div>
