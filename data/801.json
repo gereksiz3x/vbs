@@ -3,6 +3,15 @@
   "name": "Kaya, Emir",
   "exams": [
     {
+      "examName": "e7",
+      "examDate": "2026-11-12",
+      "score": 46.25,
+      "yuzde": 57.8,
+      "rank": 11,
+      "totalStudents": 15,
+      "classAverage": 58.3
+    },
+    {
       "examName": "d2",
       "examDate": "2026-11-12",
       "score": 38.75,
