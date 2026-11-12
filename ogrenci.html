@@ -16,8 +16,17 @@
             --border: #dee2e6;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; display: flex; justify-content: center; }
-        .container { width: 100%; max-width: 1000px; background: white; border-radius: 16px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); overflow: hidden; }
+        
+        /* ARKA PLAN RENK GEÇİŞİ (Göz yormayan koyu ve yumuşak tonlar) */
+        body { 
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%); 
+            min-height: 100vh; 
+            padding: 20px; 
+            display: flex; 
+            justify-content: center; 
+        }
+        
+        .container { width: 100%; max-width: 1000px; background: white; border-radius: 16px; box-shadow: 0 15px 35px rgba(0,0,0,0.3); overflow: hidden; }
         
         .header { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 25px 20px; text-align: center; }
         .header h1 { font-size: 1.8rem; margin-bottom: 8px; }
@@ -35,13 +44,11 @@
         .general-status-card { background-color: #fffde7; border: 2px solid #fff59d; }
         .general-status-card .section-title { color: #f57f17; font-size: 1.2rem; font-weight: 600; margin-bottom: 15px; border-bottom: 2px solid #fff176; padding-bottom: 8px; display: flex; align-items: center; gap: 8px; }
 
-        /* Grid Sistemleri */
-        .latest-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-        
-        /* Genel Durum 6 Kutu: PC'de 6 yan yana, Mobilde 2'li alt alta */
+        /* 8 Kutu ve 6 Kutu İçin Ortak Grid Sistemi */
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
         .general-stats-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
         
-        .stat-item { background: white; padding: 15px 8px; border-radius: 10px; text-align: center; border: 1px solid #e0e0e0; box-shadow: 0 2px 5px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: center; }
+        .stat-item { background: white; padding: 15px 10px; border-radius: 10px; text-align: center; border: 1px solid #e0e0e0; box-shadow: 0 2px 5px rgba(0,0,0,0.02); display: flex; flex-direction: column; justify-content: center; }
         .stat-label { font-size: 0.8rem; color: #6c757d; margin-bottom: 8px; font-weight: 600; line-height: 1.2; }
         .stat-value { font-size: 1.3rem; font-weight: bold; color: var(--primary); }
         
@@ -65,17 +72,17 @@
         .loading { text-align: center; padding: 40px; font-size: 1.2rem; color: var(--primary); font-weight: bold; }
         .error-box { background: #f8d7da; color: #721c24; padding: 30px; border-radius: 10px; text-align: center; }
         
-        /* EKRAN BOYUTLARINA GÖRE UYARLAMA */
+        /* MOBİL DÜZELTMELERİ */
         @media (max-width: 900px) {
-            .latest-stats-grid { grid-template-columns: repeat(2, 1fr); }
-            .general-stats-grid { grid-template-columns: repeat(2, 1fr); } /* Mobilde 2 sütun x 3 satır */
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .general-stats-grid { grid-template-columns: repeat(2, 1fr); }
         }
         @media (max-width: 500px) {
             th, td { padding: 10px 5px; font-size: 0.8rem; }
             .header h1 { font-size: 1.4rem; }
             .chart-container { height: 250px; }
-            .stat-value { font-size: 1.1rem; }
-            .stat-label { font-size: 0.7rem; }
+            .stat-value { font-size: 1.2rem; }
+            .stat-label { font-size: 0.75rem; }
         }
     </style>
 </head>
@@ -93,7 +100,7 @@
                 <!-- Son Deneme Detayları -->
                 <div class="section-card latest-exam-card" id="latestExamContainer">
                     <div class="section-title">🎯 Son Deneme Detayları <span id="latestExamName"></span></div>
-                    <div class="latest-stats-grid" id="latestStatsGrid"></div>
+                    <div class="stats-grid" id="latestStatsGrid"></div>
                     
                     <!-- Yapay Zeka Yorum Kutusu -->
                     <div class="ai-box" id="aiCommentBox" style="display: none;">
@@ -175,7 +182,6 @@
 
             globalData = data;
             
-            // Genel Sıralama Hesaplamaları
             const ortalamalar = tumSinifVerileri.filter(v => v !== null && v.exams && v.exams.length > 0).map(v => {
                 const toplam = v.exams.reduce((sum, e) => sum + e.score, 0);
                 return { id: String(v.id), name: v.name, ortalama: toplam / v.exams.length };
@@ -189,7 +195,7 @@
             const ogrToplamNet = data.exams.reduce((sum, e) => sum + e.score, 0);
             const ogrOrtalama = (ogrToplamNet / data.exams.length).toFixed(2);
 
-            // Sınıf Genel Ortalaması (Tüm öğrencilerin tüm netlerinin ortalaması)
+            // Sınıf Genel Ortalaması
             let tumNetler = [];
             tumSinifVerileri.forEach(v => {
                 if(v && v.exams) {
@@ -198,7 +204,7 @@
             });
             const sinifGenelOrtalamasi = tumNetler.length > 0 ? (tumNetler.reduce((a,b)=>a+b, 0) / tumNetler.length).toFixed(2) : '-';
 
-            // Toplam Yapılan Denemeler (En çok denemesi olan öğrencinin deneme sayısı)
+            // Toplam Yapılan Denemeler
             const maxDeneme = Math.max(...tumSinifVerileri.filter(v => v !== null && v.exams).map(v => v.exams.length));
 
             displayStudentInfo(data, ogrOrtalama, genelSiralama, genelToplamOgrenci, sinifGenelOrtalamasi, maxDeneme);
@@ -243,6 +249,7 @@
         }
     }
 
+    // Yapay Zeka Yorumu (Sınıf ortalaması rakamı kaldırıldı)
     function generateAIComment(data, latestExam, previousExam, hesaplananOrt) {
         const score = latestExam.score;
         const classAvg = parseFloat(hesaplananOrt);
@@ -262,7 +269,7 @@
         
         if (scoreDiff > 0) {
              if (classAvg && score > classAvg) {
-                 return `📈 Bir önceki denemene göre netini ${scoreDiff} puan artırdın ve sınıf ortalamasının (${classAvg}) üzerindesin. Bu istikrarı korumaya devam et.`;
+                 return `📈 Bir önceki denemene göre netini ${scoreDiff} puan artırdın ve sınıf ortalamasının üzerindesin. Bu istikrarı korumaya devam et.`;
              } else {
                  return `📈 Bir önceki denemene göre netini ${scoreDiff} puan artırdın. Gelişim devam ediyor, eksik konularına odaklanmayı sürdür.`;
              }
@@ -270,7 +277,7 @@
             return `📉 Bir önceki denemene göre netin ${Math.abs(scoreDiff)} puan düştü. Eksik olduğun konuları tekrar etmende fayda var. Her düşüş yeni bir başlangıçtır.`;
         } else {
             if (classAvg && score > classAvg) {
-                return `🎯 Netin bir önceki denemeyle aynı. Sınıf ortalamasının (${classAvg}) üzerinde, başarılı seviyeni koruyorsun.`;
+                return `🎯 Netin bir önceki denemeyle aynı. Sınıf ortalamasının üzerinde, başarılı seviyeni koruyorsun.`;
             } else {
                 return `🎯 Netin bir önceki denemeyle aynı. İlerleme kaydetmek için yeni bir çalışma yöntemi denemelisin.`;
             }
@@ -319,7 +326,7 @@
             </div>
             <div class="stat-item">
                 <div class="stat-label">Soru Sayısı</div>
-                <div class="stat-value">80</div>
+                <div class="stat-value">${latest.totalQuestions || 80}</div>
             </div>
             <div class="stat-item">
                 <div class="stat-label">Başarı Yüzdesi</div>
@@ -347,7 +354,6 @@
             </div>
         `;
 
-        // Senin Belirlediğin Sıralama ile 6'lı Genel Durum
         document.getElementById('generalStatsGrid').innerHTML = `
             <div class="stat-item">
                 <div class="stat-label">Toplam Deneme Sayısı</div>
