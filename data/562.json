@@ -3,6 +3,15 @@
   "name": "Akkanat, Durmuş Efe",
   "exams": [
     {
+      "examName": "j3",
+      "examDate": "2026-11-12",
+      "score": 67.25,
+      "yuzde": 84.1,
+      "rank": 5,
+      "totalStudents": 14,
+      "classAverage": 58.5
+    },
+    {
       "examName": "e6",
       "examDate": "2026-11-12",
       "score": 71.5,
