@@ -30,11 +30,9 @@
         
         .exam-box { background: #f0f7ff; border-left: 5px solid #3498db; padding: 15px; border-radius: 8px; }
 
-        /* SAĞ ÜST: TOKEN ALANI */
         .token-box { background: #fffdf5; border-left: 5px solid #f1c40f; padding: 15px; border-radius: 8px; }
         .token-box input { width: 100%; padding: 10px; border: 2px solid #bdc3c7; border-radius: 6px; font-size: 14px; }
 
-        /* ÖĞRENCİ LİSTESİ VE ZEBRA RENKLERİ */
         .ogrenci-liste-container { max-height: 65vh; overflow-y: auto; border: 2px solid #bdc3c7; border-radius: 10px; background: white; }
         .ogrenci-liste-container::-webkit-scrollbar { width: 8px; }
         .ogrenci-liste-container::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
@@ -51,7 +49,6 @@
         .ogrenci-adi { font-weight: bold; color: #2c3e50; font-size: 15px; }
         .ogrenci-id { font-size: 11px; color: #7f8c8d; margin-top: 2px; }
         
-        /* NET INPUT VE HATA GÖRSELİ */
         .net-input { width: 100px; padding: 8px; border: 2px solid #bdc3c7; border-radius: 6px; text-align: center; font-size: 15px; margin-right: 15px; font-weight: bold; transition: 0.2s; }
         .net-input.invalid { border-color: #e74c3c; background-color: #fadbd8; color: #c0392b; }
         
@@ -70,7 +67,6 @@
         .error { background: #f8d7da; color: #721c24; border: 2px solid #f5c6cb; display: block; }
         .info { background: #d1ecf1; color: #0c5460; border: 2px solid #bee5eb; display: block; }
 
-        /* SAĞ PANEL TABLOLARI */
         .mini-card { border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); overflow: hidden; border: 1px solid #dcdde1; }
         
         .theme-peach .mini-card-header { background: #d35400; color: white; padding: 12px; font-weight: bold; font-size: 14px; text-align: center; }
@@ -112,11 +108,11 @@
                     <div class="exam-box">
                         <div class="input-group">
                             <label>🏷️ Deneme Adı</label>
-                            <input type="text" id="denemeAdiInput" placeholder="Örn: 1. Deneme">
+                            <input type="text" id="denemeAdiInput" placeholder="Örn: 1. Deneme" oninput="formuKontrolEt()">
                         </div>
                         <div class="input-group" style="margin-bottom:0;">
                             <label>📚 Toplam Soru Sayısı</label>
-                            <input type="number" id="soruSayisiInput" min="1" placeholder="Örn: 80" oninput="formuKontrolEt()">
+                            <input type="number" id="soruSayisiInput" min="1" placeholder="Örn: 80" oninput="tumKutulariKontrolEt()">
                         </div>
                     </div>
                 </div>
@@ -137,7 +133,6 @@
 
             <!-- SAĞ TARAF -->
             <div class="right-panel">
-                <!-- Sağ Üste Taşınan Token Kutusu -->
                 <div class="token-box">
                     <div class="section-title" style="margin-bottom: 8px;">🔑 Sistem Bağlantısı</div>
                     <label style="font-size: 13px; font-weight: 600; color: #856404; margin-bottom: 5px; display: block;">GitHub Token</label>
@@ -212,6 +207,7 @@
         }
         listeyiOlustur();
         istatistikleriYukle();
+        formuKontrolEt(); 
     };
 
     function listeyiOlustur() {
@@ -249,7 +245,6 @@
         formuKontrolEt();
     }
 
-    // Anlık olarak kutu rengini değiştiren ve formu kontrol eden fonksiyon
     function kontrolEt(id) {
         const input = document.getElementById(`net_${id}`);
         const checkbox = document.getElementById(`girmedi_${id}`);
@@ -266,13 +261,15 @@
         const net = parseFloat(deger);
         let hatali = false;
 
-        // Kural 1: Tam sayı veya .25, .50, .75 (veya .5) olmalı
-        const kusurKismi = Math.abs(net % 1);
-        const gecerliKusurlar = [0, 0.25, 0.5, 0.75];
-        
-        // Float toleransı için küçük bir yuvarlama kullanıyoruz (0.25000001 gibi durumlar için)
-        const kusurGecerliMi = gecerliKusurlar.some(k => Math.abs(kusurKismi - k) < 0.0001);
-        if (!kusurGecerliMi) hatali = true;
+        // Kural 1: Küsürat Kontrolü (String bazlı güvenli yöntem)
+        if (deger.includes('.')) {
+            const parts = deger.split('.');
+            const kusurKismi = parts[1];
+            // Sadece 25, 5, 50, 75 ve 0'lardan oluşan geçerli küsüratlar
+            if (!['25', '5', '50', '75', '0', '00'].includes(kusurKismi) && !['250', '500', '750'].includes(kusurKismi)) {
+                hatali = true;
+            }
+        }
 
         // Kural 2: Net, Soru Sayısı'ndan büyük olamaz
         if (!isNaN(soruSayisi) && soruSayisi > 0 && net > soruSayisi) hatali = true;
@@ -286,7 +283,15 @@
         formuKontrolEt();
     }
 
-    // Tüm formun geçerliliğini kontrol edip "KAYDET" butonunu aktif/pasif yapan fonksiyon
+    function tumKutulariKontrolEt() {
+        sinifListesi.forEach(ogr => {
+            const input = document.getElementById(`net_${ogr.id}`);
+            if(input.value.trim() !== '') {
+                kontrolEt(ogr.id);
+            }
+        });
+    }
+
     function formuKontrolEt() {
         const token = document.getElementById('tokenInput').value.trim();
         const denemeAdi = document.getElementById('denemeAdiInput').value.trim();
@@ -295,39 +300,30 @@
         
         let formGecerli = true;
 
-        // 1. Token, Deneme Adı ve Soru Sayısı dolu mu?
         if (!token || !denemeAdi || isNaN(soruSayisi) || soruSayisi <= 0) {
             formGecerli = false;
         }
 
-        // 2. Kırmızı (invalid) kutu var mı?
         const invalidInputs = document.querySelectorAll('.net-input.invalid');
         if (invalidInputs.length > 0) {
             formGecerli = false;
         }
 
-        // 3. En az bir öğrenciye veri girilmiş mi? (Girmedi işaretli olmayan ve boş olmayan)
-        let enAzBirVeri = false;
+        // Boş bırakılan kutu kontrolü
         sinifListesi.forEach(ogr => {
             const input = document.getElementById(`net_${ogr.id}`);
             const cb = document.getElementById(`girmedi_${ogr.id}`);
-            if (!cb.checked && input.value.trim() !== '') {
-                enAzBirVeri = true;
+            if (!cb.checked && input.value.trim() === '') {
+                formGecerli = false;
             }
         });
-        if (!enAzVeri) formGecerli = false;
 
-        // Butonun durumunu ayarla
         if (formGecerli) {
             btn.disabled = false;
         } else {
             btn.disabled = true;
         }
     }
-
-    // Deneme Adı ve Soru Sayısı inputları için de form kontrolünü bağladık (HTML içindeki oninput ile)
-    document.getElementById('denemeAdiInput').addEventListener('input', formuKontrolEt);
-    // Token kutusu da oninput ile bağlandı
 
     async function istatistikleriYukle() {
         tumVeriler = {};
@@ -460,7 +456,7 @@
         sonucDiv.className = 'sonuc info';
         sonucDiv.innerHTML = '⏳ İşleniyor, lütfen bekleyin...';
         
-        document.getElementById('btnOlustur').disabled = true; // İşlem sırasında kilitle
+        document.getElementById('btnOlustur').disabled = true; 
 
         const girenler = islenecekler.filter(o => o.score !== null);
         girenler.sort((a, b) => b.score - a.score);
@@ -528,7 +524,7 @@
             sonucDiv.innerHTML = `✅ Başarıyla tamamlandı! ${basariliSayisi} öğrenci işlendi.`;
             document.getElementById('btnTekrar').style.display = 'none';
             document.getElementById('btnOlustur').style.display = 'block';
-            document.getElementById('btnOlustur').disabled = false; // İşlem bitince aç
+            document.getElementById('btnOlustur').disabled = false; 
             
             setTimeout(istatistikleriYukle, 1500);
             
