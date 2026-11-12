@@ -3,6 +3,15 @@
   "name": "Kılınç, Hacer",
   "exams": [
     {
+      "examName": "ypd4",
+      "examDate": "2026-11-12",
+      "score": 75,
+      "yuzde": 93.8,
+      "rank": 2,
+      "totalStudents": 14,
+      "classAverage": 59.6
+    },
+    {
       "examName": "j3",
       "examDate": "2026-11-12",
       "score": 65.25,
