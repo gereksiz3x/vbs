@@ -31,18 +31,21 @@
         .token-box { background: #fffdf5; border-left: 5px solid #f1c40f; padding: 15px; border-radius: 8px; }
         .exam-box { background: #f0f7ff; border-left: 5px solid #3498db; padding: 15px; border-radius: 8px; margin-top: 15px; }
 
-        /* ÖĞRENCİ LİSTESİ YÜKSEKLİĞİ VE TASARIMI */
+        /* ÖĞRENCİ LİSTESİ VE ZEBRA RENKLERİ */
         .ogrenci-liste-container { max-height: 65vh; overflow-y: auto; border: 2px solid #bdc3c7; border-radius: 10px; background: white; }
         .ogrenci-liste-container::-webkit-scrollbar { width: 8px; }
         .ogrenci-liste-container::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
         .ogrenci-liste-container::-webkit-scrollbar-thumb { background: #3498db; border-radius: 10px; }
         .ogrenci-liste-container::-webkit-scrollbar-thumb:hover { background: #2980b9; }
 
-        /* ZEBRA RENKLENDİRME VE DAHA KOMPAKT SATIRLAR */
         .ogrenci-satiri { display: flex; align-items: center; justify-content: space-between; padding: 10px 15px; transition: 0.2s; }
-        .ogrenci-satiri:nth-child(odd) { background-color: #f8f9fa; } /* Tek satırlar açık gri */
-        .ogrenci-satiri:nth-child(even) { background-color: #ffffff; } /* Çift satırlar beyaz */
-        .ogrenci-satiri:hover { background-color: #e3f2fd; }
+        
+        /* Bembeyaz ve Buz Mavisi Zebra */
+        .ogrenci-satiri:nth-child(odd) { background-color: #ffffff; } /* Tek satırlar: Beyaz */
+        .ogrenci-satiri:nth-child(even) { background-color: #eaf4f9; } /* Çift satırlar: Buz Mavisi */
+        .ogrenci-satiri:hover { background-color: #d6eaf8; }
+        
+        /* Kaydedilen (Yeşil) ve Hatalı (Kırmızı) Renkler */
         .ogrenci-satiri.basarili { background-color: #d4edda !important; pointer-events: none; opacity: 0.7; }
         .ogrenci-satiri.hatali { background-color: #f8d7da !important; }
         
@@ -66,13 +69,21 @@
         .error { background: #f8d7da; color: #721c24; border: 2px solid #f5c6cb; display: block; }
         .info { background: #d1ecf1; color: #0c5460; border: 2px solid #bee5eb; display: block; }
 
-        .mini-card { background: white; border-radius: 10px; border: 1px solid #dcdde1; box-shadow: 0 4px 10px rgba(0,0,0,0.05); overflow: hidden; }
-        .mini-card-header { background: #34495e; color: white; padding: 12px; font-weight: bold; font-size: 14px; text-align: center; }
+        /* SAĞ PANEL TABLOLARI VE FARKLI RENK TEMALARI */
+        .mini-card { border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); overflow: hidden; border: 1px solid #dcdde1; }
+        
+        /* 1. Tablo: Sıcak Krem/Şeftali Tonu (Son Deneme) */
+        .theme-peach .mini-card-header { background: #d35400; color: white; padding: 12px; font-weight: bold; font-size: 14px; text-align: center; }
+        .theme-peach .mini-table th { background: #fdebd0; color: #873600; padding: 8px; text-align: left; border-bottom: 2px solid #f5cba7; }
+        .theme-peach .mini-table td { padding: 8px; border-bottom: 1px solid #fad7a1; color: #5d4037; background: #fffcf9; }
+        
+        /* 2. Tablo: Lila/Levanta Tonu (Tüm Zamanlar) */
+        .theme-lilac .mini-card-header { background: #8e44ad; color: white; padding: 12px; font-weight: bold; font-size: 14px; text-align: center; }
+        .theme-lilac .mini-table th { background: #ebdef0; color: #4a235a; padding: 8px; text-align: left; border-bottom: 2px solid #d2b4de; }
+        .theme-lilac .mini-table td { padding: 8px; border-bottom: 1px solid #e8daef; color: #4a235a; background: #fdfafc; }
+
         .mini-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        .mini-table th { background: #ecf0f1; color: #2c3e50; padding: 8px; text-align: left; border-bottom: 2px solid #bdc3c7; }
-        .mini-table td { padding: 8px; border-bottom: 1px solid #ecf0f1; color: #34495e; }
         .mini-table tr:last-child td { border-bottom: none; }
-        .mini-table tr:nth-child(even) { background: #f8f9fa; }
         
         .ozet-kutusu { display: flex; justify-content: space-between; background: #ecf0f1; padding: 10px; border-radius: 8px; font-weight: bold; font-size: 13px; color: #2c3e50; margin-top: 10px; }
 
@@ -82,7 +93,6 @@
             .ogrenci-liste-container { max-height: 60vh; }
         }
         @media (max-width: 600px) {
-            /* Mobilde dikey dizilim ve daha az boşluk */
             .ogrenci-satiri { flex-direction: column; align-items: flex-start; gap: 8px; padding: 10px; }
             .ogrenci-satiri > div:last-child { width: 100%; display: flex; justify-content: space-between; align-items: center; }
             .net-input { width: 60%; margin-right: 0; }
@@ -149,7 +159,8 @@
                     </div>
                 </div>
 
-                <div class="mini-card">
+                <!-- Krem/Şeftali Temalı Tablo -->
+                <div class="mini-card theme-peach">
                     <div class="mini-card-header" id="sonDenemeBaslik">Son Yapılan Deneme Sıralaması</div>
                     <table class="mini-table">
                         <thead>
@@ -165,7 +176,8 @@
                     </table>
                 </div>
 
-                <div class="mini-card">
+                <!-- Lila/Levanta Temalı Tablo -->
+                <div class="mini-card theme-lilac">
                     <div class="mini-card-header">Tüm Zamanlar Sıralaması</div>
                     <table class="mini-table">
                         <thead>
@@ -273,7 +285,8 @@
         });
 
         document.getElementById('sonDenemeAdi').innerText = enSonDenemeAdi;
-        document.getElementById('sonDenemeBaslik').innerText = enSonDenemeAdi !== "-" ? `${enSonDenemeAdi} Sıralaması` : "Son Yapılan Deneme Sıralaması";
+        // Başlığı sabitledik
+        document.getElementById('sonDenemeBaslik').innerText = "Son Yapılan Deneme Sıralaması";
 
         let sonDenemeNetleri = [];
         Object.values(tumVeriler).forEach(v => {
