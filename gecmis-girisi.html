@@ -230,7 +230,7 @@
         hataliOgrenciler = []; 
 
         sonucDiv.className = 'sonuc info';
-        sonucDiv.innerHTML = '⏳ Veriler GitHub\'a kaydediliyor... Lütfen bekleyin...';
+        sonucDiv.innerHTML = '⏳ Veriler kaydediliyor... Lütfen bekleyin...';
 
         for (let ogr of islenecekler) {
             const dosyaAdi = `${ogr.id}.json`;
@@ -274,7 +274,7 @@
 
         if (hataliOgrenciler.length === 0) {
             sonucDiv.className = 'sonuc success';
-            sonucDiv.innerHTML = `✅ Başarıyla kaydedildi! ${basariliSayisi} öğrencinin geçmişi işlendi.`;
+            sonucDiv.innerHTML = `✅ Başarıyla kaydedildi! ${basariliSayisi} öğrencinin deneme sonucu sisteme işlendi.`;
             document.getElementById('btnTekrar').style.display = 'none';
             document.getElementById('btnOlustur').style.display = 'block';
             
