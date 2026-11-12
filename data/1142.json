@@ -3,6 +3,15 @@
   "name": "Yılmaz, Nur Eymen",
   "exams": [
     {
+      "examName": "ypd1",
+      "examDate": "2026-11-12",
+      "score": 53.75,
+      "yuzde": 67.2,
+      "rank": 10,
+      "totalStudents": 14,
+      "classAverage": 57.8
+    },
+    {
       "examName": "e4",
       "examDate": "2026-11-12",
       "score": 49.25,
