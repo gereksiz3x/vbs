@@ -3,6 +3,16 @@
   "name": "Hilal Aşık",
   "exams": [
     {
+      "examName": "mrv2",
+      "examDate": "2026-11-23",
+      "score": 74,
+      "yuzde": "92.50",
+      "rank": 5,
+      "totalStudents": 11,
+      "classAverage": 68.95,
+      "totalQuestions": 80
+    },
+    {
       "examName": "ypd5",
       "examDate": "2026-11-23",
       "score": 62.75,
