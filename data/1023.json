@@ -3,6 +3,16 @@
   "name": "Ece Sert",
   "exams": [
     {
+      "examName": "mrv2",
+      "examDate": "2026-11-23",
+      "score": 78.75,
+      "yuzde": "98.44",
+      "rank": 2,
+      "totalStudents": 11,
+      "classAverage": 68.95,
+      "totalQuestions": 80
+    },
+    {
       "examName": "ypd5",
       "examDate": "2026-11-23",
       "score": 71.25,
