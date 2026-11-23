@@ -3,6 +3,16 @@
   "name": "Nurten Karataş",
   "exams": [
     {
+      "examName": "mrv2",
+      "examDate": "2026-11-23",
+      "score": 70.25,
+      "yuzde": "87.81",
+      "rank": 6,
+      "totalStudents": 11,
+      "classAverage": 68.95,
+      "totalQuestions": 80
+    },
+    {
       "examName": "ypd5",
       "examDate": "2026-11-23",
       "score": 70.25,
