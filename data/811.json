@@ -3,6 +3,16 @@
   "name": "Hülya Bila",
   "exams": [
     {
+      "examName": "mrv2",
+      "examDate": "2026-11-23",
+      "score": 60,
+      "yuzde": "75.00",
+      "rank": 8,
+      "totalStudents": 11,
+      "classAverage": 68.95,
+      "totalQuestions": 80
+    },
+    {
       "examName": "ypd5",
       "examDate": "2026-11-23",
       "score": 47.75,
