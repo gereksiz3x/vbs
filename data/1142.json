@@ -3,6 +3,16 @@
   "name": "Nur Eymen Yılmaz",
   "exams": [
     {
+      "examName": "mrv2",
+      "examDate": "2026-11-23",
+      "score": 60,
+      "yuzde": "75.00",
+      "rank": 9,
+      "totalStudents": 11,
+      "classAverage": 68.95,
+      "totalQuestions": 80
+    },
+    {
       "examName": "e7",
       "examDate": "2026-11-12",
       "score": 41.25,
