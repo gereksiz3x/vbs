@@ -3,6 +3,16 @@
   "name": "Belinay Cifçi",
   "exams": [
     {
+      "examName": "mrv2",
+      "examDate": "2026-11-23",
+      "score": 57.5,
+      "yuzde": "71.88",
+      "rank": 10,
+      "totalStudents": 11,
+      "classAverage": 68.95,
+      "totalQuestions": 80
+    },
+    {
       "examName": "ypd5",
       "examDate": "2026-11-23",
       "score": 53.75,
