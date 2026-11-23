@@ -3,6 +3,16 @@
   "name": "Yarım Çağlar",
   "exams": [
     {
+      "examName": "mrv2",
+      "examDate": "2026-11-23",
+      "score": 77.5,
+      "yuzde": "96.88",
+      "rank": 4,
+      "totalStudents": 11,
+      "classAverage": 68.95,
+      "totalQuestions": 80
+    },
+    {
       "examName": "ypd5",
       "examDate": "2026-11-23",
       "score": 69.25,
