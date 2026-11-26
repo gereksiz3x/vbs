@@ -3,6 +3,16 @@
   "name": "Durmuş Efe Akkanat",
   "exams": [
     {
+      "examName": "mrv3",
+      "examDate": "2026-11-26",
+      "score": 67.5,
+      "yuzde": "84.38",
+      "rank": 4,
+      "totalStudents": 12,
+      "classAverage": 57.65,
+      "totalQuestions": 80
+    },
+    {
       "examName": "mrv2",
       "examDate": "2026-11-23",
       "score": 69.25,
