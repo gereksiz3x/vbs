@@ -3,6 +3,16 @@
   "name": "Begüm Bindebir",
   "exams": [
     {
+      "examName": "j4",
+      "examDate": "2026-11-26",
+      "score": 77.5,
+      "yuzde": "96.88",
+      "rank": 2,
+      "totalStudents": 15,
+      "classAverage": 63.8,
+      "totalQuestions": 80
+    },
+    {
       "examName": "mrv2",
       "examDate": "2026-11-23",
       "score": 78.75,
