@@ -3,6 +3,16 @@
   "name": "İclal Atalan",
   "exams": [
     {
+      "examName": "j4",
+      "examDate": "2026-11-26",
+      "score": 29,
+      "yuzde": "36.25",
+      "rank": 15,
+      "totalStudents": 15,
+      "classAverage": 63.8,
+      "totalQuestions": 80
+    },
+    {
       "examName": "mrv3",
       "examDate": "2026-11-26",
       "score": 21.25,
