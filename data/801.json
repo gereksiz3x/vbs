@@ -3,6 +3,16 @@
   "name": "Emir Kaya",
   "exams": [
     {
+      "examName": "j4",
+      "examDate": "2026-11-26",
+      "score": 57.75,
+      "yuzde": "72.19",
+      "rank": 11,
+      "totalStudents": 15,
+      "classAverage": 63.8,
+      "totalQuestions": 80
+    },
+    {
       "examName": "mrv3",
       "examDate": "2026-11-26",
       "score": 43.75,
